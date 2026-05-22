@@ -1,0 +1,67 @@
+---
+interface Props {
+  id?: string;
+}
+const { id } = Astro.props;
+---
+
+<div class="newsletter-band" id={id}>
+  <div class="nl-inner">
+    <div class="nl-top">
+      <div class="nl-headline">Build the Business.<br />Run the Play.</div>
+      <div class="nl-sub">One playbook in your inbox every Tuesday. Strategy, scripts, and systems for agents who are serious about building a real business.</div>
+    </div>
+    <div class="nl-stats">
+      <div><div class="nl-stat-num">12,400+</div><div class="nl-stat-label">Agents subscribed</div></div>
+      <div><div class="nl-stat-num">Every Tuesday</div><div class="nl-stat-label">Delivery schedule</div></div>
+      <div><div class="nl-stat-num">Free</div><div class="nl-stat-label">Always</div></div>
+    </div>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="your@email.com" />
+      <button class="nl-btn">Subscribe to the Newsletter</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .newsletter-band { background: var(--yellow); }
+  .nl-inner { max-width: 1280px; margin: 0 auto; padding: 56px 40px; }
+  .nl-top {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 48px; margin-bottom: 32px;
+  }
+  .nl-headline {
+    font-family: 'Bebas Neue', cursive; font-size: 56px; line-height: 0.92;
+    letter-spacing: 0.02em; color: var(--black);
+  }
+  .nl-sub {
+    font-family: 'DM Sans', sans-serif; font-size: 16px; color: rgba(0,0,0,0.6);
+    line-height: 1.55; max-width: 480px; padding-bottom: 4px;
+  }
+  .nl-stats {
+    display: flex; gap: 32px; padding-bottom: 28px;
+    border-bottom: 1px solid rgba(0,0,0,0.12); margin-bottom: 28px;
+  }
+  .nl-stat-num {
+    font-family: 'Bebas Neue', cursive; font-size: 32px; color: var(--black); line-height: 1;
+  }
+  .nl-stat-label {
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,0.45);
+  }
+  .nl-form { display: flex; gap: 0; max-width: 480px; }
+  .nl-input {
+    flex: 1; background: var(--white); border: none; padding: 0 20px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--black);
+    outline: none; height: 52px;
+  }
+  .nl-input::placeholder { color: #aaa; }
+  .nl-btn {
+    background: var(--black); color: var(--yellow);
+    font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 0.08em;
+    padding: 0 28px; height: 52px; cursor: pointer; white-space: nowrap;
+    display: flex; align-items: center; border: none;
+    transition: background 0.15s;
+  }
+  .nl-btn:hover { background: #222; }
+</style>

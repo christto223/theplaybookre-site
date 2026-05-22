@@ -9,6 +9,7 @@ const { activePillar } = Astro.props;
 
 <nav class="pillar-strip" aria-label="Topic navigation">
   <div class="pillar-strip-inner">
+    <a href="/" class:list={['pillar-pill', { active: !activePillar }]}>All</a>
     {PILLARS.map(p => (
       <a
         href={`/${p.slug}/`}
@@ -22,8 +23,7 @@ const { activePillar } = Astro.props;
 
 <style>
   .pillar-strip {
-    background: var(--white);
-    border-bottom: 1px solid var(--rule);
+    background: var(--yellow);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -33,27 +33,26 @@ const { activePillar } = Astro.props;
     padding: 0 40px;
     display: flex;
     gap: 0;
-    align-items: stretch;
+    white-space: nowrap;
   }
   .pillar-pill {
     font-family: 'Bebas Neue', cursive;
     font-size: 13px;
-    letter-spacing: 0.06em;
-    color: var(--charcoal);
-    padding: 14px 20px;
+    letter-spacing: 0.1em;
+    color: rgba(0, 0, 0, 0.55);
+    padding: 12px 18px;
     white-space: nowrap;
     text-decoration: none;
-    border-right: 1px solid var(--rule);
-    transition: color 0.12s, background 0.12s;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.15s, background 0.15s;
   }
-  .pillar-pill:first-child { border-left: 1px solid var(--rule); }
   .pillar-pill:hover {
     color: var(--black);
-    background: var(--off-white);
+    background: rgba(0, 0, 0, 0.08);
   }
   .pillar-pill.active {
     background: var(--black);
     color: var(--yellow);
-    border-color: var(--black);
   }
 </style>

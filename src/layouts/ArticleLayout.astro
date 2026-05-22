@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import NewsletterBand from '../components/NewsletterBand.astro';
 import { getPillarName } from '../data/pillars';
 
 interface Props {
@@ -87,11 +88,15 @@ const schema = [
       <p class="article-dek">{description}</p>
 
       <div class="article-meta">
-        <img src="/images/chris-linsell.jpg" alt="Chris Linsell" class="meta-avatar" />
-        <span class="meta-author">Chris Linsell</span>
-        <span class="meta-dot">·</span>
+        <div class="meta-author-chip">
+          <img src="/images/chris-linsell.jpg" alt="Chris Linsell" class="meta-avatar" />
+          <div class="meta-author-info">
+            <span class="meta-author">Chris Linsell</span>
+          </div>
+        </div>
+        <div class="meta-sep"></div>
         <time class="meta-date" datetime={publishDate.toISOString()}>{formattedDate}</time>
-        <span class="meta-dot">·</span>
+        <div class="meta-sep"></div>
         <span class="meta-read">{readTime} min read</span>
         <div class="meta-tags">
           {tags.map(tag => <span class="meta-tag">{tag}</span>)}
@@ -171,103 +176,103 @@ const schema = [
   </div>
 
   <!-- NEWSLETTER BAND -->
-  <div class="newsletter-band">
-    <div class="nl-inner">
-      <div class="nl-top">
-        <div class="nl-headline">Build the Business.<br />Run the Play.</div>
-        <div class="nl-sub">One playbook in your inbox every Tuesday. Strategy, scripts, and systems for agents who are serious about building a real business.</div>
-      </div>
-      <div class="nl-stats">
-        <div><div class="nl-stat-num">12,400+</div><div class="nl-stat-label">Agents subscribed</div></div>
-        <div><div class="nl-stat-num">Every Tuesday</div><div class="nl-stat-label">Delivery schedule</div></div>
-        <div><div class="nl-stat-num">Free</div><div class="nl-stat-label">Always</div></div>
-      </div>
-      <div class="nl-form">
-        <input class="nl-input" type="email" placeholder="your@email.com" />
-        <button class="nl-btn">Subscribe to the Newsletter</button>
-      </div>
-    </div>
-  </div>
+  <NewsletterBand />
 </BaseLayout>
 
 <style>
   /* ─── ARTICLE HEADER ─── */
   .article-header {
     background: var(--black);
-    padding: 56px 0 48px;
   }
   .article-header-inner {
-    max-width: 800px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 40px;
+    padding: 56px 40px 52px;
   }
   .cat-tag {
     font-family: 'Bebas Neue', cursive;
     font-size: 11px;
     letter-spacing: 0.2em;
-    color: var(--yellow);
-    background: rgba(255,209,0,0.12);
-    border: 1px solid rgba(255,209,0,0.3);
-    padding: 4px 12px;
+    color: var(--black);
+    background: var(--yellow);
+    padding: 3px 10px;
     display: inline-block;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     text-decoration: none;
+    transition: background 0.15s;
   }
-  .cat-tag:hover { background: rgba(255,209,0,0.2); }
+  .cat-tag:hover { background: #e8be00; }
 
   .article-h1 {
     font-family: 'Bebas Neue', cursive;
-    font-size: 72px;
+    font-size: 80px;
     line-height: 0.9;
     letter-spacing: 0.02em;
     color: var(--white);
-    margin-bottom: 20px;
+    max-width: 900px;
+    margin-bottom: 24px;
   }
   .article-h1 :global(.accent) { color: var(--yellow); font-style: normal; }
 
   .article-dek {
     font-family: 'DM Sans', sans-serif;
-    font-size: 18px;
-    line-height: 1.6;
-    color: #888;
+    font-size: 19px;
+    line-height: 1.55;
+    color: #bbb;
     font-style: italic;
+    max-width: 700px;
     margin-bottom: 28px;
   }
 
   .article-meta {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     flex-wrap: wrap;
+    padding: 18px 0;
+    border-top: 2px solid rgba(255,255,255,0.08);
   }
+  .meta-author-chip { display: flex; align-items: center; gap: 10px; }
   .meta-avatar {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #333;
+    flex-shrink: 0;
   }
+  .meta-author-info { display: flex; flex-direction: column; }
   .meta-author {
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--white);
   }
-  .meta-dot { color: #444; font-size: 12px; }
+  .meta-sep {
+    width: 1px;
+    height: 28px;
+    background: rgba(255,255,255,0.08);
+    flex-shrink: 0;
+  }
+  .meta-dot { color: #444; font-size: 12px; display: none; }
   .meta-date, .meta-read {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: #666;
   }
-  .meta-tags { display: flex; gap: 6px; }
+  .meta-tags { display: flex; gap: 6px; flex-wrap: wrap; }
   .meta-tag {
-    font-family: 'Bebas Neue', cursive;
+    font-family: 'Inter', sans-serif;
     font-size: 10px;
-    letter-spacing: 0.12em;
-    color: #555;
-    border: 1px solid #2a2a2a;
-    padding: 2px 8px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #666;
+    border: 1px solid #333;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: border-color 0.12s, color 0.12s;
   }
+  .meta-tag:hover { border-color: var(--yellow); color: var(--yellow); }
   .meta-spacer { flex: 1; }
   .share-buttons { display: flex; align-items: center; gap: 8px; }
   .share-label {

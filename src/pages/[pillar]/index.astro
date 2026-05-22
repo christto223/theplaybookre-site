@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PillarStrip from '../../components/PillarStrip.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
+import NewsletterBand from '../../components/NewsletterBand.astro';
 import { PILLARS, getPillarBySlug } from '../../data/pillars';
 
 export async function getStaticPaths() {
@@ -58,20 +59,27 @@ const schema = {
   {featuredArticle && (
     <div class="featured-section">
       <div class="featured-inner">
-        <div class="section-label">Featured Playbook</div>
+        <div class="featured-eyebrow">Featured Playbook</div>
         <div class="featured-card">
           <div class="featured-content">
-            <div class="featured-tag">
+            <div>
               <span class="feat-tag-pill">{featuredArticle.data.tags[0]}</span>
+              <h2 class="featured-title">
+                <a href={articleUrl(featuredArticle)}>{featuredArticle.data.title}</a>
+              </h2>
+              <p class="featured-excerpt">{featuredArticle.data.description}</p>
             </div>
-            <h2 class="featured-title">
-              <a href={articleUrl(featuredArticle)}>{featuredArticle.data.title}</a>
-            </h2>
-            <p class="featured-excerpt">{featuredArticle.data.description}</p>
-            <div class="featured-meta">
-              By Chris Linsell · {featuredArticle.data.readTime} min read
+            <div>
+              <div class="featured-meta">
+                <div class="f-author">
+                  <div class="f-avatar">CL</div>
+                  <div class="f-author-name">Chris Linsell</div>
+                </div>
+                <div class="f-sep"></div>
+                <div class="f-pill">{featuredArticle.data.readTime} min read</div>
+              </div>
+              <a href={articleUrl(featuredArticle)} class="featured-cta">Read the Playbook →</a>
             </div>
-            <a href={articleUrl(featuredArticle)} class="featured-cta">Read the Playbook →</a>
           </div>
           <div class="featured-image">
             {featuredArticle.data.heroImage
@@ -119,23 +127,7 @@ const schema = {
   </div>
 
   <!-- NEWSLETTER BAND -->
-  <div class="newsletter-band">
-    <div class="nl-inner">
-      <div class="nl-top">
-        <div class="nl-headline">Build the Business.<br />Run the Play.</div>
-        <div class="nl-sub">One playbook in your inbox every Tuesday. Strategy, scripts, and systems for agents who are serious about building a real business.</div>
-      </div>
-      <div class="nl-stats">
-        <div><div class="nl-stat-num">12,400+</div><div class="nl-stat-label">Agents subscribed</div></div>
-        <div><div class="nl-stat-num">Every Tuesday</div><div class="nl-stat-label">Delivery schedule</div></div>
-        <div><div class="nl-stat-num">Free</div><div class="nl-stat-label">Always</div></div>
-      </div>
-      <div class="nl-form">
-        <input class="nl-input" type="email" placeholder="your@email.com" />
-        <button class="nl-btn">Subscribe to the Newsletter</button>
-      </div>
-    </div>
-  </div>
+  <NewsletterBand />
 </BaseLayout>
 
 <style>
@@ -147,64 +139,79 @@ const schema = {
   }
   .pillar-eyebrow {
     font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
-    color: #333; margin-bottom: 12px;
+    color: #444; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
   }
+  .pillar-eyebrow::before { content: ''; width: 24px; height: 2px; background: #333; display: inline-block; }
   .pillar-name {
     font-family: 'Bebas Neue', cursive; font-size: 100px; line-height: 0.88;
-    letter-spacing: 0.02em; color: var(--white); margin-bottom: 20px;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 24px;
   }
   .pillar-desc {
-    font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.6;
-    color: #666; font-style: italic; max-width: 560px; margin-bottom: 20px;
+    font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.65;
+    color: #777; font-style: italic; max-width: 720px; margin-bottom: 28px;
   }
   .pillar-count {
-    font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.12em;
-    color: var(--yellow); background: rgba(255,209,0,0.1);
-    border: 1px solid rgba(255,209,0,0.2); padding: 4px 14px;
+    font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.15em;
+    color: var(--black); background: var(--yellow); padding: 4px 14px;
   }
 
   /* FEATURED */
-  .featured-section { background: var(--white); border-bottom: 1px solid var(--rule); }
+  .featured-section { background: #0d0d0d; border-top: 1px solid #1a1a1a; }
   .featured-inner { max-width: 1280px; margin: 0 auto; padding: 48px 40px; }
+  .featured-eyebrow {
+    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
+    color: var(--yellow); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .featured-eyebrow::after { content: ''; flex: 0 0 40px; height: 2px; background: var(--yellow); }
   .featured-card {
     display: grid; grid-template-columns: 1fr 480px; gap: 0;
-    border-top: 4px solid var(--yellow);
-    border: 1px solid var(--rule); border-top: 4px solid var(--yellow);
-    margin-top: 20px;
+    background: var(--black); border-top: 4px solid var(--yellow);
   }
   .featured-content {
-    padding: 36px; border-right: 1px solid var(--rule);
-    display: flex; flex-direction: column;
+    padding: 40px 44px; display: flex; flex-direction: column;
+    justify-content: space-between;
   }
   .feat-tag-pill {
-    font-family: 'Bebas Neue', cursive; font-size: 10px; letter-spacing: 0.18em;
-    color: var(--yellow); background: var(--black); padding: 2px 10px;
-    display: inline-block; margin-bottom: 16px;
+    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
+    color: var(--black); background: var(--yellow); padding: 3px 10px;
+    display: inline-block; width: fit-content; margin-bottom: 16px;
   }
   .featured-title {
-    font-family: 'Bebas Neue', cursive; font-size: 44px; line-height: 0.92;
-    letter-spacing: 0.02em; color: var(--black); margin-bottom: 14px;
+    font-family: 'Bebas Neue', cursive; font-size: 52px; line-height: 0.92;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 18px;
   }
   .featured-title a { color: inherit; text-decoration: none; transition: color 0.12s; }
   .featured-title a:hover { color: var(--yellow); }
   .featured-excerpt {
-    font-size: 15px; line-height: 1.7; color: var(--charcoal);
-    margin-bottom: 16px; flex: 1;
+    font-size: 16px; line-height: 1.65; color: #888; font-style: italic;
+    margin-bottom: 28px; flex: 1;
   }
   .featured-meta {
-    font-family: 'Inter', sans-serif; font-size: 11px; color: var(--gray);
-    margin-bottom: 24px;
+    font-family: 'Inter', sans-serif; font-size: 12px; color: #555;
+    margin-bottom: 28px; display: flex; align-items: center; gap: 16px;
   }
+  .f-avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', cursive; font-size: 13px; color: var(--black);
+    flex-shrink: 0;
+  }
+  .f-author { display: flex; align-items: center; gap: 10px; }
+  .f-author-name { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: var(--white); }
+  .f-sep { width: 1px; height: 20px; background: #2a2a2a; }
+  .f-pill { font-family: 'Inter', sans-serif; font-size: 12px; color: #555; }
   .featured-cta {
-    font-family: 'Bebas Neue', cursive; font-size: 15px; letter-spacing: 0.08em;
-    color: var(--black); border-bottom: 2px solid var(--yellow);
-    padding-bottom: 2px; text-decoration: none; align-self: flex-start;
-    transition: color 0.12s;
+    font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 0.1em;
+    background: var(--yellow); color: var(--black); padding: 12px 28px;
+    display: inline-flex; align-items: center; gap: 10px;
+    text-decoration: none; width: fit-content; transition: background 0.15s;
   }
-  .featured-cta:hover { color: var(--yellow); border-bottom-color: transparent; }
-  .featured-image { overflow: hidden; }
-  .featured-image img { width: 100%; height: 100%; object-fit: cover; }
-  .featured-image-placeholder { width: 100%; height: 100%; min-height: 300px; background: #1a1a1a; }
+  .featured-cta:hover { background: #e8be00; }
+  .featured-image { overflow: hidden; min-height: 380px; position: relative; background: #1a2a1a; }
+  .featured-image img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+  .featured-image-placeholder { width: 100%; height: 100%; min-height: 380px; background: linear-gradient(135deg, #1a2a1a 0%, #2a3a2a 100%); }
 
   /* CATALOG */
   .catalog-section { background: var(--off-white); }

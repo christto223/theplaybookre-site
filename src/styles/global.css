@@ -30,12 +30,14 @@ button { font-family: inherit; cursor: pointer; }
 /* These styles render the markdown content inside article pages */
 .prose h2 {
   font-family: 'Bebas Neue', cursive;
-  font-size: 36px;
-  line-height: 0.95;
+  font-size: 38px;
+  line-height: 1;
   letter-spacing: 0.02em;
   color: var(--black);
-  margin: 48px 0 16px;
-  padding-top: 8px;
+  margin-top: 56px;
+  margin-bottom: 20px;
+  padding-left: 18px;
+  border-left: 4px solid var(--yellow);
 }
 .prose h3 {
   font-family: 'Bebas Neue', cursive;
