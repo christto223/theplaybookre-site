@@ -32,24 +32,26 @@ const { activePillar } = Astro.props;
     margin: 0 auto;
     padding: 0 40px;
     display: flex;
+    justify-content: space-between;
     gap: 0;
-    white-space: nowrap;
   }
   .pillar-pill {
     font-family: 'Bebas Neue', cursive;
     font-size: 13px;
     letter-spacing: 0.1em;
-    color: rgba(0, 0, 0, 0.55);
+    color: var(--black);
     padding: 12px 18px;
     white-space: nowrap;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    flex: 1;
     transition: color 0.15s, background 0.15s;
   }
   .pillar-pill:hover {
     color: var(--black);
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.1);
   }
   .pillar-pill.active {
     background: var(--black);
