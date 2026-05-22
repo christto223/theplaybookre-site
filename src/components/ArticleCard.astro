@@ -1,0 +1,157 @@
+---
+import { getPillarName } from '../data/pillars';
+
+interface Props {
+  title: string;
+  description: string;
+  pillar: string;
+  primaryTag: string;
+  readTime: number;
+  slug: string;        // full slug: "lead-generation/cold-calling-from-zero"
+  heroImage?: string;
+  accentWord?: string;
+}
+
+const { title, description, pillar, primaryTag, readTime, slug, heroImage, accentWord } = Astro.props;
+
+// Build URL: /lead-generation/cold-calling-from-zero/
+const url = `/${slug}/`;
+
+// Accent word in title
+function accentTitle(title: string, word?: string): string {
+  if (!word) return title;
+  return title.replace(word, `<em>${word}</em>`);
+}
+
+// Placeholder colors by pillar
+const pillarColors: Record<string, string> = {
+  'lead-generation':         '#1a1a1a',
+  'marketing-and-branding':  '#1c1a0e',
+  'sales-skills-and-scripts':'#0e1a1a',
+  'business-systems':        '#0e0e1a',
+  'ai-and-technology':       '#0a1a12',
+  'mindset-and-performance': '#1a0e0e',
+  'growth-and-scaling':      '#1a140e',
+  'the-fundamentals':        '#131318',
+};
+const cardBg = pillarColors[pillar] ?? '#1a1a1a';
+---
+
+<article class="article-card">
+  <a href={url} class="card-image-wrap">
+    {heroImage
+      ? <img src={`/images/${heroImage}`} alt={title} loading="lazy" />
+      : <div class="card-image-placeholder" style={`background:${cardBg}`}></div>
+    }
+  </a>
+  <div class="card-body">
+    <div class="card-tag">
+      <a href={`/${pillar}/`}>{primaryTag}</a>
+    </div>
+    <h2 class="card-title">
+      <a href={url} set:html={accentTitle(title, accentWord)} />
+    </h2>
+    <p class="card-excerpt">{description}</p>
+    <div class="card-footer">
+      <span class="card-byline">By Chris Linsell · {readTime} min read</span>
+      <a href={url} class="card-read">Read →</a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .article-card {
+    background: var(--white);
+    border-top: 3px solid var(--yellow);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.12s;
+  }
+  .article-card:hover { transform: translateY(-2px); }
+
+  .card-image-wrap {
+    display: block;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+  .card-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .article-card:hover .card-image-wrap img { transform: scale(1.03); }
+  .card-image-placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  .card-body {
+    padding: 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .card-tag {
+    margin-bottom: 10px;
+  }
+  .card-tag a {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--yellow);
+    background: var(--black);
+    padding: 2px 8px;
+    text-decoration: none;
+  }
+  .card-tag a:hover { background: #222; }
+
+  .card-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 24px;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+  }
+  .card-title a {
+    color: var(--black);
+    text-decoration: none;
+    transition: color 0.12s;
+  }
+  .card-title a:hover { color: var(--yellow); }
+  .card-title :global(em) { color: var(--yellow); font-style: normal; }
+
+  .card-excerpt {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--gray);
+    margin-bottom: 16px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+  }
+  .card-byline {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--gray);
+  }
+  .card-read {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--black);
+    text-decoration: none;
+    transition: color 0.12s;
+  }
+  .card-read:hover { color: var(--yellow); }
+</style>

@@ -1,0 +1,310 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import PillarStrip from '../components/PillarStrip.astro';
+import { PILLARS } from '../data/pillars';
+
+const allArticles = await getCollection('articles', ({ data }) => !data.draft);
+const sorted = allArticles.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+// Homepage featured = first article with featured:true, else most recent
+const featured = sorted.find(a => a.data.featured) ?? sorted[0];
+// Latest 3 (excluding featured)
+const latest = sorted.filter(a => a.id !== featured?.id).slice(0, 3);
+// Most read = next 8 (placeholder — will be replaced with GA4 data)
+const mostRead = sorted.filter(a => a.id !== featured?.id && !latest.includes(a)).slice(0, 8);
+
+function articleUrl(article: typeof allArticles[0]) {
+  const parts = article.id.split('/');
+  return `/${parts[0]}/${parts.slice(1).join('/')}/`;
+}
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "The Playbook RE",
+    "url": "https://theplaybookre.com",
+    "description": "Strategy and systems for real estate agents who are serious about building a real business.",
+    "author": { "@type": "Person", "name": "Chris Linsell" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Chris Linsell",
+    "jobTitle": "Chief Marketing Officer",
+    "worksFor": { "@type": "Organization", "name": "The Mitten Group" },
+    "url": "https://chrislinsell.com",
+  }
+];
+---
+
+<BaseLayout
+  title="The Playbook RE — Real Estate Strategy You Can Actually Use"
+  description="Strategy, scripts, and systems for real estate agents who are serious about building a real business. Written by Chris Linsell, CMO of The Mitten Group."
+  schema={schema}
+>
+  <!-- PILLAR STRIP -->
+  <PillarStrip />
+
+  <!-- HOMEPAGE HERO -->
+  <div class="home-hero">
+    <div class="home-hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow">The Playbook RE</div>
+        <h1 class="hero-h1">
+          Real Estate<br />Strategy You<br /><em>Actually</em> Use.
+        </h1>
+        <p class="hero-sub">
+          The real estate industry deserves better strategy content than what it has.
+          No coaching upsells. No vendor agendas. Just the playbook — written by someone
+          who has actually done the work.
+        </p>
+        <div class="hero-ctas">
+          <a href="/start-here/" class="hero-cta-primary">Find Your Starting Point →</a>
+          <a href="/toolkit/" class="hero-cta-secondary">Browse the Toolkit</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-stat-row">
+          <div class="hero-stat">
+            <div class="hero-stat-num">{allArticles.length}</div>
+            <div class="hero-stat-label">Playbooks published</div>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">8</div>
+            <div class="hero-stat-label">Topic areas</div>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">12,400+</div>
+            <div class="hero-stat-label">Agents reading weekly</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED ARTICLE -->
+  {featured && (
+    <div class="home-featured">
+      <div class="home-featured-inner">
+        <div class="section-label light">Featured Playbook</div>
+        <div class="featured-card">
+          <div class="featured-content">
+            <span class="feat-pillar-tag">{featured.data.tags[0]}</span>
+            <h2 class="feat-title"><a href={articleUrl(featured)}>{featured.data.title}</a></h2>
+            <p class="feat-excerpt">{featured.data.description}</p>
+            <div class="feat-meta">By Chris Linsell · {featured.data.readTime} min read</div>
+            <a href={articleUrl(featured)} class="feat-cta">Read the Playbook →</a>
+          </div>
+          <div class="featured-image">
+            {featured.data.heroImage
+              ? <img src={`/images/${featured.data.heroImage}`} alt={featured.data.title} />
+              : <div class="featured-image-placeholder"></div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- LATEST PLAYBOOKS -->
+  {latest.length > 0 && (
+    <div class="home-section">
+      <div class="home-section-inner">
+        <div class="home-section-head">
+          <div class="section-label">Latest Playbooks</div>
+        </div>
+        <div class="article-grid-3">
+          {latest.map(article => (
+            <ArticleCard
+              title={article.data.title}
+              description={article.data.description}
+              pillar={article.data.pillar}
+              primaryTag={article.data.tags[0] ?? ''}
+              readTime={article.data.readTime}
+              slug={article.id}
+              heroImage={article.data.heroImage}
+              accentWord={article.data.accentWord}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- PILLAR GRID -->
+  <div class="home-pillars">
+    <div class="home-pillars-inner">
+      <div class="section-label">Browse by Topic</div>
+      <div class="pillars-grid">
+        {PILLARS.map(p => (
+          <a href={`/${p.slug}/`} class="pillar-tile">
+            <div class="pillar-tile-name">{p.name}</div>
+            <div class="pillar-tile-desc">{p.description}</div>
+            <div class="pillar-tile-link">Browse →</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- MOST READ -->
+  {mostRead.length > 0 && (
+    <div class="home-section home-section--white">
+      <div class="home-section-inner">
+        <div class="home-section-head">
+          <div class="section-label">Most Popular Playbooks</div>
+        </div>
+        <div class="article-grid-4">
+          {mostRead.map(article => (
+            <ArticleCard
+              title={article.data.title}
+              description={article.data.description}
+              pillar={article.data.pillar}
+              primaryTag={article.data.tags[0] ?? ''}
+              readTime={article.data.readTime}
+              slug={article.id}
+              heroImage={article.data.heroImage}
+              accentWord={article.data.accentWord}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- NEWSLETTER BAND -->
+  <div class="newsletter-band">
+    <div class="nl-inner">
+      <div class="nl-top">
+        <div class="nl-headline">Build the Business.<br />Run the Play.</div>
+        <div class="nl-sub">One playbook in your inbox every Tuesday. Strategy, scripts, and systems for agents who are serious about building a real business.</div>
+      </div>
+      <div class="nl-stats">
+        <div><div class="nl-stat-num">12,400+</div><div class="nl-stat-label">Agents subscribed</div></div>
+        <div><div class="nl-stat-num">Every Tuesday</div><div class="nl-stat-label">Delivery schedule</div></div>
+        <div><div class="nl-stat-num">Free</div><div class="nl-stat-label">Always</div></div>
+      </div>
+      <div class="nl-form">
+        <input class="nl-input" type="email" placeholder="your@email.com" />
+        <button class="nl-btn">Subscribe to the Newsletter</button>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .home-hero { background: var(--black); }
+  .home-hero-inner {
+    max-width: 1280px; margin: 0 auto; padding: 72px 40px 64px;
+    display: grid; grid-template-columns: 1fr 340px; gap: 80px; align-items: end;
+  }
+  .hero-eyebrow {
+    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
+    color: #333; margin-bottom: 16px;
+  }
+  .hero-h1 {
+    font-family: 'Bebas Neue', cursive; font-size: 96px; line-height: 0.88;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 24px;
+  }
+  .hero-h1 em { color: var(--yellow); font-style: normal; }
+  .hero-sub {
+    font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.65;
+    color: #666; font-style: italic; max-width: 520px; margin-bottom: 32px;
+  }
+  .hero-ctas { display: flex; gap: 16px; align-items: center; }
+  .hero-cta-primary {
+    font-family: 'Bebas Neue', cursive; font-size: 17px; letter-spacing: 0.08em;
+    background: var(--yellow); color: var(--black); padding: 14px 28px;
+    text-decoration: none; transition: background 0.12s;
+  }
+  .hero-cta-primary:hover { background: #e8be00; }
+  .hero-cta-secondary {
+    font-family: 'Bebas Neue', cursive; font-size: 14px; letter-spacing: 0.08em;
+    color: #666; text-decoration: none; border-bottom: 1px solid #333;
+    padding-bottom: 2px; transition: color 0.12s, border-color 0.12s;
+  }
+  .hero-cta-secondary:hover { color: var(--yellow); border-color: var(--yellow); }
+  .hero-right { padding-bottom: 8px; }
+  .hero-stat-row { display: flex; flex-direction: column; gap: 20px; }
+  .hero-stat-num {
+    font-family: 'Bebas Neue', cursive; font-size: 44px; line-height: 0.9;
+    color: var(--yellow); letter-spacing: 0.02em;
+  }
+  .hero-stat-label {
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: #333; margin-top: 4px;
+  }
+  .hero-stat-divider { width: 40px; height: 1px; background: #1e1e1e; }
+
+  /* FEATURED */
+  .home-featured { background: var(--white); border-bottom: 1px solid var(--rule); }
+  .home-featured-inner { max-width: 1280px; margin: 0 auto; padding: 48px 40px; }
+  .featured-card {
+    display: grid; grid-template-columns: 1fr 480px; margin-top: 20px;
+    border: 1px solid var(--rule); border-top: 4px solid var(--yellow);
+  }
+  .featured-content {
+    padding: 40px; border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column;
+  }
+  .feat-pillar-tag {
+    font-family: 'Bebas Neue', cursive; font-size: 10px; letter-spacing: 0.18em;
+    color: var(--yellow); background: var(--black); padding: 2px 10px;
+    display: inline-block; margin-bottom: 16px;
+  }
+  .feat-title {
+    font-family: 'Bebas Neue', cursive; font-size: 48px; line-height: 0.9;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 16px;
+  }
+  .feat-title a { color: inherit; text-decoration: none; transition: color 0.12s; }
+  .feat-title a:hover { color: var(--yellow); }
+  .feat-excerpt { font-size: 15px; line-height: 1.7; color: var(--charcoal); margin-bottom: 16px; flex: 1; }
+  .feat-meta { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--gray); margin-bottom: 24px; }
+  .feat-cta {
+    font-family: 'Bebas Neue', cursive; font-size: 15px; letter-spacing: 0.08em;
+    color: var(--black); border-bottom: 2px solid var(--yellow); padding-bottom: 2px;
+    text-decoration: none; align-self: flex-start; transition: color 0.12s;
+  }
+  .feat-cta:hover { color: var(--yellow); border-bottom-color: transparent; }
+  .featured-image { overflow: hidden; }
+  .featured-image img { width: 100%; height: 100%; object-fit: cover; }
+  .featured-image-placeholder { width: 100%; height: 100%; min-height: 320px; background: #1a1a1a; }
+
+  /* SECTIONS */
+  .home-section { background: var(--off-white); }
+  .home-section--white { background: var(--white); }
+  .home-section-inner { max-width: 1280px; margin: 0 auto; padding: 56px 40px; }
+  .home-section-head { margin-bottom: 24px; }
+  .article-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--rule); }
+  .article-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--rule); }
+
+  /* PILLARS */
+  .home-pillars { background: var(--black); }
+  .home-pillars-inner { max-width: 1280px; margin: 0 auto; padding: 56px 40px; }
+  .home-pillars-inner .section-label { margin-bottom: 24px; }
+  .pillars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #1a1a1a; }
+  .pillar-tile {
+    background: #0d0d0d; padding: 28px;
+    text-decoration: none; display: flex; flex-direction: column;
+    transition: background 0.12s;
+  }
+  .pillar-tile:hover { background: #161616; }
+  .pillar-tile:hover .pillar-tile-name { color: var(--yellow); }
+  .pillar-tile-name {
+    font-family: 'Bebas Neue', cursive; font-size: 26px; line-height: 0.95;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 10px;
+    transition: color 0.15s;
+  }
+  .pillar-tile-desc { font-family: 'Inter', sans-serif; font-size: 12px; color: #888; line-height: 1.6; flex: 1; }
+  .pillar-tile-link {
+    font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 0.1em;
+    color: #555; margin-top: 16px; transition: color 0.12s;
+  }
+  .pillar-tile:hover .pillar-tile-link { color: var(--yellow); }
+</style>

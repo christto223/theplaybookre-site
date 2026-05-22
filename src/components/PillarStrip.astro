@@ -1,0 +1,59 @@
+---
+import { PILLARS } from '../data/pillars';
+
+interface Props {
+  activePillar?: string;
+}
+const { activePillar } = Astro.props;
+---
+
+<nav class="pillar-strip" aria-label="Topic navigation">
+  <div class="pillar-strip-inner">
+    {PILLARS.map(p => (
+      <a
+        href={`/${p.slug}/`}
+        class:list={['pillar-pill', { active: p.slug === activePillar }]}
+      >
+        {p.shortName}
+      </a>
+    ))}
+  </div>
+</nav>
+
+<style>
+  .pillar-strip {
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pillar-strip-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+  }
+  .pillar-pill {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--charcoal);
+    padding: 14px 20px;
+    white-space: nowrap;
+    text-decoration: none;
+    border-right: 1px solid var(--rule);
+    transition: color 0.12s, background 0.12s;
+  }
+  .pillar-pill:first-child { border-left: 1px solid var(--rule); }
+  .pillar-pill:hover {
+    color: var(--black);
+    background: var(--off-white);
+  }
+  .pillar-pill.active {
+    background: var(--black);
+    color: var(--yellow);
+    border-color: var(--black);
+  }
+</style>

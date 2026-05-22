@@ -1,0 +1,64 @@
+---
+import { PILLARS } from '../data/pillars';
+const topicsPillars = PILLARS.slice(0, 4);
+const morePillars   = PILLARS.slice(4);
+---
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">THE <span>PLAYBOOK</span> RE</div>
+        <div class="footer-tagline">
+          Strategy and systems for real estate agents who are serious about
+          building a real business. No coaching upsells. No vendor agendas.
+          Just the playbook.
+        </div>
+        <div class="footer-social">
+          <div class="social-dot">X</div>
+          <div class="social-dot">IN</div>
+          <div class="social-dot">IG</div>
+          <div class="social-dot">YT</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-head">Topics</div>
+        <ul class="footer-links">
+          {topicsPillars.map(p => (
+            <li><a href={`/${p.slug}/`}>{p.name}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-head">&nbsp;</div>
+        <ul class="footer-links">
+          {morePillars.map(p => (
+            <li><a href={`/${p.slug}/`}>{p.name}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-head">The Playbook</div>
+        <ul class="footer-links">
+          <li><a href="/about/">About</a></li>
+          <li><a href="/start-here/">Start Here</a></li>
+          <li><a href="/toolkit/">The Toolkit</a></li>
+          <li><a href="/start-here/#newsletter">Newsletter</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy">
+        © {new Date().getFullYear()} The Playbook RE · <span>theplaybookre.com</span>
+      </div>
+      <ul class="footer-legal">
+        <li><a href="/privacy/">Privacy Policy</a></li>
+        <li><a href="/terms/">Terms of Use</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

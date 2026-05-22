@@ -1,0 +1,120 @@
+---
+interface Props {
+  activeNav?: 'start-here' | 'toolkit' | 'about';
+}
+const { activeNav } = Astro.props;
+---
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <a href="/" class="logo">
+      <span class="logo-the">THE</span>
+      <span class="logo-main">PLAYBOOK</span>
+      <span class="logo-re">RE</span>
+    </a>
+    <ul class="masthead-nav">
+      <li class:list={[{ 'nav-active': activeNav === 'start-here' }]}>
+        <a href="/start-here/">Start Here</a>
+      </li>
+      <li class:list={[{ 'nav-active': activeNav === 'toolkit' }]}>
+        <a href="/toolkit/">The Toolkit</a>
+      </li>
+      <li class:list={[{ 'nav-active': activeNav === 'about' }]}>
+        <a href="/about/">About</a>
+      </li>
+      <li class="nav-search" aria-label="Search">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="10.4" y1="10.4" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </li>
+      <li class="nav-cta"><a href="/start-here/#newsletter">Get the Newsletter</a></li>
+    </ul>
+  </div>
+</header>
+
+<style>
+  .masthead {
+    background: var(--black);
+    border-bottom: 4px solid var(--yellow);
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+  .masthead-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 40px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .logo {
+    font-family: 'Bebas Neue', cursive;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .logo-the  { color: var(--yellow); font-size: 16px; letter-spacing: 0.15em; }
+  .logo-main { color: var(--white);  font-size: 30px; letter-spacing: 0.04em; }
+  .logo-re   { color: var(--yellow); font-size: 16px; letter-spacing: 0.15em; }
+
+  .masthead-nav {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    align-items: center;
+  }
+  .masthead-nav li a,
+  .masthead-nav li {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #999;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .masthead-nav li:hover > a,
+  .masthead-nav li:hover {
+    color: var(--yellow);
+  }
+  .masthead-nav .nav-active > a,
+  .masthead-nav .nav-active {
+    color: var(--yellow);
+  }
+  .masthead-nav .nav-search {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    cursor: pointer;
+  }
+  .masthead-nav .nav-search:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+  .masthead-nav .nav-cta {
+    background: var(--yellow);
+    padding: 8px 20px;
+  }
+  .masthead-nav .nav-cta a {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 15px;
+    letter-spacing: 0.09em;
+    color: var(--black) !important;
+  }
+  .masthead-nav .nav-cta:hover {
+    background: #e8be00;
+  }
+</style>

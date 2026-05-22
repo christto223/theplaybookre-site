@@ -1,0 +1,306 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PILLARS } from '../data/pillars';
+---
+
+<BaseLayout
+  title="Start Here — Find Your Starting Point"
+  description="Not sure where to start? Pick where you are in your real estate career and we'll show you exactly which playbooks to read first."
+  activeNav="start-here"
+>
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="hero-inner">
+      <span class="hero-eyebrow">Welcome to The Playbook RE</span>
+      <h1 class="hero-h1">Find Your <em>Starting</em> Point.</h1>
+      <p class="hero-sub">There's a lot of content here. Most of it isn't for you right now — and that's fine. Tell me where you are in your career and I'll show you where to start.</p>
+      <div class="hero-stage-row">
+        <a href="#new-agent" class="hero-stage-chip"><span class="chip-num">01</span> New Agent</a>
+        <a href="#established-agent" class="hero-stage-chip"><span class="chip-num">02</span> Established Agent</a>
+        <a href="#scaling-agent" class="hero-stage-chip"><span class="chip-num">03</span> Scaling Agent</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE 3 PATHS -->
+  <div class="paths-section">
+    <div class="paths-inner">
+      <div class="paths-intro-row">
+        <div>
+          <div class="section-label">Your Starting Point</div>
+          <h2 class="paths-h2">Which of These Sounds Like You?</h2>
+        </div>
+        <div class="paths-intro-right">
+          <p>One thing I hear from new readers constantly is: <strong>"I don't know where to start."</strong> That's a legitimate problem. The Playbook isn't a listicle site — it's a deep catalog of strategy built for agents at different stages. Use the paths below to skip straight to what applies to you right now.</p>
+        </div>
+      </div>
+
+      <div class="paths-grid">
+        <!-- PATH 1 -->
+        <div class="path-card" id="new-agent">
+          <div class="path-num-badge">01</div>
+          <span class="path-stage-label">0 – 2 Years</span>
+          <div class="path-name">The New Agent</div>
+          <p class="path-desc">You're here if you're trying to figure out what's real and what's noise. You've got your license and you're working, but you don't have a system yet — and you know it. You're looking for a foundation that actually holds.</p>
+          <hr class="path-divider" />
+          <span class="path-reads-label">Where to Start</span>
+          <div class="path-articles">
+            <a href="/the-fundamentals/your-first-90-days/" class="path-article">
+              <div class="path-article-pillar">The Fundamentals</div>
+              <div class="path-article-title">Your First 90 Days: The Only Plan You Actually Need</div>
+            </a>
+            <a href="/lead-generation/cold-calling-from-zero/" class="path-article">
+              <div class="path-article-pillar">Lead Generation</div>
+              <div class="path-article-title">Cold Calling From Zero: How to Build Your First Pipeline</div>
+            </a>
+            <a href="/mindset-and-performance/the-mindset-shift/" class="path-article">
+              <div class="path-article-pillar">Mindset & Performance</div>
+              <div class="path-article-title">The Mindset Shift That Separates Agents Who Last</div>
+            </a>
+          </div>
+          <button class="path-sequence-btn" data-stage="new">Start the New Agent Series →</button>
+        </div>
+
+        <!-- PATH 2 -->
+        <div class="path-card" id="established-agent">
+          <div class="path-num-badge">02</div>
+          <span class="path-stage-label">Producing but Plateaued</span>
+          <div class="path-name">The Established Agent</div>
+          <p class="path-desc">You're here if you're producing but feel like it shouldn't be this hard. You're making deals happen, but it's mostly hustle — not system. You want more consistency and less chaos in how you run your business.</p>
+          <hr class="path-divider" />
+          <span class="path-reads-label">Where to Start</span>
+          <div class="path-articles">
+            <a href="/lead-generation/cold-calling-from-zero/" class="path-article">
+              <div class="path-article-pillar">Lead Generation</div>
+              <div class="path-article-title">The 12-Month Cold Calling System That Actually Works</div>
+            </a>
+            <a href="/business-systems/crm-setup-for-agents/" class="path-article">
+              <div class="path-article-pillar">Business Systems</div>
+              <div class="path-article-title">The CRM Setup That Keeps Your Pipeline From Leaking</div>
+            </a>
+            <a href="/sales-skills-and-scripts/why-your-conversion-rate-stalls/" class="path-article">
+              <div class="path-article-pillar">Sales Skills & Scripts</div>
+              <div class="path-article-title">Why Your Conversion Rate Is Stalling (And How to Fix It)</div>
+            </a>
+          </div>
+          <button class="path-sequence-btn" data-stage="established">Start the Established Agent Series →</button>
+        </div>
+
+        <!-- PATH 3 -->
+        <div class="path-card" id="scaling-agent">
+          <div class="path-num-badge">03</div>
+          <span class="path-stage-label">Building Beyond Yourself</span>
+          <div class="path-name">The Scaling Agent</div>
+          <p class="path-desc">You're here if you've built something real and you're trying to figure out how to grow without grinding harder. The next level isn't about doing more — it's about building a system that runs whether you're in the room or not.</p>
+          <hr class="path-divider" />
+          <span class="path-reads-label">Where to Start</span>
+          <div class="path-articles">
+            <a href="/growth-and-scaling/when-to-hire-your-first-assistant/" class="path-article">
+              <div class="path-article-pillar">Growth & Scaling</div>
+              <div class="path-article-title">When to Hire Your First Assistant (And What to Do First)</div>
+            </a>
+            <a href="/business-systems/operating-system-for-a-producing-business/" class="path-article">
+              <div class="path-article-pillar">Business Systems</div>
+              <div class="path-article-title">The Operating System for a 7-Figure Real Estate Business</div>
+            </a>
+            <a href="/ai-and-technology/the-ai-stack-for-agents/" class="path-article">
+              <div class="path-article-pillar">AI & Technology</div>
+              <div class="path-article-title">The AI Stack Every Scaling Agent Should Be Running Right Now</div>
+            </a>
+          </div>
+          <button class="path-sequence-btn" data-stage="scaling">Start the Scaling Agent Series →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BROWSE BY TOPIC -->
+  <div class="pillars-section">
+    <div class="pillars-inner">
+      <div class="pillars-head-row">
+        <div>
+          <div class="section-label">All 8 Topics</div>
+          <h2 class="pillars-h2">Or Browse by <em>Topic</em>.</h2>
+        </div>
+        <p class="pillars-intro">Already know what you're looking for? Every playbook on this site lives inside one of eight topic areas.</p>
+      </div>
+      <div class="pillars-grid">
+        {PILLARS.map(p => (
+          <a href={`/${p.slug}/`} class="pillar-tile">
+            <div class="pillar-tile-name">{p.name}</div>
+            <div class="pillar-tile-desc">{p.description}</div>
+            <div class="pillar-tile-link">Browse Playbooks</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER BAND -->
+  <div class="newsletter-band" id="newsletter">
+    <div class="nl-inner">
+      <div class="nl-top">
+        <div class="nl-headline">Build the Business.<br />Run the Play.</div>
+        <div class="nl-sub">One playbook in your inbox every Tuesday. Strategy, scripts, and systems for agents who are serious about building a real business.</div>
+      </div>
+      <div class="nl-stats">
+        <div><div class="nl-stat-num">12,400+</div><div class="nl-stat-label">Agents subscribed</div></div>
+        <div><div class="nl-stat-num">Every Tuesday</div><div class="nl-stat-label">Delivery schedule</div></div>
+        <div><div class="nl-stat-num">Free</div><div class="nl-stat-label">Always</div></div>
+      </div>
+      <div class="nl-form">
+        <input class="nl-input" type="email" placeholder="your@email.com" />
+        <button class="nl-btn">Subscribe to the Newsletter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEQUENCE MODAL -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <button class="modal-close" id="modal-close">×</button>
+      <div class="modal-badge" id="modal-badge">01</div>
+      <div class="modal-stage" id="modal-stage">THE NEW AGENT</div>
+      <div class="modal-headline" id="modal-headline">Start Your New Agent Series</div>
+      <p class="modal-desc" id="modal-desc"></p>
+      <hr class="modal-divider" />
+      <span class="modal-form-label">Enter your email and we'll send it right over</span>
+      <div class="modal-form">
+        <input type="email" class="modal-input" id="modal-email" placeholder="your@email.com" />
+        <button class="modal-submit" id="modal-submit">Send Me This →</button>
+      </div>
+      <p class="modal-fine">Free. Delivered to your inbox. No spam — ever.</p>
+      <div class="modal-confirm" id="modal-confirm">
+        <div class="modal-confirm-icon">✓</div>
+        <div class="modal-confirm-title">On its way.</div>
+        <p class="modal-confirm-text">Check your inbox in the next few minutes.</p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .page-hero { background: var(--black); }
+  .hero-inner { max-width: 800px; margin: 0 auto; padding: 80px 40px 72px; text-align: center; }
+  .hero-eyebrow { font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.22em; color: #444; margin-bottom: 20px; display: block; }
+  .hero-h1 { font-family: 'Bebas Neue', cursive; font-size: 96px; line-height: 0.88; letter-spacing: 0.02em; color: var(--white); margin-bottom: 28px; }
+  .hero-h1 em { color: var(--yellow); font-style: normal; }
+  .hero-sub { font-family: 'DM Sans', sans-serif; font-size: 19px; line-height: 1.7; color: #666; max-width: 540px; margin: 0 auto 44px; }
+  .hero-stage-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .hero-stage-chip { font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.14em; color: #888; border: 1px solid #2c2c2c; padding: 10px 22px; text-decoration: none; display: flex; align-items: center; gap: 10px; transition: border-color 0.15s, color 0.15s; }
+  .hero-stage-chip:hover { border-color: var(--yellow); color: var(--white); }
+  .chip-num { color: var(--yellow); }
+
+  /* PATHS */
+  .paths-section { background: var(--off-white); }
+  .paths-inner { max-width: 1280px; margin: 0 auto; padding: 72px 40px; }
+  .paths-intro-row { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; margin-bottom: 48px; }
+  .paths-h2 { font-family: 'Bebas Neue', cursive; font-size: 52px; line-height: 0.92; letter-spacing: 0.02em; color: var(--black); margin-top: 16px; }
+  .paths-intro-right p { font-size: 16px; line-height: 1.75; color: var(--charcoal); }
+  .paths-intro-right strong { color: var(--black); font-weight: 600; }
+  .paths-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--rule); }
+  .path-card { background: var(--white); border-top: 4px solid var(--yellow); padding: 40px 36px; display: flex; flex-direction: column; }
+  .path-num-badge { font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.08em; background: var(--black); color: var(--yellow); display: inline-block; padding: 3px 10px; margin-bottom: 16px; }
+  .path-stage-label { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 8px; display: block; }
+  .path-name { font-family: 'Bebas Neue', cursive; font-size: 44px; line-height: 0.9; letter-spacing: 0.02em; color: var(--black); margin-bottom: 16px; min-height: 82px; }
+  .path-desc { font-size: 15px; line-height: 1.72; color: var(--charcoal); font-style: italic; border-left: 3px solid var(--rule); padding-left: 16px; margin-bottom: 28px; min-height: 145px; }
+  .path-divider { border: none; border-top: 1px solid var(--rule); margin-bottom: 24px; }
+  .path-reads-label { font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.18em; color: var(--gray); margin-bottom: 16px; display: block; }
+  .path-articles { display: flex; flex-direction: column; flex: 1; }
+  .path-article { border-bottom: 1px solid var(--rule); padding: 14px 0; text-decoration: none; display: block; }
+  .path-article:first-child { border-top: 1px solid var(--rule); }
+  .path-article-pillar { font-family: 'Bebas Neue', cursive; font-size: 10px; letter-spacing: 0.16em; color: var(--yellow); background: var(--black); display: inline-block; padding: 2px 8px; margin-bottom: 6px; }
+  .path-article-title { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--black); line-height: 1.45; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; transition: color 0.15s; }
+  .path-article-title::after { content: '→'; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--rule); flex-shrink: 0; font-size: 13px; }
+  .path-article:hover .path-article-title { color: var(--yellow); }
+  .path-article:hover .path-article-title::after { color: var(--yellow); }
+  .path-sequence-btn { background: var(--black); color: var(--yellow); font-family: 'Bebas Neue', cursive; font-size: 15px; letter-spacing: 0.09em; padding: 16px 24px; text-align: center; border: 1px solid #222; width: 100%; margin-top: 24px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .path-sequence-btn:hover { background: #1e1e1e; border-color: var(--yellow); }
+
+  /* PILLARS */
+  .pillars-section { background: var(--black); }
+  .pillars-inner { max-width: 1280px; margin: 0 auto; padding: 72px 40px; }
+  .pillars-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; margin-bottom: 40px; }
+  .pillars-h2 { font-family: 'Bebas Neue', cursive; font-size: 52px; line-height: 0.92; letter-spacing: 0.02em; color: var(--white); margin-top: 16px; }
+  .pillars-h2 em { color: var(--yellow); font-style: normal; }
+  .pillars-intro { font-size: 15px; line-height: 1.7; color: #666; max-width: 400px; padding-bottom: 6px; }
+  .pillars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #1a1a1a; }
+  .pillar-tile { background: #0d0d0d; padding: 28px; text-decoration: none; display: flex; flex-direction: column; transition: background 0.15s; }
+  .pillar-tile:hover { background: #161616; }
+  .pillar-tile:hover .pillar-tile-name { color: var(--yellow); }
+  .pillar-tile-name { font-family: 'Bebas Neue', cursive; font-size: 28px; line-height: 0.95; letter-spacing: 0.02em; color: var(--white); margin-bottom: 12px; transition: color 0.15s; }
+  .pillar-tile-desc { font-family: 'Inter', sans-serif; font-size: 12px; color: #888; line-height: 1.65; flex: 1; }
+  .pillar-tile-link { font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 0.1em; color: #555; margin-top: 18px; transition: color 0.15s; }
+  .pillar-tile-link::after { content: ' →'; }
+  .pillar-tile:hover .pillar-tile-link { color: var(--yellow); }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; padding: 20px; }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+  .modal { background: var(--white); border-top: 4px solid var(--yellow); max-width: 480px; width: 100%; padding: 40px; position: relative; transform: translateY(12px); transition: transform 0.2s; }
+  .modal-overlay.active .modal { transform: translateY(0); }
+  .modal-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border: 1px solid var(--rule); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-size: 18px; color: var(--gray); line-height: 1; }
+  .modal-close:hover { border-color: var(--black); color: var(--black); }
+  .modal-badge { font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.08em; background: var(--black); color: var(--yellow); display: inline-block; padding: 3px 10px; margin-bottom: 14px; }
+  .modal-stage { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 8px; }
+  .modal-headline { font-family: 'Bebas Neue', cursive; font-size: 40px; line-height: 0.92; letter-spacing: 0.02em; color: var(--black); margin-bottom: 16px; }
+  .modal-desc { font-size: 15px; line-height: 1.72; color: var(--charcoal); margin-bottom: 28px; border-left: 3px solid var(--rule); padding-left: 16px; }
+  .modal-divider { border: none; border-top: 1px solid var(--rule); margin-bottom: 24px; }
+  .modal-form-label { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); margin-bottom: 10px; display: block; }
+  .modal-form { display: flex; margin-bottom: 10px; }
+  .modal-input { flex: 1; background: var(--off-white); border: 1px solid var(--rule); border-right: none; padding: 0 16px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--charcoal); outline: none; height: 48px; }
+  .modal-input:focus { border-color: var(--yellow); }
+  .modal-input::placeholder { color: #bbb; }
+  .modal-submit { background: var(--yellow); color: var(--black); font-family: 'Bebas Neue', cursive; font-size: 15px; letter-spacing: 0.08em; padding: 0 24px; height: 48px; cursor: pointer; border: none; flex-shrink: 0; }
+  .modal-submit:hover { background: #e8be00; }
+  .modal-fine { font-family: 'Inter', sans-serif; font-size: 11px; color: #bbb; }
+  .modal-confirm { display: none; text-align: center; padding: 20px 0; }
+  .modal-confirm.active { display: block; }
+  .modal-confirm-icon { width: 52px; height: 52px; background: var(--yellow); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 22px; }
+  .modal-confirm-title { font-family: 'Bebas Neue', cursive; font-size: 32px; letter-spacing: 0.02em; color: var(--black); margin-bottom: 10px; }
+  .modal-confirm-text { font-size: 15px; line-height: 1.65; color: var(--charcoal); }
+</style>
+
+<script>
+  const sequences: Record<string, { badge: string; stage: string; headline: string; desc: string }> = {
+    new: { badge: '01', stage: 'THE NEW AGENT', headline: 'Start Your New Agent Series', desc: "We'll send you the essential playbooks every new agent needs — one at a time, with specific action items after each one. No overwhelm. Just the right content at the right time." },
+    established: { badge: '02', stage: 'THE ESTABLISHED AGENT', headline: 'Start Your Established Agent Series', desc: "We'll send you the playbooks that break through plateaus and build real systems — focused on conversion, consistency, and getting more from the work you're already doing." },
+    scaling: { badge: '03', stage: 'THE SCALING AGENT', headline: 'Start Your Scaling Agent Series', desc: "We'll send you the playbooks that scale beyond hustle — delegation frameworks, hiring playbooks, and the operating systems that run at 7 figures and beyond." },
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('.path-sequence-btn').forEach(btn => {
+    btn.addEventListener('click', () => openModal(btn.dataset.stage ?? 'new'));
+  });
+
+  function openModal(type: string) {
+    const d = sequences[type] ?? sequences.new!;
+    (document.getElementById('modal-badge')  as HTMLElement).textContent = d.badge;
+    (document.getElementById('modal-stage')  as HTMLElement).textContent = d.stage;
+    (document.getElementById('modal-headline') as HTMLElement).textContent = d.headline;
+    (document.getElementById('modal-desc')   as HTMLElement).textContent = d.desc;
+    (document.getElementById('modal-confirm') as HTMLElement).classList.remove('active');
+    (document.getElementById('modal-overlay') as HTMLElement).classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => (document.getElementById('modal-email') as HTMLInputElement)?.focus(), 250);
+  }
+
+  document.getElementById('modal-close')?.addEventListener('click', closeModal);
+  document.getElementById('modal-overlay')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
+  document.getElementById('modal-submit')?.addEventListener('click', submitModal);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  function submitModal() {
+    const email = (document.getElementById('modal-email') as HTMLInputElement)?.value ?? '';
+    if (!email || !email.includes('@')) return;
+    (document.getElementById('modal-desc')?.closest('.modal') as HTMLElement)
+      ?.querySelectorAll<HTMLElement>(':not(.modal-confirm):not(.modal-close)')
+      .forEach(el => el.style.display = 'none');
+    (document.getElementById('modal-confirm') as HTMLElement).classList.add('active');
+  }
+
+  function closeModal() {
+    (document.getElementById('modal-overlay') as HTMLElement).classList.remove('active');
+    document.body.style.overflow = '';
+  }
+</script>

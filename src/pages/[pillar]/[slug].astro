@@ -1,0 +1,72 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { getPillarName } from '../../data/pillars';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  return articles.map(article => {
+    // id from content collection is "lead-generation/cold-calling-from-zero"
+    const parts = article.id.split('/');
+    const pillar = parts[0]!;
+    const slug   = parts.slice(1).join('/');
+    return {
+      params: { pillar, slug },
+      props:  { article },
+    };
+  });
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const { title, description, pillar, tags, readTime, publishDate, heroImage, accentWord } = article.data;
+const slugParts = article.id.split('/');
+const articleSlug = slugParts.slice(1).join('/');
+
+// Parse markdown for custom block types
+// Callouts, warnings, and phase blocks are handled via remark/rehype plugins
+// in a full build; here we use a client-side approach via prose CSS classes
+---
+
+<ArticleLayout
+  title={title}
+  description={description}
+  pillar={pillar}
+  tags={tags}
+  readTime={readTime}
+  publishDate={publishDate}
+  heroImage={heroImage}
+  accentWord={accentWord}
+  slug={articleSlug}
+>
+  <Content />
+</ArticleLayout>
+
+<script>
+// Transform custom markdown blocks into styled HTML after render
+// :::callout ... ::: → .callout-block
+// :::warning ... ::: → .warning-block
+// :::phase ... ::: → .phase-block with numbered rows
+document.addEventListener('DOMContentLoaded', () => {
+  const prose = document.querySelector('.prose');
+  if (!prose) return;
+
+  // Process blockquotes that contain our custom syntax
+  // Astro renders :::type blocks as <blockquote> elements by default
+  // We look for paragraphs that start with our markers
+  transformCustomBlocks(prose as HTMLElement);
+});
+
+function transformCustomBlocks(container: HTMLElement) {
+  // Find all blockquote elements (Astro renders ::: blocks as blockquotes with paragraphs)
+  const blockquotes = container.querySelectorAll('blockquote');
+  blockquotes.forEach(bq => {
+    const text = bq.textContent ?? '';
+    if (text.trim().startsWith('callout')) {
+      bq.classList.add('callout-block');
+    } else if (text.trim().startsWith('warning')) {
+      bq.classList.add('warning-block');
+    }
+  });
+}
+</script>

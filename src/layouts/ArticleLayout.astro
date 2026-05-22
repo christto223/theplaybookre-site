@@ -1,0 +1,447 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { getPillarName } from '../data/pillars';
+
+interface Props {
+  title: string;
+  description: string;
+  pillar: string;
+  tags: string[];
+  readTime: number;
+  publishDate: Date;
+  heroImage?: string;
+  accentWord?: string;
+  slug: string;
+}
+
+const {
+  title, description, pillar, tags, readTime,
+  publishDate, heroImage, accentWord, slug,
+} = Astro.props;
+
+const pillarName = getPillarName(pillar);
+const pillarUrl  = `/${pillar}/`;
+const primaryTag = tags[0] ?? pillarName;
+const canonicalUrl = `https://theplaybookre.com/${pillar}/${slug}/`;
+
+// Build article title with accent word
+function buildTitle(t: string, word?: string) {
+  if (!word) return t;
+  return t.replace(word, `<em class="accent">${word}</em>`);
+}
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  month: 'long', day: 'numeric', year: 'numeric'
+}).format(publishDate);
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": title,
+    "description": description,
+    "datePublished": publishDate.toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": "Chris Linsell",
+      "url": "https://chrislinsell.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "The Playbook RE",
+      "url": "https://theplaybookre.com"
+    },
+    "url": canonicalUrl,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://theplaybookre.com/" },
+      { "@type": "ListItem", "position": 2, "name": pillarName, "item": `https://theplaybookre.com/${pillar}/` },
+      { "@type": "ListItem", "position": 3, "name": title, "item": canonicalUrl },
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalUrl={canonicalUrl}
+  type="article"
+  publishDate={publishDate}
+  ogImage={heroImage ? `/images/${heroImage}` : undefined}
+  schema={schema}
+>
+  <!-- ARTICLE HEADER -->
+  <div
+    class="article-header"
+    style={heroImage
+      ? `background-image: linear-gradient(to bottom, rgba(8,8,8,0.78) 0%, rgba(8,8,8,0.94) 100%), url('/images/${heroImage}'); background-size: cover; background-position: center 40%;`
+      : ''}
+  >
+    <div class="article-header-inner">
+      <a href={pillarUrl} class="cat-tag">{primaryTag}</a>
+      <h1 class="article-h1" set:html={buildTitle(title, accentWord)} />
+      <p class="article-dek">{description}</p>
+
+      <div class="article-meta">
+        <img src="/images/chris-linsell.jpg" alt="Chris Linsell" class="meta-avatar" />
+        <span class="meta-author">Chris Linsell</span>
+        <span class="meta-dot">·</span>
+        <time class="meta-date" datetime={publishDate.toISOString()}>{formattedDate}</time>
+        <span class="meta-dot">·</span>
+        <span class="meta-read">{readTime} min read</span>
+        <div class="meta-tags">
+          {tags.map(tag => <span class="meta-tag">{tag}</span>)}
+        </div>
+        <div class="meta-spacer"></div>
+        <div class="share-buttons">
+          <span class="share-label">Share</span>
+          <a class="share-btn" href={`https://x.com/intent/tweet?url=${canonicalUrl}`} target="_blank" rel="noopener" title="Share on X" aria-label="Share on X">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M11.03 1h2.04L8.4 6.28 14 13H9.37L5.9 8.74 1.92 13H-.12l5.01-5.72L-.1 1h4.76l3.12 4.01L11.03 1zm-.72 10.79h1.13L3.75 2.14H2.54l7.77 9.65z"/></svg>
+          </a>
+          <a class="share-btn" href={`https://www.linkedin.com/sharing/share-offsite/?url=${canonicalUrl}`} target="_blank" rel="noopener" title="Share on LinkedIn" aria-label="Share on LinkedIn">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M2 1a1 1 0 100 2 1 1 0 000-2zM1 4h2v9H1V4zm4 0h1.9v1.23C7.28 4.44 8.1 4 9.1 4 11.02 4 12 5.1 12 7.2V13h-2V7.6c0-1.1-.45-1.6-1.35-1.6S7 6.5 7 7.6V13H5V4z"/></svg>
+          </a>
+          <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href)" title="Copy link" aria-label="Copy link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="8" height="8" rx="1"/><path d="M2 9H1a1 1 0 01-1-1V1a1 1 0 011-1h7a1 1 0 011 1v1"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTICLE BODY -->
+  <div class="article-body-wrap">
+    <div class="article-content-col">
+
+      <!-- Key Takeaways (injected before slot) -->
+      <slot name="takeaways" />
+
+      <!-- Main article content -->
+      <div class="prose">
+        <slot />
+      </div>
+
+      <!-- Tag row -->
+      <div class="article-tags">
+        {tags.map(tag => <span class="article-tag">{tag}</span>)}
+      </div>
+    </div>
+
+    <!-- Sticky Sidebar -->
+    <aside class="article-sidebar">
+      <div class="sidebar-sticky">
+        <!-- Newsletter CTA -->
+        <div class="sidebar-nl">
+          <div class="sidebar-nl-head">Get the Playbook in your inbox.</div>
+          <p class="sidebar-nl-sub">One strategy every Tuesday. Free.</p>
+          <div class="sidebar-nl-form">
+            <input type="email" placeholder="your@email.com" class="sidebar-nl-input" />
+            <button class="sidebar-nl-btn">Subscribe →</button>
+          </div>
+        </div>
+
+        <!-- Related pillar link -->
+        <div class="sidebar-pillar">
+          <div class="sidebar-pillar-label">More from</div>
+          <a href={pillarUrl} class="sidebar-pillar-link">{pillarName} →</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- AUTHOR BIO -->
+  <div class="author-section">
+    <div class="author-inner">
+      <img src="/images/chris-linsell.jpg" alt="Chris Linsell" class="author-photo" />
+      <div class="author-text">
+        <div class="author-name">Chris Linsell</div>
+        <div class="author-role">CMO, The Mitten Group · Founder, The Playbook RE</div>
+        <p class="author-bio">
+          Chris Linsell is the Chief Marketing Officer of The Mitten Group, a residential real estate
+          brokerage in Northern Michigan. He has spent more than a decade working inside real estate
+          businesses as an agent, strategist, marketer, and builder. The Playbook RE is built from
+          that experience — not from a content brief.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER BAND -->
+  <div class="newsletter-band">
+    <div class="nl-inner">
+      <div class="nl-top">
+        <div class="nl-headline">Build the Business.<br />Run the Play.</div>
+        <div class="nl-sub">One playbook in your inbox every Tuesday. Strategy, scripts, and systems for agents who are serious about building a real business.</div>
+      </div>
+      <div class="nl-stats">
+        <div><div class="nl-stat-num">12,400+</div><div class="nl-stat-label">Agents subscribed</div></div>
+        <div><div class="nl-stat-num">Every Tuesday</div><div class="nl-stat-label">Delivery schedule</div></div>
+        <div><div class="nl-stat-num">Free</div><div class="nl-stat-label">Always</div></div>
+      </div>
+      <div class="nl-form">
+        <input class="nl-input" type="email" placeholder="your@email.com" />
+        <button class="nl-btn">Subscribe to the Newsletter</button>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* ─── ARTICLE HEADER ─── */
+  .article-header {
+    background: var(--black);
+    padding: 56px 0 48px;
+  }
+  .article-header-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  .cat-tag {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--yellow);
+    background: rgba(255,209,0,0.12);
+    border: 1px solid rgba(255,209,0,0.3);
+    padding: 4px 12px;
+    display: inline-block;
+    margin-bottom: 16px;
+    text-decoration: none;
+  }
+  .cat-tag:hover { background: rgba(255,209,0,0.2); }
+
+  .article-h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 72px;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+  .article-h1 :global(.accent) { color: var(--yellow); font-style: normal; }
+
+  .article-dek {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #888;
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .meta-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #333;
+  }
+  .meta-author {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .meta-dot { color: #444; font-size: 12px; }
+  .meta-date, .meta-read {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #666;
+  }
+  .meta-tags { display: flex; gap: 6px; }
+  .meta-tag {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: #555;
+    border: 1px solid #2a2a2a;
+    padding: 2px 8px;
+  }
+  .meta-spacer { flex: 1; }
+  .share-buttons { display: flex; align-items: center; gap: 8px; }
+  .share-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #444;
+  }
+  .share-btn {
+    width: 28px; height: 28px;
+    border: 1px solid #2a2a2a;
+    background: none;
+    display: flex; align-items: center; justify-content: center;
+    color: #555;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.12s, color 0.12s;
+  }
+  .share-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  /* ─── ARTICLE BODY ─── */
+  .article-body-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 56px 40px;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 64px;
+    align-items: start;
+  }
+  .article-content-col {}
+
+  /* ─── ARTICLE TAGS ─── */
+  .article-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 40px;
+    margin-top: 48px;
+    border-top: 1px solid var(--rule);
+  }
+  .article-tag {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--charcoal);
+    border: 1px solid var(--rule);
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: border-color 0.12s, color 0.12s;
+  }
+  .article-tag:hover { border-color: var(--yellow); color: var(--black); }
+
+  /* ─── SIDEBAR ─── */
+  .article-sidebar { position: relative; }
+  .sidebar-sticky {
+    position: sticky;
+    top: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .sidebar-nl {
+    background: var(--black);
+    padding: 24px;
+    border-top: 4px solid var(--yellow);
+  }
+  .sidebar-nl-head {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .sidebar-nl-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .sidebar-nl-form { display: flex; flex-direction: column; gap: 8px; }
+  .sidebar-nl-input {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--white);
+    outline: none;
+    height: 40px;
+  }
+  .sidebar-nl-input::placeholder { color: #444; }
+  .sidebar-nl-input:focus { border-color: var(--yellow); }
+  .sidebar-nl-btn {
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .sidebar-nl-btn:hover { background: #e8be00; }
+
+  .sidebar-pillar {
+    padding: 20px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+  }
+  .sidebar-pillar-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .sidebar-pillar-link {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    color: var(--black);
+    text-decoration: none;
+    transition: color 0.12s;
+  }
+  .sidebar-pillar-link:hover { color: var(--yellow); }
+
+  /* ─── AUTHOR ─── */
+  .author-section {
+    background: var(--black);
+    border-top: 1px solid #1a1a1a;
+  }
+  .author-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 40px;
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .author-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--yellow);
+    flex-shrink: 0;
+  }
+  .author-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .author-role {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #444;
+    margin-bottom: 12px;
+  }
+  .author-bio {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #666;
+    max-width: 640px;
+  }
+</style>
