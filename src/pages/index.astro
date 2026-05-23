@@ -615,7 +615,7 @@ const schema = [
   .sp-h3 :global(em) { color: var(--yellow); font-style: normal; }
   .sp-h4 {
     font-family: 'Bebas Neue', cursive; font-size: 19px; line-height: 1.05;
-    letter-spacing: 0.02em; color: var(--white); margin-bottom: 12px; flex: 1;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 12px;
   }
   .sp-h4 :global(em) { color: var(--yellow); font-style: normal; }
   .sp-excerpt { font-size: 13px; color: #777; line-height: 1.55; margin-bottom: 18px; }
@@ -624,6 +624,7 @@ const schema = [
     color: var(--yellow); display: flex; align-items: center; gap: 6px;
     margin-top: auto;
   }
+  .sp-card-sm .sp-read { margin-top: 0; }
   .sp-read::after { content: '→'; }
   .sp-card-lg:hover .sp-read,
   .sp-card-sm:hover .sp-read { color: #e8be00; }
