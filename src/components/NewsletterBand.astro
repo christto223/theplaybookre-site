@@ -7,61 +7,101 @@ const { id } = Astro.props;
 
 <div class="newsletter-band" id={id}>
   <div class="nl-inner">
-    <div class="nl-top">
-      <div class="nl-headline">Build the Business.<br />Run the Play.</div>
-      <div class="nl-sub">One playbook in your inbox every Tuesday. Strategy, scripts, and systems for agents who are serious about building a real business.</div>
+
+    <!-- Left: headline + description -->
+    <div class="nl-left">
+      <h2 class="nl-headline">Build the Business.<br />Run the Play.</h2>
+      <p class="nl-sub">The Playbook RE is the strategy resource built by a real estate practitioner for agents who want to build, grow, and scale — without the coaching upsells, vendor agendas, or fluff.</p>
     </div>
-    <div class="nl-stats">
-      <div><div class="nl-stat-num">12,400+</div><div class="nl-stat-label">Agents subscribed</div></div>
-      <div><div class="nl-stat-num">Every Tuesday</div><div class="nl-stat-label">Delivery schedule</div></div>
-      <div><div class="nl-stat-num">Free</div><div class="nl-stat-label">Always</div></div>
+
+    <!-- Right: stats → divider → email form -->
+    <div class="nl-right">
+      <div class="nl-stat-row">
+        <div class="nl-stat">
+          <div class="nl-stat-num">8</div>
+          <div class="nl-stat-label">Content Pillars</div>
+        </div>
+        <div class="nl-stat">
+          <div class="nl-stat-num">12K+</div>
+          <div class="nl-stat-label">Agents Reading Weekly</div>
+        </div>
+        <div class="nl-stat">
+          <div class="nl-stat-num">100%</div>
+          <div class="nl-stat-label">Practitioner-Written</div>
+        </div>
+      </div>
+      <div class="nl-divider"></div>
+      <div class="nl-form">
+        <input class="nl-input" type="email" placeholder="your@email.com" />
+        <button class="nl-btn">Subscribe to the Newsletter</button>
+      </div>
     </div>
-    <div class="nl-form">
-      <input class="nl-input" type="email" placeholder="your@email.com" />
-      <button class="nl-btn">Subscribe to the Newsletter</button>
-    </div>
+
   </div>
 </div>
 
 <style>
-  .newsletter-band { background: var(--yellow); }
-  .nl-inner { max-width: 1280px; margin: 0 auto; padding: 56px 40px; }
-  .nl-top {
-    display: flex; align-items: flex-end; justify-content: space-between;
-    gap: 48px; margin-bottom: 32px;
+  .newsletter-band {
+    background: var(--yellow);
+    border-top: 3px solid var(--black);
+    border-bottom: 3px solid var(--black);
   }
+  .nl-inner {
+    max-width: 1280px; margin: 0 auto; padding: 48px 40px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px; align-items: center;
+  }
+
+  /* Left column */
   .nl-headline {
-    font-family: 'Bebas Neue', cursive; font-size: 56px; line-height: 0.92;
-    letter-spacing: 0.02em; color: var(--black);
+    font-family: 'Bebas Neue', cursive; font-size: 72px; line-height: 0.88;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 16px;
   }
   .nl-sub {
-    font-family: 'DM Sans', sans-serif; font-size: 16px; color: rgba(0,0,0,0.6);
-    line-height: 1.55; max-width: 480px; padding-bottom: 4px;
+    font-size: 16px; color: rgba(0,0,0,0.65); line-height: 1.6; max-width: 420px;
   }
-  .nl-stats {
-    display: flex; gap: 32px; padding-bottom: 28px;
-    border-bottom: 1px solid rgba(0,0,0,0.12); margin-bottom: 28px;
-  }
+
+  /* Right column */
+  .nl-right { display: flex; flex-direction: column; gap: 12px; }
+  .nl-stat-row { display: flex; gap: 32px; }
+  .nl-stat { display: flex; flex-direction: column; }
   .nl-stat-num {
-    font-family: 'Bebas Neue', cursive; font-size: 32px; color: var(--black); line-height: 1;
+    font-family: 'Bebas Neue', cursive; font-size: 52px; line-height: 0.9;
+    color: var(--black); letter-spacing: 0.02em;
   }
   .nl-stat-label {
     font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
-    letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,0.45);
+    letter-spacing: 0.1em; text-transform: uppercase; color: rgba(0,0,0,0.5);
+    margin-top: 4px;
   }
-  .nl-form { display: flex; gap: 0; max-width: 480px; }
+  .nl-divider { width: 100%; height: 1px; background: rgba(0,0,0,0.15); }
+  .nl-form { display: flex; gap: 0; align-items: stretch; }
   .nl-input {
-    flex: 1; background: var(--white); border: none; padding: 0 20px;
-    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--black);
-    outline: none; height: 52px;
+    background: var(--white); border: none; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--charcoal); padding: 0 18px;
+    flex: 1; outline: none; min-width: 0; height: 52px;
   }
   .nl-input::placeholder { color: #aaa; }
   .nl-btn {
     background: var(--black); color: var(--yellow);
-    font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 0.08em;
-    padding: 0 28px; height: 52px; cursor: pointer; white-space: nowrap;
-    display: flex; align-items: center; border: none;
-    transition: background 0.15s;
+    font-family: 'Bebas Neue', cursive; font-size: 18px; letter-spacing: 0.1em;
+    padding: 14px 28px; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    border: none; transition: background 0.15s;
   }
   .nl-btn:hover { background: #222; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .nl-inner { grid-template-columns: 1fr; gap: 36px; }
+    .nl-headline { font-size: 56px; }
+  }
+  @media (max-width: 600px) {
+    .nl-inner { padding: 40px 20px; }
+    .nl-headline { font-size: 48px; }
+    .nl-stat-row { gap: 20px; }
+    .nl-stat-num { font-size: 40px; }
+    .nl-form { flex-direction: column; }
+    .nl-input { height: 48px; }
+    .nl-btn { padding: 14px 20px; font-size: 16px; }
+  }
 </style>
