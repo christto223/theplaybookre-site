@@ -13,13 +13,28 @@ const sorted = allArticles.sort((a, b) => b.data.publishDate.valueOf() - a.data.
 const featured = sorted.find(a => a.data.featured) ?? sorted[0];
 // Latest 3 (excluding featured)
 const latest = sorted.filter(a => a.id !== featured?.id).slice(0, 3);
-// Most read = next 8 (placeholder — will be replaced with GA4 data)
-const mostRead = sorted.filter(a => a.id !== featured?.id && !latest.includes(a)).slice(0, 8);
+// Most read = next 5 (placeholder — will be replaced with GA4 data)
+const mostRead = sorted.filter(a => a.id !== featured?.id && !latest.includes(a)).slice(0, 5);
 
 function articleUrl(article: typeof allArticles[0]) {
   const parts = article.id.split('/');
   return `/${parts[0]}/${parts.slice(1).join('/')}/`;
 }
+
+function formatDate(d: Date) {
+  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(d);
+}
+
+const lpPillarColors: Record<string, string> = {
+  'lead-generation':          '#0e1a12',
+  'marketing-and-branding':   '#1c1a0e',
+  'sales-skills-and-scripts': '#1a0e0e',
+  'business-systems':         '#0e0e1a',
+  'ai-and-technology':        '#0a1a12',
+  'mindset-and-performance':  '#1a0e14',
+  'growth-and-scaling':       '#1a140e',
+  'the-fundamentals':         '#131318',
+};
 
 const schema = [
   {
@@ -89,30 +104,126 @@ const schema = [
     </div>
   )}
 
-  <!-- LATEST PLAYBOOKS -->
-  {latest.length > 0 && (
-    <div class="home-section">
-      <div class="home-section-inner">
-        <div class="home-section-head">
-          <div class="section-label">Latest Playbooks</div>
+  <!-- LATEST PLAYBOOKS + SIDEBAR -->
+  <div class="lp-section-head">
+    <div class="lp-title">Latest Playbooks</div>
+    <a href="#" class="lp-view-all">View All →</a>
+  </div>
+
+  <div class="lp-layout">
+
+    <!-- MAIN FEED -->
+    <div class="lp-feed">
+
+      {latest[0] && (() => {
+        const a = latest[0];
+        const bg = lpPillarColors[a.data.pillar] ?? '#1a1a1a';
+        const tag = PILLARS.find(p => p.slug === a.data.pillar)?.name ?? a.data.pillar;
+        return (
+          <a href={articleUrl(a)} class="lp-card-lg">
+            <div class="lp-card-img" style={`background:${bg}`}>
+              <div class="lp-img-badge">{a.data.tags[0]}</div>
+              {a.data.accentWord && <span class="lp-img-word" style="font-size:100px">{a.data.accentWord.toUpperCase()}</span>}
+            </div>
+            <div class="lp-card-body">
+              <div class="lp-cat-tag">{tag}</div>
+              <h2 class="lp-card-h2" set:html={a.data.title.replace(a.data.accentWord ?? '___', `<em>${a.data.accentWord}</em>`)} />
+              <p class="lp-card-excerpt">{a.data.description}</p>
+              <div class="lp-card-foot">
+                <span class="lp-byline">By <strong>Chris Linsell</strong> · {formatDate(a.data.publishDate)} · {a.data.readTime} min read</span>
+                <span class="lp-read-link">Read →</span>
+              </div>
+            </div>
+          </a>
+        );
+      })()}
+
+      {latest[1] && (() => {
+        const a = latest[1];
+        const bg = lpPillarColors[a.data.pillar] ?? '#1a1a1a';
+        const tag = PILLARS.find(p => p.slug === a.data.pillar)?.name ?? a.data.pillar;
+        return (
+          <a href={articleUrl(a)} class="lp-card-sm">
+            <div class="lp-card-img lp-card-img--sm" style={`background:${bg}`}>
+              <div class="lp-img-badge">{a.data.tags[0]}</div>
+              {a.data.accentWord && <span class="lp-img-word" style="font-size:72px">{a.data.accentWord.toUpperCase()}</span>}
+            </div>
+            <div class="lp-card-body">
+              <div class="lp-cat-tag">{tag}</div>
+              <h3 class="lp-card-h3" set:html={a.data.title.replace(a.data.accentWord ?? '___', `<em>${a.data.accentWord}</em>`)} />
+              <p class="lp-card-excerpt lp-card-excerpt--sm">{a.data.description}</p>
+              <div class="lp-card-foot">
+                <span class="lp-byline">By <strong>Chris Linsell</strong> · {formatDate(a.data.publishDate)} · {a.data.readTime} min read</span>
+                <span class="lp-read-link">Read →</span>
+              </div>
+            </div>
+          </a>
+        );
+      })()}
+
+      {latest[2] && (() => {
+        const a = latest[2];
+        const bg = lpPillarColors[a.data.pillar] ?? '#1a1a1a';
+        const tag = PILLARS.find(p => p.slug === a.data.pillar)?.name ?? a.data.pillar;
+        return (
+          <a href={articleUrl(a)} class="lp-card-sm">
+            <div class="lp-card-img lp-card-img--sm" style={`background:${bg}`}>
+              <div class="lp-img-badge">{a.data.tags[0]}</div>
+              {a.data.accentWord && <span class="lp-img-word" style="font-size:72px">{a.data.accentWord.toUpperCase()}</span>}
+            </div>
+            <div class="lp-card-body">
+              <div class="lp-cat-tag">{tag}</div>
+              <h3 class="lp-card-h3" set:html={a.data.title.replace(a.data.accentWord ?? '___', `<em>${a.data.accentWord}</em>`)} />
+              <p class="lp-card-excerpt lp-card-excerpt--sm">{a.data.description}</p>
+              <div class="lp-card-foot">
+                <span class="lp-byline">By <strong>Chris Linsell</strong> · {formatDate(a.data.publishDate)} · {a.data.readTime} min read</span>
+                <span class="lp-read-link">Read →</span>
+              </div>
+            </div>
+          </a>
+        );
+      })()}
+
+    </div><!-- /lp-feed -->
+
+    <!-- SIDEBAR -->
+    <div class="lp-sidebar">
+      <div class="lp-sidebar-sticky">
+
+        <!-- Newsletter -->
+        <div class="lp-nl">
+          <div class="lp-nl-eyebrow">The Playbook Newsletter</div>
+          <h3 class="lp-nl-head">One Playbook.<br/><span>Every Week.</span></h3>
+          <p class="lp-nl-sub">Strategy and systems for agents who are serious about building a real business. No fluff. Every Tuesday.</p>
+          <input type="email" class="lp-nl-input" placeholder="your@email.com" />
+          <button class="lp-nl-btn">Subscribe Free</button>
+          <div class="lp-nl-note">Join 12,000+ agents. Unsubscribe anytime.</div>
         </div>
-        <div class="article-grid-3">
-          {latest.map(article => (
-            <ArticleCard
-              title={article.data.title}
-              description={article.data.description}
-              pillar={article.data.pillar}
-              primaryTag={article.data.tags[0] ?? ''}
-              readTime={article.data.readTime}
-              slug={article.id}
-              heroImage={article.data.heroImage}
-              accentWord={article.data.accentWord}
-            />
-          ))}
-        </div>
+
+        <!-- Most Read -->
+        {mostRead.length > 0 && (
+          <div class="lp-most-read">
+            <div class="lp-mr-head">
+              <span>Most Read</span>
+              <a href="#">See All →</a>
+            </div>
+            {mostRead.map((a, i) => (
+              <a href={articleUrl(a)} class="lp-mr-item">
+                <div class="lp-mr-num">{String(i + 1).padStart(2, '0')}</div>
+                <div class="lp-mr-body">
+                  <div class="lp-mr-cat">{PILLARS.find(p => p.slug === a.data.pillar)?.shortName ?? a.data.tags[0]}</div>
+                  <h4 class="lp-mr-title">{a.data.title}</h4>
+                  <div class="lp-mr-meta">{a.data.readTime} min read</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+
       </div>
-    </div>
-  )}
+    </div><!-- /lp-sidebar -->
+
+  </div><!-- /lp-layout -->
 
   <!-- PILLAR GRID -->
   <div class="home-pillars">
@@ -129,31 +240,6 @@ const schema = [
       </div>
     </div>
   </div>
-
-  <!-- MOST READ -->
-  {mostRead.length > 0 && (
-    <div class="home-section home-section--white">
-      <div class="home-section-inner">
-        <div class="home-section-head">
-          <div class="section-label">Most Popular Playbooks</div>
-        </div>
-        <div class="article-grid-4">
-          {mostRead.map(article => (
-            <ArticleCard
-              title={article.data.title}
-              description={article.data.description}
-              pillar={article.data.pillar}
-              primaryTag={article.data.tags[0] ?? ''}
-              readTime={article.data.readTime}
-              slug={article.id}
-              heroImage={article.data.heroImage}
-              accentWord={article.data.accentWord}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  )}
 
   <!-- NEWSLETTER BAND -->
   <NewsletterBand />
@@ -229,13 +315,171 @@ const schema = [
     font-family: 'Inter', sans-serif; font-size: 10px; color: #444; font-style: italic;
   }
 
-  /* SECTIONS */
-  .home-section { background: var(--off-white); }
-  .home-section--white { background: var(--white); }
-  .home-section-inner { max-width: 1280px; margin: 0 auto; padding: 56px 40px; }
-  .home-section-head { margin-bottom: 24px; }
-  .article-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--rule); }
-  .article-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--rule); }
+  /* LATEST PLAYBOOKS SECTION */
+  .lp-section-head {
+    max-width: 1280px; margin: 0 auto; padding: 40px 40px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .lp-title {
+    font-family: 'Bebas Neue', cursive; font-size: 28px; letter-spacing: 0.04em;
+    color: var(--black); display: flex; align-items: center; gap: 14px;
+  }
+  .lp-title::after {
+    content: ''; display: block; width: 40px; height: 3px; background: var(--yellow);
+  }
+  .lp-view-all {
+    font-family: 'Bebas Neue', cursive; font-size: 14px; letter-spacing: 0.1em;
+    color: var(--gray); text-decoration: none;
+  }
+  .lp-view-all:hover { color: var(--black); }
+
+  /* 2-col layout */
+  .lp-layout {
+    max-width: 1280px; margin: 0 auto; padding: 0 40px 48px;
+    display: grid; grid-template-columns: 1fr 320px;
+    gap: 2px; background: var(--rule);
+  }
+
+  /* Feed: left column */
+  .lp-feed {
+    background: var(--off-white); display: flex; flex-direction: column; gap: 2px;
+  }
+
+  /* Large card */
+  .lp-card-lg {
+    background: var(--white); display: grid; grid-template-columns: 280px 1fr;
+    text-decoration: none; color: inherit;
+  }
+  .lp-card-lg:hover .lp-card-h2 { color: var(--yellow); }
+  .lp-card-lg:hover .lp-read-link { color: var(--yellow); }
+
+  /* Small card */
+  .lp-card-sm {
+    background: var(--white); display: grid; grid-template-columns: 180px 1fr;
+    text-decoration: none; color: inherit;
+  }
+  .lp-card-sm:hover .lp-card-h3 { color: var(--yellow); }
+  .lp-card-sm:hover .lp-read-link { color: var(--yellow); }
+
+  /* Card image panel */
+  .lp-card-img {
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; min-height: 200px;
+  }
+  .lp-card-img--sm { min-height: 160px; }
+  .lp-img-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--yellow); color: var(--black);
+    font-family: 'Bebas Neue', cursive; font-size: 10px; letter-spacing: 0.18em; padding: 3px 9px;
+    z-index: 2;
+  }
+  .lp-img-word {
+    font-family: 'Bebas Neue', cursive; line-height: 1;
+    color: rgba(255,255,255,0.08); user-select: none; position: relative; z-index: 1;
+  }
+
+  /* Card body */
+  .lp-card-body {
+    padding: 24px 28px; display: flex; flex-direction: column;
+  }
+  .lp-card-sm .lp-card-body { padding: 18px 22px; }
+  .lp-cat-tag {
+    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
+    color: var(--yellow); background: var(--black);
+    display: inline-block; padding: 2px 9px; margin-bottom: 12px; width: fit-content;
+  }
+  .lp-card-h2 {
+    font-family: 'Bebas Neue', cursive; font-size: 30px; line-height: 0.95;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 12px;
+    transition: color 0.12s;
+  }
+  .lp-card-h2 :global(em) { color: var(--yellow); font-style: normal; }
+  .lp-card-h3 {
+    font-family: 'Bebas Neue', cursive; font-size: 22px; line-height: 1;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 10px;
+    transition: color 0.12s;
+  }
+  .lp-card-h3 :global(em) { color: var(--yellow); font-style: normal; }
+  .lp-card-excerpt {
+    font-size: 14px; line-height: 1.6; color: var(--charcoal); margin-bottom: 20px; flex: 1;
+  }
+  .lp-card-excerpt--sm { font-size: 13px; margin-bottom: 14px; }
+  .lp-card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--rule); padding-top: 14px; margin-top: auto;
+  }
+  .lp-byline { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--gray); }
+  .lp-byline strong { color: var(--charcoal); font-weight: 600; }
+  .lp-read-link {
+    font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.1em;
+    color: var(--black); transition: color 0.12s; white-space: nowrap;
+  }
+
+  /* Sidebar: right column */
+  .lp-sidebar { background: var(--off-white); display: flex; flex-direction: column; }
+  .lp-sidebar-sticky { position: sticky; top: 20px; display: flex; flex-direction: column; gap: 2px; }
+
+  /* Newsletter box */
+  .lp-nl { background: var(--black); padding: 28px 24px; }
+  .lp-nl-eyebrow {
+    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
+    color: var(--yellow); margin-bottom: 10px;
+  }
+  .lp-nl-head {
+    font-family: 'Bebas Neue', cursive; font-size: 28px; line-height: 0.95;
+    color: var(--white); margin-bottom: 12px;
+  }
+  .lp-nl-head span { color: var(--yellow); }
+  .lp-nl-sub { font-size: 13px; line-height: 1.6; color: #888; margin-bottom: 20px; }
+  .lp-nl-input {
+    width: 100%; background: #1a1a1a; border: 1px solid #333; color: #666;
+    font-family: 'Inter', sans-serif; font-size: 13px; padding: 11px 14px;
+    margin-bottom: 8px; box-sizing: border-box;
+  }
+  .lp-nl-btn {
+    width: 100%; background: var(--yellow); color: var(--black);
+    font-family: 'Bebas Neue', cursive; font-size: 17px; letter-spacing: 0.08em;
+    padding: 12px; border: none; cursor: pointer; transition: background 0.12s;
+  }
+  .lp-nl-btn:hover { background: #e8be00; }
+  .lp-nl-note {
+    font-family: 'Inter', sans-serif; font-size: 10px; color: #555;
+    margin-top: 10px; text-align: center;
+  }
+
+  /* Most Read list */
+  .lp-most-read { background: var(--white); }
+  .lp-mr-head {
+    padding: 16px 20px 12px; font-family: 'Bebas Neue', cursive; font-size: 16px;
+    letter-spacing: 0.1em; color: var(--black);
+    border-bottom: 2px solid var(--yellow);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .lp-mr-head a {
+    font-size: 12px; color: var(--gray); text-decoration: none; letter-spacing: 0.05em;
+  }
+  .lp-mr-head a:hover { color: var(--black); }
+  .lp-mr-item {
+    padding: 14px 20px; border-bottom: 1px solid var(--rule);
+    display: flex; gap: 14px; align-items: flex-start;
+    text-decoration: none; color: inherit; transition: background 0.1s;
+  }
+  .lp-mr-item:last-child { border-bottom: none; }
+  .lp-mr-item:hover { background: var(--off-white); }
+  .lp-mr-num {
+    font-family: 'Bebas Neue', cursive; font-size: 28px;
+    color: var(--rule); line-height: 1; flex-shrink: 0; width: 28px;
+  }
+  .lp-mr-cat {
+    font-family: 'Bebas Neue', cursive; font-size: 10px; letter-spacing: 0.15em;
+    color: var(--yellow); background: var(--black);
+    display: inline-block; padding: 1px 7px; margin-bottom: 5px;
+  }
+  .lp-mr-title {
+    font-family: 'Bebas Neue', cursive; font-size: 17px; line-height: 1.05;
+    letter-spacing: 0.01em; color: var(--black); margin-bottom: 4px;
+  }
+  .lp-mr-meta { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--gray); }
 
   /* PILLARS */
   .home-pillars { background: var(--black); }
