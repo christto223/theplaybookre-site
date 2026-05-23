@@ -28,10 +28,22 @@ const { activeNav } = Astro.props;
           <line x1="10.4" y1="10.4" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </li>
-      <li class="nav-cta"><a href="/start-here/#newsletter">Get the Newsletter</a></li>
+      <li class="nav-cta"><button id="masthead-nl-btn">Get the Newsletter</button></li>
     </ul>
   </div>
 </header>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('masthead-nl-btn');
+    if (btn) {
+      btn.addEventListener('click', function() {
+        var footerBtn = document.getElementById('footer-nl-btn');
+        if (footerBtn) footerBtn.click();
+      });
+    }
+  });
+</script>
 
 <style>
   .masthead {
@@ -108,11 +120,16 @@ const { activeNav } = Astro.props;
     background: var(--yellow);
     padding: 8px 20px;
   }
-  .masthead-nav .nav-cta a {
+  .masthead-nav .nav-cta a,
+  .masthead-nav .nav-cta button {
     font-family: 'Bebas Neue', cursive;
     font-size: 15px;
     letter-spacing: 0.09em;
     color: var(--black) !important;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
   }
   .masthead-nav .nav-cta:hover {
     background: #e8be00;
