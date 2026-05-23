@@ -8,6 +8,34 @@ import { PILLARS } from '../data/pillars';
 import { MOST_READ_IDS } from '../data/mostRead';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
+const allToolkit = await getCollection('toolkit');
+const homepageToolkit = allToolkit.sort((a, b) => a.data.order - b.data.order);
+
+function tkCapitalize(s: string) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function tkBadgeClass(type: string) {
+  return ({ template:'badge-template', script:'badge-script', checklist:'badge-checklist', calculator:'badge-calculator', guide:'badge-guide' })[type] ?? 'badge-template';
+}
+function tkTypeLabel(type: string) {
+  return ({ template:'Template', script:'Script Pack', checklist:'Checklist', calculator:'Calculator', guide:'Free Guide' })[type] ?? tkCapitalize(type);
+}
+const tkIcons: Record<string, string> = {
+  template: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="8" width="40" height="32" rx="2" stroke="#FFD100" stroke-width="2"/><line x1="4" y1="16" x2="44" y2="16" stroke="#FFD100" stroke-width="1.5"/><line x1="4" y1="24" x2="44" y2="24" stroke="#FFD100" stroke-width="1.5"/><line x1="4" y1="32" x2="44" y2="32" stroke="#FFD100" stroke-width="1.5"/><line x1="16" y1="8" x2="16" y2="40" stroke="#FFD100" stroke-width="1.5"/><line x1="28" y1="8" x2="28" y2="40" stroke="#FFD100" stroke-width="1.5"/><rect x="5" y="9" width="10" height="6" fill="#FFD100" opacity="0.15"/><rect x="17" y="9" width="10" height="6" fill="#FFD100" opacity="0.15"/></svg>`,
+  script:   `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="4" width="28" height="36" rx="2" stroke="#FFD100" stroke-width="2"/><line x1="14" y1="14" x2="30" y2="14" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="20" x2="30" y2="20" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="26" x2="22" y2="26" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/><circle cx="36" cy="36" r="8" fill="#111" stroke="#FFD100" stroke-width="1.5"/><line x1="36" y1="32" x2="36" y2="40" stroke="#FFD100" stroke-width="1.5" stroke-linecap="round"/><line x1="32" y1="36" x2="40" y2="36" stroke="#FFD100" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+  checklist:`<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="4" width="36" height="40" rx="2" stroke="#FFD100" stroke-width="2"/><line x1="12" y1="15" x2="36" y2="15" stroke="#333" stroke-width="1"/><line x1="12" y1="22" x2="36" y2="22" stroke="#333" stroke-width="1"/><line x1="12" y1="29" x2="36" y2="29" stroke="#333" stroke-width="1"/><line x1="12" y1="36" x2="36" y2="36" stroke="#333" stroke-width="1"/><polyline points="14,14 17,18 22,11" stroke="#FFD100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14,21 17,25 22,18" stroke="#FFD100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14,28 17,32 22,25" stroke="#FFD100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  guide:    `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="18" stroke="#FFD100" stroke-width="2"/><polyline points="24,14 24,24 30,30" stroke="#FFD100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="14" y1="8" x2="34" y2="8" stroke="#FFD100" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/><line x1="10" y1="4" x2="38" y2="4" stroke="#FFD100" stroke-width="1" stroke-linecap="round" opacity="0.2"/></svg>`,
+  calculator:`<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="4" width="28" height="40" rx="2" stroke="#FFD100" stroke-width="2"/><rect x="14" y="10" width="20" height="10" rx="1" fill="#FFD100" opacity="0.15" stroke="#FFD100" stroke-width="1"/><line x1="14" y1="28" x2="18" y2="28" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/><line x1="23" y1="28" x2="27" y2="28" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="35" x2="18" y2="35" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/><line x1="23" y1="35" x2="27" y2="35" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/></svg>`,
+};
+const tkResourcesData = Object.fromEntries(
+  homepageToolkit.map(r => [r.id, {
+    type: tkCapitalize(r.data.resourceType),
+    typeBadge: tkBadgeClass(r.data.resourceType),
+    pillar: r.data.pillar,
+    title: r.data.title,
+    desc: r.data.description,
+    includes: r.data.includes ?? [],
+    format: r.data.format,
+  }])
+);
 const sorted = allArticles.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 
 // Homepage featured = first article with featured:true, else most recent
@@ -298,100 +326,56 @@ const schema = [
         <a href="/toolkit/" class="tk-link">All Free Resources</a>
       </div>
       <div class="tk-grid">
-
-        <div class="tk-card">
-          <div class="tk-card-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="8" y="4" width="28" height="36" rx="2" stroke="#FFD100" stroke-width="2"/>
-              <line x1="14" y1="14" x2="30" y2="14" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/>
-              <line x1="14" y1="20" x2="30" y2="20" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/>
-              <line x1="14" y1="26" x2="22" y2="26" stroke="#FFD100" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="36" cy="36" r="8" fill="#111" stroke="#FFD100" stroke-width="1.5"/>
-              <line x1="36" y1="32" x2="36" y2="40" stroke="#FFD100" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="32" y1="36" x2="40" y2="36" stroke="#FFD100" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="tk-body">
-            <div class="tk-type-badge">Script Pack</div>
-            <h3>The Cold Calling Script Pack</h3>
-            <p>23 tested scripts for FSBOs, expired listings, and circle prospecting — with objection handlers built in.</p>
-            <div class="tk-cta">
-              <span class="tk-cta-btn">Download Free</span>
+        {homepageToolkit.map(resource => (
+          <div class="tk-card">
+            <div class="tk-card-icon" set:html={tkIcons[resource.data.resourceType] ?? tkIcons.template} />
+            <div class="tk-body">
+              <div class="tk-type-badge">{tkTypeLabel(resource.data.resourceType)}</div>
+              <h3>{resource.data.title}</h3>
+              <p>{resource.data.description}</p>
+              <div class="tk-cta">
+                <button class="tk-cta-btn" data-resource-id={resource.id}>Download Free</button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="tk-card">
-          <div class="tk-card-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="6" y="4" width="36" height="40" rx="2" stroke="#FFD100" stroke-width="2"/>
-              <line x1="12" y1="15" x2="36" y2="15" stroke="#333" stroke-width="1"/>
-              <line x1="12" y1="22" x2="36" y2="22" stroke="#333" stroke-width="1"/>
-              <line x1="12" y1="29" x2="36" y2="29" stroke="#333" stroke-width="1"/>
-              <line x1="12" y1="36" x2="36" y2="36" stroke="#333" stroke-width="1"/>
-              <polyline points="14,14 17,18 22,11" stroke="#FFD100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <polyline points="14,21 17,25 22,18" stroke="#FFD100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <polyline points="14,28 17,32 22,25" stroke="#FFD100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="tk-body">
-            <div class="tk-type-badge">Checklist</div>
-            <h3>The Listing Appointment Prep Checklist</h3>
-            <p>The 47-point pre-appointment checklist top listing agents run before every single appointment.</p>
-            <div class="tk-cta">
-              <span class="tk-cta-btn">Download Free</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="tk-card">
-          <div class="tk-card-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="8" width="40" height="32" rx="2" stroke="#FFD100" stroke-width="2"/>
-              <line x1="4" y1="16" x2="44" y2="16" stroke="#FFD100" stroke-width="1.5"/>
-              <line x1="4" y1="24" x2="44" y2="24" stroke="#FFD100" stroke-width="1.5"/>
-              <line x1="4" y1="32" x2="44" y2="32" stroke="#FFD100" stroke-width="1.5"/>
-              <line x1="16" y1="8" x2="16" y2="40" stroke="#FFD100" stroke-width="1.5"/>
-              <line x1="28" y1="8" x2="28" y2="40" stroke="#FFD100" stroke-width="1.5"/>
-              <rect x="5" y="9" width="10" height="6" fill="#FFD100" opacity="0.15"/>
-              <rect x="17" y="9" width="10" height="6" fill="#FFD100" opacity="0.15"/>
-            </svg>
-          </div>
-          <div class="tk-body">
-            <div class="tk-type-badge">Template</div>
-            <h3>The Agent KPI Scorecard</h3>
-            <p>Track the 12 metrics that actually predict your income — spend 5 minutes a month, not five hours.</p>
-            <div class="tk-cta">
-              <span class="tk-cta-btn">Download Free</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="tk-card">
-          <div class="tk-card-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="24" cy="24" r="18" stroke="#FFD100" stroke-width="2"/>
-              <polyline points="24,14 24,24 30,30" stroke="#FFD100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <line x1="14" y1="8" x2="34" y2="8" stroke="#FFD100" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
-              <line x1="10" y1="4" x2="38" y2="4" stroke="#FFD100" stroke-width="1" stroke-linecap="round" opacity="0.2"/>
-            </svg>
-          </div>
-          <div class="tk-body">
-            <div class="tk-type-badge">Free Guide</div>
-            <h3>The 90-Day New Agent Launch Roadmap</h3>
-            <p>The step-by-step launch plan for new agents who want to hit the ground running — not waste six months figuring it out.</p>
-            <div class="tk-cta">
-              <span class="tk-cta-btn">Download Free</span>
-            </div>
-          </div>
-        </div>
-
+        ))}
       </div>
     </div>
   </section>
 
   <!-- NEWSLETTER BAND -->
   <NewsletterBand />
+
+  <!-- TOOLKIT DOWNLOAD MODAL -->
+  <div class="tk-modal-overlay" id="tk-modal-overlay">
+    <div class="tk-modal">
+      <button class="tk-modal-close" id="tk-modal-close">×</button>
+      <div id="tk-modal-request">
+        <div class="tk-modal-badges">
+          <span class="tk-modal-type-badge" id="tk-modal-type-badge">Template</span>
+          <span class="tk-modal-pillar-badge" id="tk-modal-pillar-badge">Business Systems</span>
+        </div>
+        <div class="tk-modal-title" id="tk-modal-title">Loading...</div>
+        <p class="tk-modal-desc" id="tk-modal-desc"></p>
+        <div class="tk-modal-includes" id="tk-modal-includes-wrap">
+          <span class="tk-modal-includes-label">What's included</span>
+          <div class="tk-modal-includes-list" id="tk-modal-includes-list"></div>
+        </div>
+        <hr class="tk-modal-divider" />
+        <span class="tk-modal-form-label">Enter your email and we'll send it right over</span>
+        <div class="tk-modal-form">
+          <input type="email" class="tk-modal-input" id="tk-modal-email" placeholder="your@email.com" />
+          <button class="tk-modal-submit" id="tk-modal-submit">Send Me This →</button>
+        </div>
+        <p class="tk-modal-fine">Free. Delivered to your inbox. No spam — ever.</p>
+      </div>
+      <div class="tk-modal-confirm" id="tk-modal-confirm">
+        <div class="tk-modal-confirm-icon">✓</div>
+        <div class="tk-modal-confirm-title">On its way.</div>
+        <p class="tk-modal-confirm-text">Check your inbox in the next few minutes. If you don't see it, check your spam folder and mark us as a trusted sender.</p>
+      </div>
+    </div>
+  </div>
 </BaseLayout>
 
 <style>
@@ -785,10 +769,95 @@ const schema = [
   }
   .tk-cta-btn {
     font-family: 'Bebas Neue', cursive; font-size: 14px; letter-spacing: 0.1em;
-    color: var(--yellow); cursor: pointer; display: flex; align-items: center; gap: 5px;
+    color: var(--yellow); cursor: pointer; background: none; border: none;
+    display: flex; align-items: center; gap: 5px; padding: 0;
   }
   .tk-cta-btn::after { content: '↓'; font-size: 12px; }
   .tk-card:hover { background: #1c1c1c; }
+
+  /* ─── TOOLKIT MODAL ─── */
+  .tk-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    z-index: 500; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s; padding: 20px;
+  }
+  .tk-modal-overlay.active { opacity: 1; pointer-events: all; }
+  .tk-modal {
+    background: var(--white); border-top: 4px solid var(--yellow);
+    max-width: 520px; width: 100%; padding: 40px; position: relative;
+    transform: translateY(12px); transition: transform 0.2s;
+  }
+  .tk-modal-overlay.active .tk-modal { transform: translateY(0); }
+  .tk-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border: 1px solid var(--rule);
+    background: none; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; font-family: 'Inter', sans-serif;
+    font-size: 18px; color: var(--gray); line-height: 1;
+  }
+  .tk-modal-close:hover { border-color: var(--black); color: var(--black); }
+  .tk-modal-badges { display: flex; gap: 8px; margin-bottom: 16px; }
+  .tk-modal-type-badge {
+    font-family: 'Bebas Neue', cursive; font-size: 10px; letter-spacing: 0.18em;
+    padding: 3px 10px; display: inline-block;
+    background: var(--yellow); color: var(--black);
+  }
+  .tk-modal-type-badge.badge-script    { background: var(--black); color: var(--yellow); }
+  .tk-modal-type-badge.badge-checklist { background: var(--charcoal); color: var(--white); }
+  .tk-modal-type-badge.badge-calculator{ background: #2a2a2a; color: var(--white); }
+  .tk-modal-pillar-badge {
+    font-family: 'Bebas Neue', cursive; font-size: 10px; letter-spacing: 0.14em;
+    color: var(--gray); border: 1px solid var(--rule); padding: 3px 10px;
+  }
+  .tk-modal-title {
+    font-family: 'Bebas Neue', cursive; font-size: 40px; line-height: 0.92;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 12px;
+  }
+  .tk-modal-desc { font-size: 15px; line-height: 1.72; color: var(--charcoal); margin-bottom: 8px; }
+  .tk-modal-includes { margin-bottom: 28px; }
+  .tk-modal-includes-label {
+    font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray);
+    margin-bottom: 8px; margin-top: 16px; display: block;
+  }
+  .tk-modal-includes-list { display: flex; flex-direction: column; gap: 5px; }
+  .tk-modal-includes-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--charcoal); line-height: 1.4; }
+  .tk-modal-includes-dot { width: 7px; height: 7px; background: var(--yellow); flex-shrink: 0; margin-top: 4px; }
+  .tk-modal-divider { border: none; border-top: 1px solid var(--rule); margin-bottom: 24px; }
+  .tk-modal-form-label {
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray);
+    margin-bottom: 10px; display: block;
+  }
+  .tk-modal-form { display: flex; gap: 0; margin-bottom: 10px; }
+  .tk-modal-input {
+    flex: 1; background: var(--off-white); border: 1px solid var(--rule);
+    border-right: none; padding: 0 16px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--charcoal); outline: none; height: 48px;
+  }
+  .tk-modal-input:focus { border-color: var(--yellow); }
+  .tk-modal-input::placeholder { color: #bbb; }
+  .tk-modal-submit {
+    background: var(--yellow); color: var(--black);
+    font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 0.08em;
+    padding: 0 24px; height: 48px; cursor: pointer; white-space: nowrap;
+    border: none; transition: background 0.15s; flex-shrink: 0;
+  }
+  .tk-modal-submit:hover { background: #e8be00; }
+  .tk-modal-fine { font-family: 'Inter', sans-serif; font-size: 11px; color: #bbb; line-height: 1.5; }
+  .tk-modal-confirm { display: none; text-align: center; padding: 20px 0 10px; }
+  .tk-modal-confirm.active { display: block; }
+  .tk-modal-confirm-icon {
+    width: 52px; height: 52px; background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px; font-size: 22px;
+  }
+  .tk-modal-confirm-title {
+    font-family: 'Bebas Neue', cursive; font-size: 32px;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 10px;
+  }
+  .tk-modal-confirm-text { font-size: 15px; line-height: 1.65; color: var(--charcoal); }
+
   @media (max-width: 900px) {
     .tk-grid { grid-template-columns: repeat(2, 1fr); }
   }
@@ -799,3 +868,75 @@ const schema = [
     .tk-header { flex-direction: column; align-items: flex-start; gap: 16px; }
   }
 </style>
+
+<script define:vars={{ tkResourcesData }}>
+  const overlay   = document.getElementById('tk-modal-overlay');
+  const reqPane   = document.getElementById('tk-modal-request');
+  const confPane  = document.getElementById('tk-modal-confirm');
+
+  function openModal(id) {
+    const r = tkResourcesData[id];
+    if (!r) return;
+
+    reqPane.style.display = 'block';
+    confPane.classList.remove('active');
+    document.getElementById('tk-modal-email').value = '';
+
+    const typeBadge = document.getElementById('tk-modal-type-badge');
+    typeBadge.textContent = r.type;
+    typeBadge.className = 'tk-modal-type-badge ' + r.typeBadge;
+
+    document.getElementById('tk-modal-pillar-badge').textContent = r.pillar;
+    document.getElementById('tk-modal-title').textContent = r.title;
+    document.getElementById('tk-modal-desc').textContent = r.desc;
+
+    const list = document.getElementById('tk-modal-includes-list');
+    const wrap = document.getElementById('tk-modal-includes-wrap');
+    list.innerHTML = '';
+    if (r.includes && r.includes.length) {
+      wrap.style.display = 'block';
+      r.includes.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'tk-modal-includes-item';
+        div.innerHTML = '<div class="tk-modal-includes-dot"></div>' + item;
+        list.appendChild(div);
+      });
+    } else {
+      wrap.style.display = 'none';
+    }
+
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('tk-modal-email').focus(), 250);
+  }
+
+  function submitModal() {
+    const email = document.getElementById('tk-modal-email').value;
+    if (!email || !email.includes('@')) {
+      const input = document.getElementById('tk-modal-email');
+      input.focus();
+      input.style.borderColor = '#e00055';
+      setTimeout(() => { input.style.borderColor = ''; }, 1200);
+      return;
+    }
+    reqPane.style.display = 'none';
+    confPane.classList.add('active');
+  }
+
+  function closeModal() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-resource-id]').forEach(btn => {
+    btn.addEventListener('click', () => openModal(btn.dataset.resourceId));
+  });
+
+  document.getElementById('tk-modal-close').addEventListener('click', closeModal);
+  document.getElementById('tk-modal-submit').addEventListener('click', submitModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && overlay.classList.contains('active')) submitModal();
+  });
+</script>
