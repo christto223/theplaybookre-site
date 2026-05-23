@@ -131,54 +131,54 @@ const col2Pillars = PILLARS.slice(4);
   </div>
 </div>
 
-<script>
-  function setupModal(overlayId: string, openBtnId: string, closeBtnId: string, submitBtnId: string, emailId: string, confirmId: string, requestId?: string) {
-    const overlay = document.getElementById(overlayId);
-    const openBtn = document.getElementById(openBtnId);
-    const closeBtn = document.getElementById(closeBtnId);
-    const submitBtn = document.getElementById(submitBtnId);
-    const emailInput = document.getElementById(emailId) as HTMLInputElement;
-    const confirm = document.getElementById(confirmId);
-    const request = requestId ? document.getElementById(requestId) : null;
+<script is:inline>
+  function footerSetupModal(overlayId, openBtnId, closeBtnId, submitBtnId, emailId, confirmId, requestId) {
+    var overlay   = document.getElementById(overlayId);
+    var openBtn   = document.getElementById(openBtnId);
+    var closeBtn  = document.getElementById(closeBtnId);
+    var submitBtn = document.getElementById(submitBtnId);
+    var emailInput = document.getElementById(emailId);
+    var confirmEl = document.getElementById(confirmId);
+    var requestEl = requestId ? document.getElementById(requestId) : null;
 
-    if (!overlay || !openBtn || !closeBtn || !submitBtn || !emailInput || !confirm) return;
+    if (!overlay || !openBtn || !closeBtn || !submitBtn || !emailInput || !confirmEl) return;
 
-    function open() {
-      if (request) request.style.display = 'block';
-      confirm.style.display = 'none';
-      confirm.classList.remove('active');
+    function openModal() {
+      if (requestEl) requestEl.style.display = 'block';
+      confirmEl.style.display = 'none';
+      confirmEl.classList.remove('active');
       emailInput.value = '';
-      overlay!.classList.add('active');
+      overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
-      setTimeout(() => emailInput.focus(), 250);
+      setTimeout(function() { emailInput.focus(); }, 250);
     }
-    function close() {
-      overlay!.classList.remove('active');
+    function closeModal() {
+      overlay.classList.remove('active');
       document.body.style.overflow = '';
     }
-    function submit() {
+    function submitModal() {
       if (!emailInput.value || !emailInput.value.includes('@')) {
         emailInput.focus();
         emailInput.style.borderColor = '#e00055';
-        setTimeout(() => { emailInput.style.borderColor = ''; }, 1200);
+        setTimeout(function() { emailInput.style.borderColor = ''; }, 1200);
         return;
       }
-      if (request) request.style.display = 'none';
-      confirm.style.display = 'block';
-      confirm.classList.add('active');
+      if (requestEl) requestEl.style.display = 'none';
+      confirmEl.style.display = 'block';
+      confirmEl.classList.add('active');
     }
 
-    openBtn.addEventListener('click', open);
-    closeBtn.addEventListener('click', close);
-    submitBtn.addEventListener('click', submit);
-    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && overlay!.classList.contains('active')) close();
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    submitBtn.addEventListener('click', submitModal);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
     });
   }
 
-  setupModal('footer-nl-overlay', 'footer-nl-btn', 'footer-nl-close', 'footer-nl-submit', 'footer-nl-email', 'footer-nl-confirm', 'footer-nl-request');
-  setupModal('footer-ad-overlay', 'footer-ad-btn', 'footer-ad-close', 'footer-ad-submit', 'footer-ad-email', 'footer-ad-confirm');
+  footerSetupModal('footer-nl-overlay', 'footer-nl-btn', 'footer-nl-close', 'footer-nl-submit', 'footer-nl-email', 'footer-nl-confirm', 'footer-nl-request');
+  footerSetupModal('footer-ad-overlay', 'footer-ad-btn', 'footer-ad-close', 'footer-ad-submit', 'footer-ad-email', 'footer-ad-confirm', null);
 </script>
 
 <style>
