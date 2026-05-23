@@ -49,45 +49,6 @@ const schema = [
   <!-- PILLAR STRIP -->
   <PillarStrip />
 
-  <!-- HOMEPAGE HERO -->
-  <div class="home-hero">
-    <div class="home-hero-inner">
-      <div class="hero-left">
-        <div class="hero-eyebrow">The Playbook RE</div>
-        <h1 class="hero-h1">
-          Real Estate<br />Strategy You<br /><em>Actually</em> Use.
-        </h1>
-        <p class="hero-sub">
-          The real estate industry deserves better strategy content than what it has.
-          No coaching upsells. No vendor agendas. Just the playbook — written by someone
-          who has actually done the work.
-        </p>
-        <div class="hero-ctas">
-          <a href="/start-here/" class="hero-cta-primary">Find Your Starting Point →</a>
-          <a href="/toolkit/" class="hero-cta-secondary">Browse the Toolkit</a>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="hero-stat-row">
-          <div class="hero-stat">
-            <div class="hero-stat-num">{allArticles.length}</div>
-            <div class="hero-stat-label">Playbooks published</div>
-          </div>
-          <div class="hero-stat-divider"></div>
-          <div class="hero-stat">
-            <div class="hero-stat-num">8</div>
-            <div class="hero-stat-label">Topic areas</div>
-          </div>
-          <div class="hero-stat-divider"></div>
-          <div class="hero-stat">
-            <div class="hero-stat-num">12,400+</div>
-            <div class="hero-stat-label">Agents reading weekly</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- FEATURED ARTICLE -->
   {featured && (
     <div class="home-featured">
@@ -199,50 +160,6 @@ const schema = [
 </BaseLayout>
 
 <style>
-  /* HERO */
-  .home-hero { background: var(--black); }
-  .home-hero-inner {
-    max-width: 1280px; margin: 0 auto; padding: 72px 40px 64px;
-    display: grid; grid-template-columns: 1fr 340px; gap: 80px; align-items: end;
-  }
-  .hero-eyebrow {
-    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
-    color: #333; margin-bottom: 16px;
-  }
-  .hero-h1 {
-    font-family: 'Bebas Neue', cursive; font-size: 96px; line-height: 0.88;
-    letter-spacing: 0.02em; color: var(--white); margin-bottom: 24px;
-  }
-  .hero-h1 em { color: var(--yellow); font-style: normal; }
-  .hero-sub {
-    font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.65;
-    color: #666; font-style: italic; max-width: 520px; margin-bottom: 32px;
-  }
-  .hero-ctas { display: flex; gap: 16px; align-items: center; }
-  .hero-cta-primary {
-    font-family: 'Bebas Neue', cursive; font-size: 17px; letter-spacing: 0.08em;
-    background: var(--yellow); color: var(--black); padding: 14px 28px;
-    text-decoration: none; transition: background 0.12s;
-  }
-  .hero-cta-primary:hover { background: #e8be00; }
-  .hero-cta-secondary {
-    font-family: 'Bebas Neue', cursive; font-size: 14px; letter-spacing: 0.08em;
-    color: #666; text-decoration: none; border-bottom: 1px solid #333;
-    padding-bottom: 2px; transition: color 0.12s, border-color 0.12s;
-  }
-  .hero-cta-secondary:hover { color: var(--yellow); border-color: var(--yellow); }
-  .hero-right { padding-bottom: 8px; }
-  .hero-stat-row { display: flex; flex-direction: column; gap: 20px; }
-  .hero-stat-num {
-    font-family: 'Bebas Neue', cursive; font-size: 44px; line-height: 0.9;
-    color: var(--yellow); letter-spacing: 0.02em;
-  }
-  .hero-stat-label {
-    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
-    letter-spacing: 0.08em; text-transform: uppercase; color: #333; margin-top: 4px;
-  }
-  .hero-stat-divider { width: 40px; height: 1px; background: #1e1e1e; }
-
   /* FEATURED HERO */
   .home-featured { background: var(--black); border-bottom: 1px solid #1f1f1f; }
   .home-featured-inner {
