@@ -14,6 +14,12 @@ const sorted = allArticles.sort((a, b) => b.data.publishDate.valueOf() - a.data.
 const featured = sorted.find(a => a.data.featured) ?? sorted[0];
 // Latest 5 (excluding featured)
 const latest = sorted.filter(a => a.id !== featured?.id).slice(0, 5);
+// Spotlight: lead generation pillar — large card + up to 3 small cards
+const spotlightAll = allArticles
+  .filter(a => a.data.pillar === 'lead-generation')
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+const spotlightLg = spotlightAll[0];
+const spotlightSm = spotlightAll.slice(1, 4);
 // Most read — driven by manually curated MOST_READ_IDS; falls back to recent if ID not found
 const mostRead = MOST_READ_IDS
   .map(id => allArticles.find(a => a.id === id + (id.endsWith('.md') ? '' : '.md') || a.id.replace(/\.mdx?$/, '') === id))
@@ -228,21 +234,57 @@ const schema = [
 
   </div><!-- /lp-layout -->
 
-  <!-- PILLAR GRID -->
-  <div class="home-pillars">
-    <div class="home-pillars-inner">
-      <div class="section-label">Browse by Topic</div>
-      <div class="pillars-grid">
-        {PILLARS.map(p => (
-          <a href={`/${p.slug}/`} class="pillar-tile">
-            <div class="pillar-tile-name">{p.name}</div>
-            <div class="pillar-tile-desc">{p.description}</div>
-            <div class="pillar-tile-link">Browse →</div>
+  <!-- SPOTLIGHT: LEAD GENERATION -->
+  <section class="sp-section">
+    <div class="sp-inner">
+
+      <div class="sp-header">
+        <div>
+          <div class="sp-label">Spotlight</div>
+          <div class="sp-title">Lead <span>Generation</span></div>
+          <div class="sp-desc">The strategies, systems, and scripts that build a pipeline that never runs dry.</div>
+        </div>
+        <a href="/lead-generation/" class="sp-link">All Lead Generation Playbooks</a>
+      </div>
+
+      <div class="sp-grid">
+
+        {spotlightLg && (
+          <a href={articleUrl(spotlightLg)} class="sp-card-lg">
+            <div class="sp-img-tall">
+              {spotlightLg.data.accentWord && (
+                <span class="sp-img-word">{spotlightLg.data.accentWord.toUpperCase()}</span>
+              )}
+              <div class="sp-img-badge">{spotlightLg.data.tags[0]}</div>
+            </div>
+            <div class="sp-body">
+              <div class="sp-cat-tag">{PILLARS.find(p => p.slug === spotlightLg.data.pillar)?.name ?? 'Lead Generation'}</div>
+              <h3 class="sp-h3" set:html={spotlightLg.data.title.replace(spotlightLg.data.accentWord ?? '___', `<em>${spotlightLg.data.accentWord}</em>`)} />
+              <p class="sp-excerpt">{spotlightLg.data.description}</p>
+              <span class="sp-read">Read the Playbook</span>
+            </div>
+          </a>
+        )}
+
+        {spotlightSm.map(a => (
+          <a href={articleUrl(a)} class="sp-card-sm">
+            <div class="sp-img-med">
+              {a.data.accentWord && (
+                <span class="sp-img-word sp-img-word--sm">{a.data.accentWord.toUpperCase()}</span>
+              )}
+              <div class="sp-img-badge">{a.data.tags[0]}</div>
+            </div>
+            <div class="sp-body">
+              <div class="sp-cat-tag">{a.data.tags[0]}</div>
+              <h4 class="sp-h4" set:html={a.data.title.replace(a.data.accentWord ?? '___', `<em>${a.data.accentWord}</em>`)} />
+              <span class="sp-read">Read the Playbook</span>
+            </div>
           </a>
         ))}
+
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- NEWSLETTER BAND -->
   <NewsletterBand />
@@ -484,27 +526,105 @@ const schema = [
   }
   .lp-mr-meta { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--gray); }
 
-  /* PILLARS */
-  .home-pillars { background: var(--black); }
-  .home-pillars-inner { max-width: 1280px; margin: 0 auto; padding: 56px 40px; }
-  .home-pillars-inner .section-label { margin-bottom: 24px; }
-  .pillars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #1a1a1a; }
-  .pillar-tile {
-    background: #0d0d0d; padding: 28px;
-    text-decoration: none; display: flex; flex-direction: column;
-    transition: background 0.12s;
+  /* SPOTLIGHT SECTION */
+  .sp-section {
+    background: var(--black);
+    border-top: 1px solid #1f1f1f;
+    border-bottom: 1px solid #1f1f1f;
   }
-  .pillar-tile:hover { background: #161616; }
-  .pillar-tile:hover .pillar-tile-name { color: var(--yellow); }
-  .pillar-tile-name {
-    font-family: 'Bebas Neue', cursive; font-size: 26px; line-height: 0.95;
-    letter-spacing: 0.02em; color: var(--white); margin-bottom: 10px;
-    transition: color 0.15s;
+  .sp-inner { max-width: 1280px; margin: 0 auto; padding: 48px 40px; }
+  .sp-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid #222;
   }
-  .pillar-tile-desc { font-family: 'Inter', sans-serif; font-size: 12px; color: #888; line-height: 1.6; flex: 1; }
-  .pillar-tile-link {
-    font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 0.1em;
-    color: #555; margin-top: 16px; transition: color 0.12s;
+  .sp-label {
+    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.25em;
+    color: #555; margin-bottom: 6px;
   }
-  .pillar-tile:hover .pillar-tile-link { color: var(--yellow); }
+  .sp-title {
+    font-family: 'Bebas Neue', cursive; font-size: 48px; line-height: 0.9;
+    letter-spacing: 0.02em; color: var(--white);
+  }
+  .sp-title span { color: var(--yellow); }
+  .sp-desc { font-size: 14px; color: #666; max-width: 400px; line-height: 1.6; margin-top: 8px; }
+  .sp-link {
+    font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 0.1em;
+    color: var(--yellow); text-decoration: none; flex-shrink: 0;
+    display: flex; align-items: center; gap: 8px; white-space: nowrap;
+  }
+  .sp-link::after { content: '→'; }
+  .sp-link:hover { color: #e8be00; }
+
+  /* 4-card spotlight grid: large (2fr) + up to 3 small (1fr each) */
+  .sp-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 2px; background: #1a1a1a;
+  }
+
+  /* Large card */
+  .sp-card-lg {
+    background: #161616; display: flex; flex-direction: column;
+    text-decoration: none; color: inherit; transition: background 0.12s;
+  }
+  .sp-card-lg:hover { background: #1c1c1c; }
+  .sp-img-tall {
+    height: 220px; position: relative; overflow: hidden;
+    background: #0e1a12;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Small card */
+  .sp-card-sm {
+    background: #161616; display: flex; flex-direction: column;
+    text-decoration: none; color: inherit; transition: background 0.12s;
+  }
+  .sp-card-sm:hover { background: #1c1c1c; }
+  .sp-img-med {
+    height: 120px; position: relative; overflow: hidden;
+    background: #0e1a12;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Shared image word */
+  .sp-img-word {
+    font-family: 'Bebas Neue', cursive; font-size: 100px; line-height: 1;
+    color: rgba(255,255,255,0.07); user-select: none; position: relative; z-index: 1;
+  }
+  .sp-img-word--sm { font-size: 60px; }
+  .sp-img-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--yellow); color: var(--black);
+    font-family: 'Bebas Neue', cursive; font-size: 10px; letter-spacing: 0.18em;
+    padding: 3px 9px; z-index: 2;
+  }
+
+  /* Card body */
+  .sp-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+  .sp-card-sm .sp-body { padding: 16px; }
+  .sp-cat-tag {
+    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
+    color: var(--yellow); background: var(--black);
+    display: inline-block; padding: 2px 9px; margin-bottom: 12px; width: fit-content;
+  }
+  .sp-card-sm .sp-cat-tag { margin-bottom: 8px; }
+  .sp-h3 {
+    font-family: 'Bebas Neue', cursive; font-size: 30px; line-height: 0.95;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 12px; flex: 1;
+  }
+  .sp-h3 :global(em) { color: var(--yellow); font-style: normal; }
+  .sp-h4 {
+    font-family: 'Bebas Neue', cursive; font-size: 19px; line-height: 1.05;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 12px; flex: 1;
+  }
+  .sp-h4 :global(em) { color: var(--yellow); font-style: normal; }
+  .sp-excerpt { font-size: 13px; color: #777; line-height: 1.55; margin-bottom: 18px; }
+  .sp-read {
+    font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.12em;
+    color: var(--yellow); display: flex; align-items: center; gap: 6px;
+    margin-top: auto;
+  }
+  .sp-read::after { content: '→'; }
+  .sp-card-lg:hover .sp-read,
+  .sp-card-sm:hover .sp-read { color: #e8be00; }
 </style>
