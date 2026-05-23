@@ -5,16 +5,20 @@ import ArticleCard from '../components/ArticleCard.astro';
 import PillarStrip from '../components/PillarStrip.astro';
 import NewsletterBand from '../components/NewsletterBand.astro';
 import { PILLARS } from '../data/pillars';
+import { MOST_READ_IDS } from '../data/mostRead';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
 const sorted = allArticles.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 
 // Homepage featured = first article with featured:true, else most recent
 const featured = sorted.find(a => a.data.featured) ?? sorted[0];
-// Latest 3 (excluding featured)
-const latest = sorted.filter(a => a.id !== featured?.id).slice(0, 3);
-// Most read = next 5 (placeholder — will be replaced with GA4 data)
-const mostRead = sorted.filter(a => a.id !== featured?.id && !latest.includes(a)).slice(0, 5);
+// Latest 5 (excluding featured)
+const latest = sorted.filter(a => a.id !== featured?.id).slice(0, 5);
+// Most read — driven by manually curated MOST_READ_IDS; falls back to recent if ID not found
+const mostRead = MOST_READ_IDS
+  .map(id => allArticles.find(a => a.id === id + (id.endsWith('.md') ? '' : '.md') || a.id.replace(/\.mdx?$/, '') === id))
+  .filter(Boolean)
+  .slice(0, 5) as typeof allArticles;
 
 function articleUrl(article: typeof allArticles[0]) {
   const parts = article.id.split('/');
@@ -107,7 +111,7 @@ const schema = [
   <!-- LATEST PLAYBOOKS + SIDEBAR -->
   <div class="lp-section-head">
     <div class="lp-title">Latest Playbooks</div>
-    <a href="#" class="lp-view-all">View All →</a>
+    <a href="/playbooks/" class="lp-view-all">View All →</a>
   </div>
 
   <div class="lp-layout">
@@ -161,8 +165,7 @@ const schema = [
         );
       })()}
 
-      {latest[2] && (() => {
-        const a = latest[2];
+      {[latest[2], latest[3], latest[4]].map(a => a && (() => {
         const bg = lpPillarColors[a.data.pillar] ?? '#1a1a1a';
         const tag = PILLARS.find(p => p.slug === a.data.pillar)?.name ?? a.data.pillar;
         return (
@@ -182,7 +185,7 @@ const schema = [
             </div>
           </a>
         );
-      })()}
+      })())}
 
     </div><!-- /lp-feed -->
 
@@ -205,7 +208,7 @@ const schema = [
           <div class="lp-most-read">
             <div class="lp-mr-head">
               <span>Most Read</span>
-              <a href="#">See All →</a>
+              <a href="/playbooks/">See All →</a>
             </div>
             {mostRead.map((a, i) => (
               <a href={articleUrl(a)} class="lp-mr-item">

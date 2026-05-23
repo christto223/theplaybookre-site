@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import PillarStrip from '../../components/PillarStrip.astro';
+import NewsletterBand from '../../components/NewsletterBand.astro';
+
+const allArticles = await getCollection('articles', ({ data }) => !data.draft);
+const sorted = allArticles.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+function articleUrl(article: typeof allArticles[0]) {
+  const parts = article.id.split('/');
+  return `/${parts[0]}/${parts.slice(1).join('/')}/`;
+}
+---
+
+<BaseLayout
+  title="All Playbooks — The Playbook RE"
+  description="Every playbook published on The Playbook RE, newest to oldest. Strategy, scripts, and systems for real estate agents."
+>
+  <PillarStrip />
+
+  <div class="pb-header">
+    <div class="pb-header-inner">
+      <div class="pb-eyebrow">The Archive</div>
+      <h1 class="pb-title">All Playbooks</h1>
+      <p class="pb-sub">{sorted.length} playbooks published — newest first.</p>
+    </div>
+  </div>
+
+  <div class="pb-grid-wrap">
+    <div class="pb-grid">
+      {sorted.map(article => (
+        <ArticleCard
+          title={article.data.title}
+          description={article.data.description}
+          pillar={article.data.pillar}
+          primaryTag={article.data.tags[0] ?? ''}
+          readTime={article.data.readTime}
+          slug={article.id}
+          heroImage={article.data.heroImage}
+          accentWord={article.data.accentWord}
+        />
+      ))}
+    </div>
+  </div>
+
+  <NewsletterBand />
+</BaseLayout>
+
+<style>
+  /* Page header */
+  .pb-header { background: var(--black); border-bottom: 1px solid #1a1a1a; }
+  .pb-header-inner {
+    max-width: 1280px; margin: 0 auto; padding: 56px 40px 52px;
+  }
+  .pb-eyebrow {
+    font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 0.25em;
+    color: var(--yellow); margin-bottom: 12px;
+  }
+  .pb-title {
+    font-family: 'Bebas Neue', cursive; font-size: 72px; line-height: 0.9;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 16px;
+  }
+  .pb-sub {
+    font-family: 'Inter', sans-serif; font-size: 14px; color: #666;
+  }
+
+  /* Article grid */
+  .pb-grid-wrap {
+    background: var(--off-white);
+  }
+  .pb-grid {
+    max-width: 1280px; margin: 0 auto; padding: 40px 40px 64px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; background: var(--rule);
+  }
+  @media (max-width: 900px) {
+    .pb-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .pb-grid { grid-template-columns: 1fr; padding: 24px 20px 48px; }
+    .pb-title { font-size: 52px; }
+    .pb-header-inner { padding: 40px 20px; }
+  }
+</style>
