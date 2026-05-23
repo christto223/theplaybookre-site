@@ -6,6 +6,7 @@ import PillarStrip from '../components/PillarStrip.astro';
 import NewsletterBand from '../components/NewsletterBand.astro';
 import { PILLARS } from '../data/pillars';
 import { MOST_READ_IDS } from '../data/mostRead';
+import { CL_POSTS } from '../data/clPosts';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
 const allToolkit = await getCollection('toolkit');
@@ -345,6 +346,38 @@ const schema = [
 
   <!-- NEWSLETTER BAND -->
   <NewsletterBand />
+
+  <!-- FROM THE DESK OF CHRIS LINSELL -->
+  <section class="cl-section">
+    <div class="cl-section-head">
+      <div class="cl-title-block">
+        <div class="cl-title">From the Desk of Chris Linsell</div>
+        <div class="cl-subtitle">Perspective, analysis, and takes on what's actually happening in real estate — not strategy, just point of view.</div>
+      </div>
+      <a href="https://chrislinsell.com/blog" class="cl-view-all" target="_blank" rel="noopener">Read More at ChrisLinsell.com ↗</a>
+    </div>
+    <div class="cl-grid-wrap">
+      <div class="cl-grid">
+        {CL_POSTS.slice(0, 3).map(post => (
+          <a href={post.href} class="cl-card" target="_blank" rel="noopener">
+            <div class="cl-card-img">
+              <span class="cl-img-word">{post.word}</span>
+              <div class="cl-source-badge">chrislinsell.com</div>
+            </div>
+            <div class="cl-card-body">
+              <div class="cl-card-type">{post.type}</div>
+              <h3>{post.title}</h3>
+              <p class="cl-excerpt">{post.excerpt}</p>
+              <div class="cl-card-foot">
+                <span class="cl-byline"><strong>Chris Linsell</strong> · {post.date}</span>
+                <span class="cl-read-link">Read on ChrisLinsell.com</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
 
   <!-- TOOLKIT DOWNLOAD MODAL -->
   <div class="tk-modal-overlay" id="tk-modal-overlay">
@@ -866,6 +899,81 @@ const schema = [
     .tk-inner { padding: 40px 20px; }
     .tk-title { font-size: 40px; }
     .tk-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+
+  /* ─── FROM THE DESK OF CHRIS LINSELL ─── */
+  .cl-section { background: var(--off-white); }
+  .cl-section-head {
+    max-width: 1280px; margin: 0 auto; padding: 40px 40px 20px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+  }
+  .cl-title {
+    font-family: 'Bebas Neue', cursive; font-size: 28px; letter-spacing: 0.04em;
+    color: var(--black); display: flex; align-items: center; gap: 14px;
+  }
+  .cl-title::after { content: ''; display: block; width: 40px; height: 3px; background: var(--yellow); }
+  .cl-subtitle { font-size: 13px; color: var(--gray); margin-top: 4px; }
+  .cl-view-all {
+    font-family: 'Bebas Neue', cursive; font-size: 14px; letter-spacing: 0.1em;
+    color: var(--gray); text-decoration: none;
+    display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  }
+  .cl-view-all:hover { color: var(--black); }
+  .cl-grid-wrap { max-width: 1280px; margin: 0 auto; padding: 0 40px 48px; }
+  .cl-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px; background: var(--rule);
+  }
+  .cl-card {
+    background: var(--white); display: flex; flex-direction: column;
+    position: relative; text-decoration: none; color: inherit;
+    transition: background 0.12s;
+  }
+  .cl-card:hover { background: #fafaf8; }
+  .cl-card-img {
+    height: 180px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #4a7a5a 0%, #6a9e78 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cl-img-word {
+    font-family: 'Bebas Neue', cursive; font-size: 80px;
+    color: rgba(255,255,255,0.15); user-select: none;
+  }
+  .cl-source-badge {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--black); color: var(--white);
+    font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .cl-source-badge::after { content: '↗'; font-size: 8px; }
+  .cl-card-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+  .cl-card-type {
+    font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray);
+    margin-bottom: 10px;
+  }
+  .cl-card-body h3 {
+    font-family: 'Bebas Neue', cursive; font-size: 24px; line-height: 1.0;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 10px; flex: 1;
+  }
+  .cl-excerpt { font-size: 13px; color: var(--charcoal); line-height: 1.55; margin-bottom: 16px; }
+  .cl-card-foot { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--rule); }
+  .cl-byline { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--gray); display: block; margin-bottom: 8px; }
+  .cl-byline strong { color: var(--black); font-weight: 600; }
+  .cl-read-link {
+    font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.1em;
+    color: var(--black); display: flex; align-items: center; gap: 5px;
+  }
+  .cl-read-link::after { content: '↗'; font-size: 11px; }
+  .cl-card:hover .cl-read-link { color: var(--yellow); }
+  @media (max-width: 900px) {
+    .cl-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .cl-grid { grid-template-columns: 1fr; }
+    .cl-grid-wrap { padding: 0 20px 40px; }
+    .cl-section-head { padding: 32px 20px 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
   }
 </style>
 
