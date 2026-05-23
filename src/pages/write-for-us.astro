@@ -1,0 +1,192 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Write for Us — The Playbook RE"
+  description="The Playbook RE publishes practitioner-written strategy for real estate agents. If you've built something that works and want to share it, here's how."
+>
+  <div class="wfu-hero">
+    <div class="wfu-hero-inner">
+      <div class="wfu-eyebrow">Contribute</div>
+      <h1 class="wfu-title">Write for <em>The Playbook</em>.</h1>
+      <p class="wfu-sub">We publish strategy, systems, and scripts from people who've actually used them. Not content marketing. Not thought leadership fluff. Real playbooks from real practitioners.</p>
+    </div>
+  </div>
+
+  <div class="wfu-body">
+    <div class="wfu-body-inner">
+
+      <div class="wfu-standards">
+        <h2 class="wfu-h2">What We Publish</h2>
+        <p>The Playbook RE has one editorial standard: <strong>it has to work</strong>. Every piece we publish is something a working agent can pick up and use — a system they can implement, a script they can run, a framework they can apply.</p>
+        <p>We don't publish opinion pieces, general advice, or market commentary. We publish playbooks.</p>
+
+        <div class="wfu-criteria">
+          <div class="wfu-criterion">
+            <div class="wfu-criterion-num">01</div>
+            <div>
+              <strong>Practitioner-written</strong>
+              <p>You've used this in a real business. You have results. You can speak to what worked, what didn't, and what someone else needs to know before they try it.</p>
+            </div>
+          </div>
+          <div class="wfu-criterion">
+            <div class="wfu-criterion-num">02</div>
+            <div>
+              <strong>Specific and actionable</strong>
+              <p>Step-by-step beats high-level every time. Scripts, frameworks, checklists, and systems over general principles.</p>
+            </div>
+          </div>
+          <div class="wfu-criterion">
+            <div class="wfu-criterion-num">03</div>
+            <div>
+              <strong>No promotional content</strong>
+              <p>We don't publish pieces that promote a product, service, brokerage, or brand — including your own. The playbook is the value. Period.</p>
+            </div>
+          </div>
+          <div class="wfu-criterion">
+            <div class="wfu-criterion-num">04</div>
+            <div>
+              <strong>Original work</strong>
+              <p>Must not be published elsewhere. We don't republish, syndicate, or accept AI-generated content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wfu-form-wrap">
+        <h2 class="wfu-h2">Pitch Us</h2>
+        <p>Tell us what you want to write and why you're the right person to write it. Keep it brief — a paragraph or two is enough.</p>
+
+        <form class="wfu-form" id="wfu-form">
+          <div class="wfu-field">
+            <label class="wfu-label" for="wfu-name">Your name</label>
+            <input class="wfu-input" type="text" id="wfu-name" placeholder="First and last name" />
+          </div>
+          <div class="wfu-field">
+            <label class="wfu-label" for="wfu-email">Email address</label>
+            <input class="wfu-input" type="email" id="wfu-email" placeholder="your@email.com" />
+          </div>
+          <div class="wfu-field">
+            <label class="wfu-label" for="wfu-role">Your role</label>
+            <input class="wfu-input" type="text" id="wfu-role" placeholder="e.g. Realtor, Team Lead, Broker" />
+          </div>
+          <div class="wfu-field">
+            <label class="wfu-label" for="wfu-topic">Proposed topic / working title</label>
+            <input class="wfu-input" type="text" id="wfu-topic" placeholder="What's the playbook?" />
+          </div>
+          <div class="wfu-field">
+            <label class="wfu-label" for="wfu-pitch">Your pitch</label>
+            <textarea class="wfu-input wfu-textarea" id="wfu-pitch" placeholder="What does this piece cover? Why are you the right person to write it? What results have you seen using this in your own business?"></textarea>
+          </div>
+          <button class="wfu-submit" type="submit">Submit Your Pitch →</button>
+        </form>
+
+        <div class="wfu-confirm" id="wfu-confirm">
+          <div class="wfu-confirm-icon">✓</div>
+          <div class="wfu-confirm-title">Pitch received.</div>
+          <p class="wfu-confirm-text">We review every submission. If it's a fit, someone will be in touch within two weeks. If it's not, we won't follow up — but we appreciate you reaching out.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('wfu-form') as HTMLFormElement;
+  const confirm = document.getElementById('wfu-confirm');
+  form?.addEventListener('submit', e => {
+    e.preventDefault();
+    if (form) form.style.display = 'none';
+    if (confirm) confirm.style.display = 'block';
+  });
+</script>
+
+<style>
+  /* Hero */
+  .wfu-hero { background: var(--black); border-bottom: 1px solid #1f1f1f; }
+  .wfu-hero-inner { max-width: 860px; margin: 0 auto; padding: 72px 40px 64px; }
+  .wfu-eyebrow {
+    font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 0.25em;
+    color: var(--yellow); margin-bottom: 12px;
+  }
+  .wfu-title {
+    font-family: 'Bebas Neue', cursive; font-size: 80px; line-height: 0.9;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 24px;
+  }
+  .wfu-title em { color: var(--yellow); font-style: normal; }
+  .wfu-sub {
+    font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.65;
+    color: #666; max-width: 600px;
+  }
+
+  /* Body */
+  .wfu-body { background: var(--off-white); }
+  .wfu-body-inner {
+    max-width: 860px; margin: 0 auto; padding: 64px 40px 80px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  }
+  .wfu-h2 {
+    font-family: 'Bebas Neue', cursive; font-size: 32px; letter-spacing: 0.02em;
+    color: var(--black); margin-bottom: 20px;
+  }
+  .wfu-standards p, .wfu-form-wrap p {
+    font-size: 15px; line-height: 1.7; color: var(--charcoal); margin-bottom: 12px;
+  }
+  .wfu-standards strong { color: var(--black); font-weight: 600; }
+
+  /* Criteria list */
+  .wfu-criteria { margin-top: 32px; display: flex; flex-direction: column; gap: 28px; }
+  .wfu-criterion { display: flex; gap: 20px; align-items: flex-start; }
+  .wfu-criterion-num {
+    font-family: 'Bebas Neue', cursive; font-size: 28px; color: var(--yellow);
+    line-height: 1; flex-shrink: 0; width: 32px;
+  }
+  .wfu-criterion strong { font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 0.05em; color: var(--black); display: block; margin-bottom: 4px; }
+  .wfu-criterion p { font-size: 13px; line-height: 1.55; color: #666; margin: 0; }
+
+  /* Form */
+  .wfu-form { display: flex; flex-direction: column; gap: 20px; }
+  .wfu-field { display: flex; flex-direction: column; gap: 6px; }
+  .wfu-label {
+    font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray);
+  }
+  .wfu-input {
+    background: var(--white); border: 1px solid var(--rule);
+    padding: 12px 16px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--charcoal); outline: none;
+    transition: border-color 0.15s;
+  }
+  .wfu-input:focus { border-color: var(--yellow); }
+  .wfu-input::placeholder { color: #bbb; }
+  .wfu-textarea { resize: vertical; min-height: 120px; }
+  .wfu-submit {
+    background: var(--black); color: var(--yellow);
+    font-family: 'Bebas Neue', cursive; font-size: 17px; letter-spacing: 0.08em;
+    padding: 16px 32px; border: none; cursor: pointer;
+    align-self: flex-start; transition: background 0.15s;
+  }
+  .wfu-submit:hover { background: #222; }
+
+  /* Confirm */
+  .wfu-confirm { display: none; text-align: center; padding: 40px 0; }
+  .wfu-confirm-icon {
+    width: 52px; height: 52px; background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px; font-size: 22px;
+  }
+  .wfu-confirm-title {
+    font-family: 'Bebas Neue', cursive; font-size: 36px;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 12px;
+  }
+  .wfu-confirm-text { font-size: 15px; line-height: 1.65; color: var(--charcoal); max-width: 420px; margin: 0 auto; }
+
+  /* Responsive */
+  @media (max-width: 800px) {
+    .wfu-body-inner { grid-template-columns: 1fr; gap: 48px; }
+    .wfu-title { font-size: 60px; }
+    .wfu-hero-inner, .wfu-body-inner { padding-left: 20px; padding-right: 20px; }
+  }
+</style>

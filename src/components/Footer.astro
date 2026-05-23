@@ -1,13 +1,15 @@
 ---
 import { PILLARS } from '../data/pillars';
-const topicsPillars = PILLARS.slice(0, 4);
-const morePillars   = PILLARS.slice(4);
+const col1Pillars = PILLARS.slice(0, 4);
+const col2Pillars = PILLARS.slice(4);
 ---
 
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-top">
-      <div>
+
+      <!-- Brand + social -->
+      <div class="footer-brand">
         <div class="footer-logo">THE <span>PLAYBOOK</span> RE</div>
         <div class="footer-tagline">
           Strategy and systems for real estate agents who are serious about
@@ -15,40 +17,58 @@ const morePillars   = PILLARS.slice(4);
           Just the playbook.
         </div>
         <div class="footer-social">
-          <div class="social-dot">X</div>
-          <div class="social-dot">IN</div>
-          <div class="social-dot">IG</div>
-          <div class="social-dot">YT</div>
+          <a href="https://www.threads.net/@chrislinsell" target="_blank" rel="noopener" class="social-icon" aria-label="Threads">
+            <svg viewBox="0 0 192 192" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.229c8.249.053 14.474 2.452 18.503 7.129 2.932 3.405 4.893 8.111 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 7.047 4.652 16.124 6.927 25.557 6.412 12.458-.683 22.231-5.436 29.049-14.127 5.178-6.6 8.453-15.153 9.899-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.376-11.319 11.308-24.925 16.2-45.488 16.351-22.809-.169-40.06-7.484-51.275-21.742C35.236 134.995 29.808 117.38 29.549 96c.259-21.381 5.687-39.004 16.142-52.367C56.906 29.517 74.157 22.21 96.966 22.041c22.961.17 40.526 7.512 52.171 21.813 5.711 7.026 10.015 15.86 12.853 26.162l16.147-4.308c-3.44-12.68-8.853-23.606-16.219-32.668C147.036 16.24 124.669 6.21 96.985 6.002h-.052C69.327 6.21 47.019 16.28 31.996 33.036 18.596 48.035 11.725 68.459 11.499 95.9v.2c.226 27.441 7.097 47.865 20.497 62.864 15.023 16.756 37.331 26.826 64.988 27.034h.052c24.563-.185 41.947-6.615 56.228-20.877 18.98-18.958 18.399-42.714 12.131-57.256-4.433-10.337-12.697-18.798-23.858-24.877Zm-41.659 39.41c-10.463.564-21.328-4.107-21.868-14.15-.408-7.638 5.42-16.166 22.747-17.185a96.847 96.847 0 0 1 5.741-.172c6.195 0 11.98.606 17.271 1.765-1.959 24.136-13.956 29.136-23.891 29.742z"/>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/chrislinsell" target="_blank" rel="noopener" class="social-icon" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/chrislinsell" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+          </a>
         </div>
       </div>
 
+      <!-- Topics col 1 -->
       <div>
         <div class="footer-col-head">Topics</div>
         <ul class="footer-links">
-          {topicsPillars.map(p => (
+          {col1Pillars.map(p => (
             <li><a href={`/${p.slug}/`}>{p.name}</a></li>
           ))}
         </ul>
       </div>
 
+      <!-- Topics col 2 -->
       <div>
         <div class="footer-col-head">&nbsp;</div>
         <ul class="footer-links">
-          {morePillars.map(p => (
+          {col2Pillars.map(p => (
             <li><a href={`/${p.slug}/`}>{p.name}</a></li>
           ))}
         </ul>
       </div>
 
+      <!-- The Playbook -->
       <div>
         <div class="footer-col-head">The Playbook</div>
         <ul class="footer-links">
           <li><a href="/about/">About</a></li>
           <li><a href="/start-here/">Start Here</a></li>
           <li><a href="/toolkit/">The Toolkit</a></li>
-          <li><a href="/start-here/#newsletter">Newsletter</a></li>
+          <li><button class="footer-link-btn" id="footer-nl-btn">Newsletter</button></li>
+          <li><a href="/playbooks/">Most Read</a></li>
+          <li><a href="/write-for-us/">Write for Us</a></li>
+          <li><button class="footer-link-btn" id="footer-ad-btn">Advertise</button></li>
         </ul>
       </div>
+
     </div>
 
     <div class="footer-bottom">
@@ -62,3 +82,186 @@ const morePillars   = PILLARS.slice(4);
     </div>
   </div>
 </footer>
+
+<!-- NEWSLETTER MODAL -->
+<div class="footer-modal-overlay" id="footer-nl-overlay">
+  <div class="footer-modal">
+    <button class="footer-modal-close" id="footer-nl-close">×</button>
+    <div id="footer-nl-request">
+      <div class="footer-modal-eyebrow">The Playbook RE Newsletter</div>
+      <div class="footer-modal-title">One Playbook.<br/>Every Week.</div>
+      <p class="footer-modal-desc">Strategy, scripts, and systems for agents who are serious about building a real business. Delivered every Tuesday. Free, always.</p>
+      <div class="footer-modal-stats">
+        <div><strong>12K+</strong> agents subscribed</div>
+        <div><strong>Every Tuesday</strong> delivery</div>
+      </div>
+      <hr class="footer-modal-divider" />
+      <div class="footer-modal-form">
+        <input type="email" class="footer-modal-input" id="footer-nl-email" placeholder="your@email.com" />
+        <button class="footer-modal-submit" id="footer-nl-submit">Subscribe →</button>
+      </div>
+      <p class="footer-modal-fine">Free. No spam. Unsubscribe any time.</p>
+    </div>
+    <div class="footer-modal-confirm" id="footer-nl-confirm">
+      <div class="footer-modal-confirm-icon">✓</div>
+      <div class="footer-modal-confirm-title">You're in.</div>
+      <p class="footer-modal-confirm-text">First issue arrives next Tuesday. Check your inbox — and your spam folder if it doesn't show up.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADVERTISE MODAL -->
+<div class="footer-modal-overlay" id="footer-ad-overlay">
+  <div class="footer-modal">
+    <button class="footer-modal-close" id="footer-ad-close">×</button>
+    <div class="footer-modal-eyebrow">Advertising</div>
+    <div class="footer-modal-title">We Don't Run Ads.</div>
+    <p class="footer-modal-desc">The Playbook RE is completely editorially independent. We don't accept advertising, sponsored content, or paid placements — and we have no plans to change that.</p>
+    <p class="footer-modal-desc" style="margin-top: 12px;">If you'd like to be notified if that ever changes, leave your email below and we'll reach out. No obligation, no pitch.</p>
+    <hr class="footer-modal-divider" />
+    <div class="footer-modal-form">
+      <input type="email" class="footer-modal-input" id="footer-ad-email" placeholder="your@email.com" />
+      <button class="footer-modal-submit" id="footer-ad-submit">Notify Me →</button>
+    </div>
+    <div class="footer-modal-confirm" id="footer-ad-confirm" style="display:none; margin-top: 24px;">
+      <div class="footer-modal-confirm-icon">✓</div>
+      <div class="footer-modal-confirm-title">Got it.</div>
+      <p class="footer-modal-confirm-text">We'll reach out if our advertising policy ever changes. Thanks for your interest.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setupModal(overlayId: string, openBtnId: string, closeBtnId: string, submitBtnId: string, emailId: string, confirmId: string, requestId?: string) {
+    const overlay = document.getElementById(overlayId);
+    const openBtn = document.getElementById(openBtnId);
+    const closeBtn = document.getElementById(closeBtnId);
+    const submitBtn = document.getElementById(submitBtnId);
+    const emailInput = document.getElementById(emailId) as HTMLInputElement;
+    const confirm = document.getElementById(confirmId);
+    const request = requestId ? document.getElementById(requestId) : null;
+
+    if (!overlay || !openBtn || !closeBtn || !submitBtn || !emailInput || !confirm) return;
+
+    function open() {
+      if (request) request.style.display = 'block';
+      confirm.style.display = 'none';
+      confirm.classList.remove('active');
+      emailInput.value = '';
+      overlay!.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => emailInput.focus(), 250);
+    }
+    function close() {
+      overlay!.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function submit() {
+      if (!emailInput.value || !emailInput.value.includes('@')) {
+        emailInput.focus();
+        emailInput.style.borderColor = '#e00055';
+        setTimeout(() => { emailInput.style.borderColor = ''; }, 1200);
+        return;
+      }
+      if (request) request.style.display = 'none';
+      confirm.style.display = 'block';
+      confirm.classList.add('active');
+    }
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    submitBtn.addEventListener('click', submit);
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && overlay!.classList.contains('active')) close();
+    });
+  }
+
+  setupModal('footer-nl-overlay', 'footer-nl-btn', 'footer-nl-close', 'footer-nl-submit', 'footer-nl-email', 'footer-nl-confirm', 'footer-nl-request');
+  setupModal('footer-ad-overlay', 'footer-ad-btn', 'footer-ad-close', 'footer-ad-submit', 'footer-ad-email', 'footer-ad-confirm');
+</script>
+
+<style>
+  /* Social icons */
+  .footer-social { display: flex; gap: 10px; }
+  .social-icon {
+    width: 32px; height: 32px; border: 1px solid #333;
+    display: flex; align-items: center; justify-content: center;
+    color: #555; transition: border-color 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+  .social-icon svg { width: 14px; height: 14px; }
+  .social-icon:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  /* Footer link buttons (Newsletter, Advertise) */
+  .footer-link-btn {
+    font-family: 'Inter', sans-serif; font-size: 12px; color: #555;
+    background: none; border: none; padding: 0; cursor: pointer;
+    text-align: left;
+  }
+  .footer-link-btn:hover { color: var(--yellow); }
+
+  /* Modals */
+  .footer-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    z-index: 600; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s; padding: 20px;
+  }
+  .footer-modal-overlay.active { opacity: 1; pointer-events: all; }
+  .footer-modal {
+    background: var(--white); border-top: 4px solid var(--yellow);
+    max-width: 480px; width: 100%; padding: 40px; position: relative;
+    transform: translateY(12px); transition: transform 0.2s;
+  }
+  .footer-modal-overlay.active .footer-modal { transform: translateY(0); }
+  .footer-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border: 1px solid var(--rule);
+    background: none; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; color: var(--gray); line-height: 1;
+  }
+  .footer-modal-close:hover { border-color: var(--black); color: var(--black); }
+  .footer-modal-eyebrow {
+    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
+    color: var(--gray); margin-bottom: 8px;
+  }
+  .footer-modal-title {
+    font-family: 'Bebas Neue', cursive; font-size: 44px; line-height: 0.92;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 16px;
+  }
+  .footer-modal-desc { font-size: 14px; line-height: 1.7; color: var(--charcoal); }
+  .footer-modal-stats {
+    display: flex; gap: 24px; margin: 20px 0 0;
+    font-family: 'Inter', sans-serif; font-size: 12px; color: var(--gray);
+  }
+  .footer-modal-stats strong { color: var(--black); font-weight: 700; }
+  .footer-modal-divider { border: none; border-top: 1px solid var(--rule); margin: 24px 0; }
+  .footer-modal-form { display: flex; gap: 0; margin-bottom: 10px; }
+  .footer-modal-input {
+    flex: 1; background: var(--off-white); border: 1px solid var(--rule);
+    border-right: none; padding: 0 16px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--charcoal); outline: none; height: 48px; min-width: 0;
+  }
+  .footer-modal-input:focus { border-color: var(--yellow); }
+  .footer-modal-input::placeholder { color: #bbb; }
+  .footer-modal-submit {
+    background: var(--yellow); color: var(--black);
+    font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 0.08em;
+    padding: 0 22px; height: 48px; cursor: pointer; white-space: nowrap;
+    border: none; transition: background 0.15s; flex-shrink: 0;
+  }
+  .footer-modal-submit:hover { background: #e8be00; }
+  .footer-modal-fine { font-family: 'Inter', sans-serif; font-size: 11px; color: #bbb; }
+  .footer-modal-confirm { display: none; text-align: center; padding: 16px 0 8px; }
+  .footer-modal-confirm.active { display: block; }
+  .footer-modal-confirm-icon {
+    width: 48px; height: 48px; background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 20px;
+  }
+  .footer-modal-confirm-title {
+    font-family: 'Bebas Neue', cursive; font-size: 32px;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 8px;
+  }
+  .footer-modal-confirm-text { font-size: 14px; line-height: 1.65; color: var(--charcoal); }
+</style>
