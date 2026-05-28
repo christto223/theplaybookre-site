@@ -13,4 +13,11 @@ export default defineConfig({
     format: 'directory', // generates /lead-generation/article-slug/ (trailing slash)
   },
   trailingSlash: 'always',
+  vite: {
+    optimizeDeps: {
+      // Skip slow node_modules scanning — improves local dev startup time
+      noDiscovery: true,
+      include: [],
+    },
+  },
 });
