@@ -5,14 +5,16 @@ interface Props {
 const { activeNav } = Astro.props;
 ---
 
-<header class="masthead">
+<header class="masthead" id="masthead">
   <div class="masthead-inner">
     <a href="/" class="logo">
       <span class="logo-the">THE</span>
       <span class="logo-main">PLAYBOOK</span>
       <span class="logo-re">RE</span>
     </a>
-    <ul class="masthead-nav">
+
+    <!-- Normal nav -->
+    <ul class="masthead-nav" id="masthead-nav">
       <li class:list={[{ 'nav-active': activeNav === 'start-here' }]}>
         <a href="/start-here/">Start Here</a>
       </li>
@@ -22,7 +24,7 @@ const { activeNav } = Astro.props;
       <li class:list={[{ 'nav-active': activeNav === 'about' }]}>
         <a href="/about/">About</a>
       </li>
-      <li class="nav-search" aria-label="Search">
+      <li class="nav-search" id="nav-search-btn" aria-label="Search">
         <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
           <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
           <line x1="10.4" y1="10.4" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -30,18 +32,136 @@ const { activeNav } = Astro.props;
       </li>
       <li class="nav-cta"><button id="masthead-nl-btn">Get the Newsletter</button></li>
     </ul>
+
+    <!-- Search bar (replaces nav when active) -->
+    <div class="masthead-search-row" id="masthead-search-row">
+      <svg width="16" height="16" viewBox="0 0 15 15" fill="none" class="msr-icon">
+        <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="10.4" y1="10.4" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input
+        type="text"
+        id="nav-search-input"
+        class="msr-input"
+        placeholder="Search playbooks..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button id="nav-search-close" class="msr-close">×</button>
+    </div>
   </div>
 </header>
 
+<!-- Search results panel — fixed below masthead, populated by JS -->
+<div class="nav-search-results" id="nav-search-results"></div>
+
 <script is:inline>
-  document.addEventListener('DOMContentLoaded', function() {
-    var btn = document.getElementById('masthead-nl-btn');
-    if (btn) {
-      btn.addEventListener('click', function() {
+  document.addEventListener('DOMContentLoaded', function () {
+    var masthead    = document.getElementById('masthead');
+    var mastheadNav = document.getElementById('masthead-nav');
+    var searchRow   = document.getElementById('masthead-search-row');
+    var searchBtn   = document.getElementById('nav-search-btn');
+    var searchInput = document.getElementById('nav-search-input');
+    var searchClose = document.getElementById('nav-search-close');
+    var results     = document.getElementById('nav-search-results');
+    var nlBtn       = document.getElementById('masthead-nl-btn');
+
+    // Newsletter button delegates to footer modal
+    if (nlBtn) {
+      nlBtn.addEventListener('click', function () {
         var footerBtn = document.getElementById('footer-nl-btn');
         if (footerBtn) footerBtn.click();
       });
     }
+
+    // ── Search ──────────────────────────────────────────────
+    var articles  = null;
+    var isOpen    = false;
+
+    function openSearch() {
+      isOpen = true;
+      mastheadNav.style.display = 'none';
+      searchRow.style.display   = 'flex';
+      setTimeout(function () { searchInput.focus(); }, 30);
+      if (!articles) loadIndex();
+    }
+
+    function closeSearch() {
+      isOpen = false;
+      mastheadNav.style.display  = '';
+      searchRow.style.display    = 'none';
+      searchInput.value          = '';
+      results.innerHTML          = '';
+      results.classList.remove('has-results');
+    }
+
+    function loadIndex() {
+      fetch('/search.json')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          articles = data;
+          if (searchInput.value.trim()) runSearch(searchInput.value);
+        })
+        .catch(function (e) { console.warn('[search] index load failed:', e); });
+    }
+
+    function runSearch(raw) {
+      var q = raw.trim().toLowerCase();
+      if (!articles || !q) {
+        results.innerHTML = '';
+        results.classList.remove('has-results');
+        return;
+      }
+
+      var hits = articles.filter(function (a) {
+        return a.title.toLowerCase().includes(q) ||
+               (a.description && a.description.toLowerCase().includes(q));
+      }).slice(0, 8);
+
+      if (hits.length === 0) {
+        results.innerHTML = '<div class="nsr-empty">No playbooks matched “' + raw.trim() + '”</div>';
+      } else {
+        results.innerHTML = hits.map(function (a) {
+          var pillar = (a.pillar || '').replace(/-/g, ' ')
+            .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+          return '<a href="' + a.url + '" class="nsr-item">' +
+            '<div class="nsr-pillar">' + pillar + '</div>' +
+            '<div class="nsr-title">' + a.title + '</div>' +
+            '</a>';
+        }).join('');
+      }
+      results.classList.add('has-results');
+    }
+
+    if (searchBtn) {
+      searchBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openSearch();
+      });
+    }
+    if (searchClose) searchClose.addEventListener('click', closeSearch);
+
+    if (searchInput) {
+      searchInput.addEventListener('input',   function () { runSearch(this.value); });
+      searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { closeSearch(); return; }
+        if (e.key === 'Enter') {
+          var first = results.querySelector('.nsr-item');
+          if (first) first.click();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen) closeSearch();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (isOpen && masthead && !masthead.contains(e.target) &&
+          results && !results.contains(e.target)) {
+        closeSearch();
+      }
+    });
   });
 </script>
 
@@ -95,31 +215,21 @@ const { activeNav } = Astro.props;
     text-decoration: none;
   }
   .masthead-nav li:hover > a,
-  .masthead-nav li:hover {
-    color: var(--yellow);
-  }
+  .masthead-nav li:hover { color: var(--yellow); }
   .masthead-nav .nav-active > a,
-  .masthead-nav .nav-active {
-    color: var(--yellow);
-  }
+  .masthead-nav .nav-active { color: var(--yellow); }
+
   .masthead-nav .nav-search {
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border: 1px solid #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #777;
-    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #777; cursor: pointer;
   }
   .masthead-nav .nav-search:hover {
     border-color: var(--yellow);
     color: var(--yellow);
   }
-  .masthead-nav .nav-cta {
-    background: var(--yellow);
-    padding: 8px 20px;
-  }
+  .masthead-nav .nav-cta { background: var(--yellow); padding: 8px 20px; }
   .masthead-nav .nav-cta a,
   .masthead-nav .nav-cta button {
     font-family: 'Bebas Neue', cursive;
@@ -131,7 +241,74 @@ const { activeNav } = Astro.props;
     padding: 0;
     cursor: pointer;
   }
-  .masthead-nav .nav-cta:hover {
-    background: #e8be00;
+  .masthead-nav .nav-cta:hover { background: #e8be00; }
+
+  /* ── Search row (replaces nav when active) ── */
+  .masthead-search-row {
+    display: none; /* toggled via JS */
+    flex: 1;
+    align-items: center;
+    gap: 14px;
+    margin-left: 24px;
+  }
+  .msr-icon { color: #555; flex-shrink: 0; }
+  .msr-input {
+    flex: 1; min-width: 0;
+    background: none; border: none; outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px; font-weight: 400;
+    color: var(--white); letter-spacing: 0.01em;
+  }
+  .msr-input::placeholder { color: #333; }
+  .msr-close {
+    width: 32px; height: 32px;
+    background: none; border: 1px solid #333;
+    color: #555; font-size: 18px; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-family: 'Inter', sans-serif;
+  }
+  .msr-close:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  /* ── Search results panel (fixed below masthead) ── */
+  .nav-search-results {
+    position: fixed;
+    top: 72px; /* 68px masthead + 4px border */
+    left: 0; right: 0;
+    background: #0e0e0e;
+    border-bottom: 3px solid var(--yellow);
+    z-index: 199;
+    display: none;
+    overflow-y: auto;
+    max-height: 60vh;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.7);
+  }
+  .nav-search-results.has-results { display: block; }
+
+  .nsr-item {
+    display: block;
+    padding: 14px 40px;
+    border-bottom: 1px solid #1e1e1e;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.1s;
+  }
+  .nsr-item:last-child { border-bottom: none; }
+  .nsr-item:hover { background: #1a1a1a; }
+  .nsr-pillar {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--yellow); margin-bottom: 3px;
+  }
+  .nsr-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 19px; letter-spacing: 0.02em;
+    color: var(--white);
+  }
+  .nsr-item:hover .nsr-title { color: var(--yellow); }
+
+  .nsr-empty {
+    padding: 20px 40px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; color: #555;
   }
 </style>

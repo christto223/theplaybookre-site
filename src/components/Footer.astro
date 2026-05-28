@@ -63,7 +63,6 @@ const col2Pillars = PILLARS.slice(4);
           <li><a href="/start-here/">Start Here</a></li>
           <li><a href="/toolkit/">The Toolkit</a></li>
           <li><button class="footer-link-btn" id="footer-nl-btn">Newsletter</button></li>
-          <li><a href="/playbooks/">Most Read</a></li>
           <li><a href="/write-for-us/">Write for Us</a></li>
           <li><button class="footer-link-btn" id="footer-ad-btn">Advertise</button></li>
         </ul>
@@ -127,14 +126,22 @@ const col2Pillars = PILLARS.slice(4);
 </div>
 
 <script is:inline>
-  function footerSetupModal(overlayId, openBtnId, closeBtnId, submitBtnId, emailId, confirmId, requestId) {
-    var overlay   = document.getElementById(overlayId);
-    var openBtn   = document.getElementById(openBtnId);
-    var closeBtn  = document.getElementById(closeBtnId);
-    var submitBtn = document.getElementById(submitBtnId);
+  function sendToBeehiiv(email, source) {
+    fetch('/.netlify/functions/newsletter-subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, source: source }),
+    }).catch(function(e) { console.warn('[subscribe] API call failed:', e); });
+  }
+
+  function footerSetupModal(overlayId, openBtnId, closeBtnId, submitBtnId, emailId, confirmId, requestId, source) {
+    var overlay    = document.getElementById(overlayId);
+    var openBtn    = document.getElementById(openBtnId);
+    var closeBtn   = document.getElementById(closeBtnId);
+    var submitBtn  = document.getElementById(submitBtnId);
     var emailInput = document.getElementById(emailId);
-    var confirmEl = document.getElementById(confirmId);
-    var requestEl = requestId ? document.getElementById(requestId) : null;
+    var confirmEl  = document.getElementById(confirmId);
+    var requestEl  = requestId ? document.getElementById(requestId) : null;
 
     if (!overlay || !openBtn || !closeBtn || !submitBtn || !emailInput || !confirmEl) return;
 
@@ -158,22 +165,27 @@ const col2Pillars = PILLARS.slice(4);
         setTimeout(function() { emailInput.style.borderColor = ''; }, 1200);
         return;
       }
+      // Show confirmation immediately, submit to Beehiiv in background
       if (requestEl) requestEl.style.display = 'none';
       confirmEl.style.display = 'block';
       confirmEl.classList.add('active');
+      sendToBeehiiv(emailInput.value, source || 'newsletter');
     }
 
     openBtn.addEventListener('click', openModal);
     closeBtn.addEventListener('click', closeModal);
     submitBtn.addEventListener('click', submitModal);
+    emailInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') submitModal();
+    });
     overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
     });
   }
 
-  footerSetupModal('footer-nl-overlay', 'footer-nl-btn', 'footer-nl-close', 'footer-nl-submit', 'footer-nl-email', 'footer-nl-confirm', 'footer-nl-request');
-  footerSetupModal('footer-ad-overlay', 'footer-ad-btn', 'footer-ad-close', 'footer-ad-submit', 'footer-ad-email', 'footer-ad-confirm', null);
+  footerSetupModal('footer-nl-overlay', 'footer-nl-btn', 'footer-nl-close', 'footer-nl-submit', 'footer-nl-email', 'footer-nl-confirm', 'footer-nl-request', 'newsletter');
+  footerSetupModal('footer-ad-overlay', 'footer-ad-btn', 'footer-ad-close', 'footer-ad-submit', 'footer-ad-email', 'footer-ad-confirm', null, 'advertise');
 </script>
 
 <style>

@@ -233,8 +233,8 @@ const schema = [
           <div class="lp-nl-eyebrow">Get the Newsletter</div>
           <h3 class="lp-nl-head">Playbooks delivered straight to your inbox.</h3>
           <p class="lp-nl-sub">Strategy, insight, and perspective for agents serious about building a real business. Delivered every Monday. Free forever.</p>
-          <input type="email" class="lp-nl-input" placeholder="your@email.com" />
-          <button class="lp-nl-btn">Subscribe Free</button>
+          <input type="email" class="lp-nl-input" id="lp-nl-email" placeholder="your@email.com" />
+          <button class="lp-nl-btn" id="lp-nl-submit">Subscribe Free</button>
         </div>
 
         <!-- Most Read -->
@@ -975,6 +975,42 @@ const schema = [
     .cl-section-head { padding: 32px 20px 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
   }
 </style>
+
+<script is:inline>
+  // Sidebar newsletter subscribe
+  document.addEventListener('DOMContentLoaded', function () {
+    var nlEmail  = document.getElementById('lp-nl-email');
+    var nlSubmit = document.getElementById('lp-nl-submit');
+    if (!nlEmail || !nlSubmit) return;
+
+    nlSubmit.addEventListener('click', function () {
+      if (!nlEmail.value || !nlEmail.value.includes('@')) {
+        nlEmail.focus();
+        nlEmail.style.borderColor = '#e00055';
+        setTimeout(function () { nlEmail.style.borderColor = ''; }, 1200);
+        return;
+      }
+      var box = nlSubmit.closest('.lp-nl');
+      if (box) {
+        box.innerHTML =
+          '<div style="text-align:center;padding:24px 0;">' +
+            '<div style="width:40px;height:40px;background:var(--yellow);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:18px;">✓</div>' +
+            '<div style="font-family:\'Bebas Neue\',cursive;font-size:24px;color:var(--white);margin-bottom:8px;">You\'re in.</div>' +
+            '<p style="font-size:12px;color:#666;line-height:1.5;">First issue arrives Monday.</p>' +
+          '</div>';
+      }
+      fetch('/.netlify/functions/newsletter-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: nlEmail.value, source: 'newsletter' }),
+      }).catch(function (e) { console.warn('[subscribe] failed:', e); });
+    });
+
+    nlEmail.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') nlSubmit.click();
+    });
+  });
+</script>
 
 <script define:vars={{ tkResourcesData }}>
   const overlay   = document.getElementById('tk-modal-overlay');
