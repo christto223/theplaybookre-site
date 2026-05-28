@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const lastUpdated = 'May 2026';
+---
+
+<BaseLayout
+  title="Privacy Policy — The Playbook RE"
+  description="How The Playbook RE collects, uses, and protects your information."
+>
+  <div class="legal-hero">
+    <div class="legal-hero-inner">
+      <div class="legal-eyebrow">Legal</div>
+      <h1 class="legal-title">Privacy Policy</h1>
+      <p class="legal-meta">Last updated: {lastUpdated}</p>
+    </div>
+  </div>
+
+  <div class="legal-body">
+    <div class="legal-inner">
+
+      <p class="legal-intro">The Playbook RE is operated by Chris Linsell. This policy explains what information we collect, how we use it, and what rights you have over it. We keep it simple because we don't do anything complicated with your data.</p>
+
+      <h2>What We Collect</h2>
+      <p><strong>Email address.</strong> When you subscribe to the newsletter or request a resource from The Toolkit, we collect your email address. That's the only personal information we ask for.</p>
+      <p><strong>Usage data.</strong> Like most websites, we collect anonymous analytics — pages visited, time on page, general geographic region, device type. This data is aggregated and never tied to an individual.</p>
+      <p><strong>Cookies.</strong> We use cookies for analytics purposes only. We do not use advertising cookies or cross-site tracking.</p>
+
+      <h2>How We Use Your Information</h2>
+      <p>Your email address is used to send you the newsletter you signed up for or to deliver the resource you requested. We do not sell, rent, share, or trade your email address with any third party — ever.</p>
+      <p>We use anonymous analytics data to understand what content is valuable so we can make more of it.</p>
+
+      <h2>Email Communications</h2>
+      <p>Every email we send includes an unsubscribe link. Click it and you're off the list immediately. No questions, no re-engagement sequences, no friction.</p>
+      <p>We use a third-party email service provider to send newsletters. Your email address is stored on their platform subject to their own privacy practices. We will update this page with the specific provider name before launch.</p>
+
+      <h2>Data Retention</h2>
+      <p>We retain your email address for as long as you remain subscribed. When you unsubscribe, your address is removed from active lists. You can request complete deletion at any time by emailing us.</p>
+
+      <h2>Third-Party Links</h2>
+      <p>The Playbook RE links to external sites, including ChrisLinsell.com and resource providers. We are not responsible for the privacy practices of those sites. Review their policies before submitting personal information to them.</p>
+
+      <h2>Children's Privacy</h2>
+      <p>This site is not directed at children under 13. We do not knowingly collect information from anyone under 13.</p>
+
+      <h2>Changes to This Policy</h2>
+      <p>If we make material changes to this policy, we'll update the "last updated" date at the top of this page. Continued use of the site after changes constitutes acceptance of the updated policy.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about this policy? Email us at <a href="mailto:hello@theplaybookre.com">hello@theplaybookre.com</a>.</p>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .legal-hero {
+    background: var(--black);
+    border-bottom: 1px solid #1f1f1f;
+  }
+  .legal-hero-inner {
+    max-width: 760px; margin: 0 auto; padding: 56px 40px 48px;
+  }
+  .legal-eyebrow {
+    font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 0.25em;
+    color: var(--yellow); margin-bottom: 12px;
+  }
+  .legal-title {
+    font-family: 'Bebas Neue', cursive; font-size: 64px; line-height: 0.9;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 16px;
+  }
+  .legal-meta {
+    font-family: 'Inter', sans-serif; font-size: 12px; color: #555;
+  }
+
+  .legal-body { background: var(--off-white); }
+  .legal-inner {
+    max-width: 760px; margin: 0 auto; padding: 56px 40px 80px;
+  }
+
+  .legal-intro {
+    font-size: 17px; line-height: 1.75; color: var(--charcoal);
+    margin-bottom: 40px; padding-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .legal-inner h2 {
+    font-family: 'Bebas Neue', cursive; font-size: 24px; letter-spacing: 0.04em;
+    color: var(--black); margin: 36px 0 12px;
+  }
+  .legal-inner h2:first-of-type { margin-top: 0; }
+
+  .legal-inner p {
+    font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.75;
+    color: var(--charcoal); margin-bottom: 14px;
+  }
+  .legal-inner strong { color: var(--black); font-weight: 600; }
+  .legal-inner a { color: var(--black); text-decoration: underline; }
+  .legal-inner a:hover { color: var(--yellow); }
+
+  @media (max-width: 600px) {
+    .legal-hero-inner, .legal-inner { padding-left: 20px; padding-right: 20px; }
+    .legal-title { font-size: 48px; }
+  }
+</style>
