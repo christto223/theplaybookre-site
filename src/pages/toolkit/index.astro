@@ -44,7 +44,7 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   "name": "The Toolkit — The Playbook RE",
-  "description": "Templates, scripts, checklists, and tools for real estate agents. Free resources built from real experience.",
+  "description": "Templates, scripts, checklists, and tools for real estate agents, built from real experience in the field. No filler. Every resource is free.",
   "url": "https://theplaybookre.com/toolkit/",
   "isPartOf": { "@type": "WebSite", "name": "The Playbook RE", "url": "https://theplaybookre.com" },
   "author": { "@type": "Person", "name": "Chris Linsell" }
@@ -53,7 +53,7 @@ const schema = {
 
 <BaseLayout
   title="The Toolkit — Templates, Scripts & Resources — The Playbook RE"
-  description="Templates, scripts, checklists, and tools built from real experience in real estate. Every resource in The Toolkit is free — enter your email and we'll send it directly to you."
+  description="Templates, scripts, checklists, and tools built from real experience in the field. No content briefs, no filler. Every resource in The Toolkit is free — enter your email and we'll send it directly to you."
   activeNav="toolkit"
   schema={schema}
 >
@@ -63,7 +63,7 @@ const schema = {
       <div>
         <div class="hero-eyebrow">The Playbook RE</div>
         <h1 class="hero-h1">The <em>Toolkit</em>.</h1>
-        <p class="hero-sub">Templates, scripts, checklists, and tools built from real experience — not assembled from a content brief. Every resource is free. Enter your email and it goes straight to your inbox.</p>
+        <p class="hero-sub">Templates, scripts, checklists, and tools built from real experience in the field. No content briefs, no filler. Every resource is free. Enter your email and it goes straight to your inbox.</p>
       </div>
       <div class="hero-right">
         <div class="hero-stat-row">
@@ -212,7 +212,7 @@ const schema = {
   <!-- COMING SOON BAND -->
   <div class="coming-soon">
     <div class="coming-soon-inner">
-      <p class="coming-soon-text">New resources are added as they're built — not on a publishing schedule. <strong>Every tool in this catalog has been used in a real business.</strong> If there's something specific you'd find useful, let me know.</p>
+      <p class="coming-soon-text">New resources show up when they're built and ready, on no fixed schedule. <strong>Every tool in this catalog has been used in a real business.</strong> If there's something specific you'd find useful, let me know.</p>
       <button class="suggest-btn">Suggest a Resource →</button>
     </div>
   </div>
@@ -251,6 +251,56 @@ const schema = {
         <div class="modal-confirm-icon">✓</div>
         <div class="modal-confirm-title">On its way.</div>
         <p class="modal-confirm-text">Check your inbox in the next few minutes. If you don't see it, check your spam folder and mark us as a trusted sender.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGGEST A RESOURCE MODAL -->
+  <div class="modal-overlay" id="suggest-overlay">
+    <div class="modal">
+      <button class="modal-close" id="suggest-close-btn">×</button>
+
+      <!-- Request state -->
+      <div id="suggest-request">
+        <div class="modal-badges">
+          <span class="resource-type-badge badge-template">Your Idea</span>
+        </div>
+        <div class="modal-title">Suggest a Resource.</div>
+        <p class="modal-desc">Tell me what would actually help your business and I'll consider building it. You'll be added to the newsletter, so if I make it, it lands straight in your inbox.</p>
+        <hr class="modal-divider" />
+        <form
+          name="suggest-a-resource"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          id="suggest-form"
+        >
+          <input type="hidden" name="form-name" value="suggest-a-resource" />
+          <p class="suggest-hp">
+            <label>Leave this field empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+          </p>
+          <div class="suggest-field">
+            <label class="suggest-label" for="suggest-name">Name</label>
+            <input type="text" class="suggest-input" id="suggest-name" name="name" placeholder="Your name" />
+          </div>
+          <div class="suggest-field">
+            <label class="suggest-label" for="suggest-email">Email <span class="suggest-req">*</span></label>
+            <input type="email" class="suggest-input" id="suggest-email" name="email" placeholder="your@email.com" />
+          </div>
+          <div class="suggest-field">
+            <label class="suggest-label" for="suggest-message">What should I build? <span class="suggest-req">*</span></label>
+            <textarea class="suggest-textarea" id="suggest-message" name="suggestion" rows="4" placeholder="Describe the template, script, checklist, or tool you'd find useful…"></textarea>
+          </div>
+          <button type="submit" class="modal-submit suggest-submit" id="suggest-submit-btn">Send Suggestion →</button>
+          <p class="modal-fine">You'll be added to the newsletter. No spam — ever.</p>
+        </form>
+      </div>
+
+      <!-- Confirmation state -->
+      <div class="modal-confirm" id="suggest-confirm">
+        <div class="modal-confirm-icon">✓</div>
+        <div class="modal-confirm-title">Got it.</div>
+        <p class="modal-confirm-text">Thanks for the suggestion — I read every one. If I build it, you'll be among the first to know.</p>
       </div>
     </div>
   </div>
@@ -349,6 +399,102 @@ const schema = {
       });
     });
   });
+</script>
+
+<script is:inline>
+  // ─── Suggest a Resource Modal ───────────────────────────────────
+  (function () {
+    const sOverlay = document.getElementById('suggest-overlay');
+    if (!sOverlay) return;
+    const sRequest = document.getElementById('suggest-request');
+    const sConfirm = document.getElementById('suggest-confirm');
+    const sForm = document.getElementById('suggest-form');
+    const nameEl = document.getElementById('suggest-name');
+    const emailEl = document.getElementById('suggest-email');
+    const msgEl = document.getElementById('suggest-message');
+    const submitBtn = document.getElementById('suggest-submit-btn');
+
+    function openSuggest() {
+      sRequest.style.display = 'block';
+      sConfirm.classList.remove('active');
+      sForm.reset();
+      sOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function () { nameEl.focus(); }, 250);
+    }
+
+    function closeSuggest() {
+      sOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function flagInvalid(el) {
+      el.focus();
+      el.style.borderColor = '#e00055';
+      setTimeout(function () { el.style.borderColor = ''; }, 1200);
+    }
+
+    function encodeForm(data) {
+      return Object.keys(data).map(function (k) {
+        return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+      }).join('&');
+    }
+
+    async function submitSuggest() {
+      const name = nameEl.value.trim();
+      const email = emailEl.value.trim();
+      const suggestion = msgEl.value.trim();
+
+      if (!email || !email.includes('@')) { flagInvalid(emailEl); return; }
+      if (!suggestion) { flagInvalid(msgEl); return; }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      const botField = sForm.querySelector('[name="bot-field"]');
+      const formData = {
+        'form-name': 'suggest-a-resource',
+        name: name,
+        email: email,
+        suggestion: suggestion,
+        'bot-field': botField ? botField.value : ''
+      };
+
+      // Fire both in parallel: Netlify Forms (emails the suggestion to Chris)
+      // and the Beehiiv function (subscribes the suggester to the newsletter).
+      const tasks = [
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: encodeForm(formData)
+        }),
+        fetch('/.netlify/functions/newsletter-subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, source: 'toolkit-suggestion' })
+        })
+      ];
+
+      await Promise.allSettled(tasks);
+
+      // Always show confirmation — graceful in local dev, where neither
+      // the Netlify Form handler nor the function runs.
+      sRequest.style.display = 'none';
+      sConfirm.classList.add('active');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Suggestion →';
+    }
+
+    document.querySelectorAll('.suggest-btn').forEach(function (btn) {
+      btn.addEventListener('click', openSuggest);
+    });
+    document.getElementById('suggest-close-btn').addEventListener('click', closeSuggest);
+    sOverlay.addEventListener('click', function (e) { if (e.target === sOverlay) closeSuggest(); });
+    sForm.addEventListener('submit', function (e) { e.preventDefault(); submitSuggest(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && sOverlay.classList.contains('active')) closeSuggest();
+    });
+  })();
 </script>
 
 <style>
@@ -533,4 +679,20 @@ const schema = {
   .modal-confirm-icon { width: 52px; height: 52px; background: var(--yellow); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 22px; }
   .modal-confirm-title { font-family: 'Bebas Neue', cursive; font-size: 32px; letter-spacing: 0.02em; color: var(--black); margin-bottom: 10px; }
   .modal-confirm-text { font-size: 15px; line-height: 1.65; color: var(--charcoal); }
+
+  /* SUGGEST FORM */
+  .suggest-hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+  .suggest-field { margin-bottom: 16px; }
+  .suggest-label { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); margin-bottom: 8px; display: block; }
+  .suggest-req { color: #e00055; }
+  .suggest-input, .suggest-textarea {
+    width: 100%; box-sizing: border-box; background: var(--off-white);
+    border: 1px solid var(--rule); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--charcoal); outline: none;
+  }
+  .suggest-input { height: 48px; padding: 0 14px; }
+  .suggest-textarea { padding: 12px 14px; line-height: 1.6; resize: vertical; min-height: 110px; }
+  .suggest-input:focus, .suggest-textarea:focus { border-color: var(--yellow); }
+  .suggest-input::placeholder, .suggest-textarea::placeholder { color: #bbb; }
+  .suggest-submit { width: 100%; margin: 4px 0 12px; }
 </style>

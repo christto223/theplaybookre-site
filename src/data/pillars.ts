@@ -11,13 +11,13 @@ export const PILLARS: Pillar[] = [
     slug: 'lead-generation',
     name: 'Lead Generation',
     shortName: 'Lead Generation',
-    description: 'Cold calling, door knocking, referrals, and every other way to build a pipeline that actually compounds.',
+    description: 'From cold calls and door knocks to referrals and content engines, every way to build a pipeline that actually compounds.',
   },
   {
     slug: 'marketing-and-branding',
     name: 'Marketing & Branding',
     shortName: 'Marketing',
-    description: 'Your brand, your content, your digital presence. How to be findable, memorable, and trusted before anyone meets you.',
+    description: 'Your brand, your content, your reputation online and off. How to be findable, memorable, and trusted before anyone meets you.',
   },
   {
     slug: 'sales-skills-and-scripts',
