@@ -351,7 +351,7 @@ const schema = {
     setTimeout(() => document.getElementById('modal-email').focus(), 250);
   }
 
-  function submitModal() {
+  async function submitModal() {
     const email = document.getElementById('modal-email').value;
     if (!email || !email.includes('@')) {
       const input = document.getElementById('modal-email');
@@ -360,6 +360,20 @@ const schema = {
       setTimeout(() => { input.style.borderColor = ''; }, 1200);
       return;
     }
+
+    // Subscribe to Beehiiv via the newsletter function (source: 'toolkit').
+    // Graceful: confirmation still shows even if the request fails — e.g. in
+    // local dev, where the Netlify function doesn't run.
+    try {
+      await fetch('/.netlify/functions/newsletter-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, source: 'toolkit' }),
+      });
+    } catch (err) {
+      /* swallow — show confirmation regardless */
+    }
+
     modalRequest.style.display = 'none';
     modalConfirm.classList.add('active');
   }
