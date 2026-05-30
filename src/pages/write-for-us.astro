@@ -58,26 +58,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <h2 class="wfu-h2">Pitch Us</h2>
         <p>Tell us what you want to write and why you're the right person to write it. Keep it brief — a paragraph or two is enough.</p>
 
-        <form class="wfu-form" id="wfu-form">
+        <form class="wfu-form" id="wfu-form" name="write-for-us" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="write-for-us" />
+          <p style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+            <label>Leave this field empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+          </p>
           <div class="wfu-field">
             <label class="wfu-label" for="wfu-name">Your name</label>
-            <input class="wfu-input" type="text" id="wfu-name" placeholder="First and last name" />
+            <input class="wfu-input" type="text" id="wfu-name" name="name" placeholder="First and last name" />
           </div>
           <div class="wfu-field">
             <label class="wfu-label" for="wfu-email">Email address</label>
-            <input class="wfu-input" type="email" id="wfu-email" placeholder="your@email.com" />
+            <input class="wfu-input" type="email" id="wfu-email" name="email" placeholder="your@email.com" />
           </div>
           <div class="wfu-field">
             <label class="wfu-label" for="wfu-role">Your role</label>
-            <input class="wfu-input" type="text" id="wfu-role" placeholder="e.g. Realtor, Team Lead, Broker" />
+            <input class="wfu-input" type="text" id="wfu-role" name="role" placeholder="e.g. Realtor, Team Lead, Broker" />
           </div>
           <div class="wfu-field">
             <label class="wfu-label" for="wfu-topic">Proposed topic / working title</label>
-            <input class="wfu-input" type="text" id="wfu-topic" placeholder="What's the playbook?" />
+            <input class="wfu-input" type="text" id="wfu-topic" name="topic" placeholder="What's the playbook?" />
           </div>
           <div class="wfu-field">
             <label class="wfu-label" for="wfu-pitch">Your pitch</label>
-            <textarea class="wfu-input wfu-textarea" id="wfu-pitch" placeholder="What does this piece cover? Why are you the right person to write it? What results have you seen using this in your own business?"></textarea>
+            <textarea class="wfu-input wfu-textarea" id="wfu-pitch" name="pitch" placeholder="What does this piece cover? Why are you the right person to write it? What results have you seen using this in your own business?"></textarea>
           </div>
           <button class="wfu-submit" type="submit">Submit Your Pitch →</button>
         </form>
@@ -98,10 +102,51 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     var form = document.getElementById('wfu-form');
     var confirm = document.getElementById('wfu-confirm');
     if (!form) return;
+
+    function flag(el) {
+      if (!el) return;
+      el.focus();
+      el.style.borderColor = '#e00055';
+      setTimeout(function () { el.style.borderColor = ''; }, 1200);
+    }
+    function encode(data) {
+      return Object.keys(data).map(function (k) {
+        return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+      }).join('&');
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      var name  = document.getElementById('wfu-name');
+      var email = document.getElementById('wfu-email');
+      var role  = document.getElementById('wfu-role');
+      var topic = document.getElementById('wfu-topic');
+      var pitch = document.getElementById('wfu-pitch');
+
+      if (!name.value.trim()) { flag(name); return; }
+      if (!email.value.trim() || !email.value.includes('@')) { flag(email); return; }
+      if (!pitch.value.trim()) { flag(pitch); return; }
+
+      var hp = form.querySelector('[name="bot-field"]');
+      var body = {
+        'form-name': 'write-for-us',
+        name: name.value.trim(),
+        email: email.value.trim(),
+        role: role.value.trim(),
+        topic: topic.value.trim(),
+        pitch: pitch.value.trim(),
+        'bot-field': hp ? hp.value : '',
+      };
+
+      // Show confirmation immediately; send the pitch to Netlify Forms in the
+      // background (graceful — confirmation stands even if it fails locally).
       form.style.display = 'none';
       if (confirm) confirm.style.display = 'block';
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encode(body),
+      }).catch(function (err) { console.warn('[write-for-us] submit failed:', err); });
     });
   })();
 </script>
