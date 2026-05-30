@@ -33,12 +33,52 @@ const { id } = Astro.props;
       <div class="nl-divider"></div>
       <div class="nl-form">
         <input class="nl-input" type="email" placeholder="your@email.com" />
-        <button class="nl-btn">Subscribe to the Newsletter</button>
+        <button class="nl-btn" type="button">Subscribe to the Newsletter</button>
+      </div>
+      <div class="nl-confirm">
+        <span class="nl-confirm-check">✓</span>
+        <span class="nl-confirm-text">You're in. Check your inbox to confirm your subscription.</span>
       </div>
     </div>
 
   </div>
 </div>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll('.newsletter-band').forEach(function (band) {
+      if (band.dataset.wired) return;          // idempotent: never double-bind
+      band.dataset.wired = '1';
+      var input   = band.querySelector('.nl-input');
+      var btn     = band.querySelector('.nl-btn');
+      var form    = band.querySelector('.nl-form');
+      var confirm = band.querySelector('.nl-confirm');
+      if (!input || !btn || !form || !confirm) return;
+
+      function submit() {
+        var email = input.value.trim();
+        if (!email || !email.includes('@')) {
+          input.focus();
+          input.style.outline = '2px solid #e00055';
+          setTimeout(function () { input.style.outline = ''; }, 1200);
+          return;
+        }
+        // Show confirmation immediately; subscribe in the background (graceful —
+        // confirmation stands even if the request fails, e.g. in local dev).
+        form.style.display = 'none';
+        confirm.classList.add('active');
+        fetch('/.netlify/functions/newsletter-subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, source: 'newsletter-band' }),
+        }).catch(function (e) { console.warn('[subscribe] API call failed:', e); });
+      }
+
+      btn.addEventListener('click', submit);
+      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+    });
+  })();
+</script>
 
 <style>
   .newsletter-band {
@@ -89,6 +129,16 @@ const { id } = Astro.props;
     border: none; transition: background 0.15s;
   }
   .nl-btn:hover { background: #222; }
+  .nl-confirm { display: none; align-items: center; gap: 12px; min-height: 52px; }
+  .nl-confirm.active { display: flex; }
+  .nl-confirm-check {
+    width: 28px; height: 28px; background: var(--black); color: var(--yellow);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    font-size: 15px;
+  }
+  .nl-confirm-text {
+    font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--black); font-weight: 600;
+  }
 
   /* Responsive */
   @media (max-width: 900px) {

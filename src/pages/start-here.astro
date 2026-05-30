@@ -247,45 +247,85 @@ import { PILLARS } from '../data/pillars';
   .modal-confirm-text { font-size: 15px; line-height: 1.65; color: var(--charcoal); }
 </style>
 
-<script>
-  const sequences: Record<string, { badge: string; stage: string; headline: string; desc: string }> = {
-    new: { badge: '01', stage: 'THE NEW AGENT', headline: 'Start Your New Agent Series', desc: "We'll send you the essential playbooks every new agent needs — one at a time, with specific action items after each one. No overwhelm. Just the right content at the right time." },
-    established: { badge: '02', stage: 'THE ESTABLISHED AGENT', headline: 'Start Your Established Agent Series', desc: "We'll send you the playbooks that break through plateaus and build real systems — focused on conversion, consistency, and getting more from the work you're already doing." },
-    scaling: { badge: '03', stage: 'THE SCALING AGENT', headline: 'Start Your Scaling Agent Series', desc: "We'll send you the playbooks that scale beyond hustle — delegation frameworks, hiring playbooks, and the operating systems that run at 7 figures and beyond." },
-  };
+<script is:inline>
+  (function () {
+    var sequences = {
+      new: { badge: '01', stage: 'THE NEW AGENT', headline: 'Start Your New Agent Series', desc: "We'll send you the essential playbooks every new agent needs — one at a time, with specific action items after each one. No overwhelm. Just the right content at the right time." },
+      established: { badge: '02', stage: 'THE ESTABLISHED AGENT', headline: 'Start Your Established Agent Series', desc: "We'll send you the playbooks that break through plateaus and build real systems — focused on conversion, consistency, and getting more from the work you're already doing." },
+      scaling: { badge: '03', stage: 'THE SCALING AGENT', headline: 'Start Your Scaling Agent Series', desc: "We'll send you the playbooks that scale beyond hustle — delegation frameworks, hiring playbooks, and the operating systems that run at 7 figures and beyond." },
+    };
 
-  document.querySelectorAll<HTMLButtonElement>('.path-sequence-btn').forEach(btn => {
-    btn.addEventListener('click', () => openModal(btn.dataset.stage ?? 'new'));
-  });
+    var overlay = document.getElementById('modal-overlay');
+    var modal = overlay ? overlay.querySelector('.modal') : null;
 
-  function openModal(type: string) {
-    const d = sequences[type] ?? sequences.new!;
-    (document.getElementById('modal-badge')  as HTMLElement).textContent = d.badge;
-    (document.getElementById('modal-stage')  as HTMLElement).textContent = d.stage;
-    (document.getElementById('modal-headline') as HTMLElement).textContent = d.headline;
-    (document.getElementById('modal-desc')   as HTMLElement).textContent = d.desc;
-    (document.getElementById('modal-confirm') as HTMLElement).classList.remove('active');
-    (document.getElementById('modal-overlay') as HTMLElement).classList.add('active');
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => (document.getElementById('modal-email') as HTMLInputElement)?.focus(), 250);
-  }
+    function resetModalState() {
+      if (!modal) return;
+      Array.prototype.forEach.call(modal.children, function (el) {
+        if (el.classList.contains('modal-confirm')) {
+          el.classList.remove('active');
+        } else if (!el.classList.contains('modal-close')) {
+          el.style.display = '';
+        }
+      });
+    }
 
-  document.getElementById('modal-close')?.addEventListener('click', closeModal);
-  document.getElementById('modal-overlay')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
-  document.getElementById('modal-submit')?.addEventListener('click', submitModal);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    function openModal(type) {
+      var d = sequences[type] || sequences.new;
+      resetModalState();
+      document.getElementById('modal-badge').textContent = d.badge;
+      document.getElementById('modal-stage').textContent = d.stage;
+      document.getElementById('modal-headline').textContent = d.headline;
+      document.getElementById('modal-desc').textContent = d.desc;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function () {
+        var e = document.getElementById('modal-email');
+        if (e) e.focus();
+      }, 250);
+    }
 
-  function submitModal() {
-    const email = (document.getElementById('modal-email') as HTMLInputElement)?.value ?? '';
-    if (!email || !email.includes('@')) return;
-    (document.getElementById('modal-desc')?.closest('.modal') as HTMLElement)
-      ?.querySelectorAll<HTMLElement>(':not(.modal-confirm):not(.modal-close)')
-      .forEach(el => el.style.display = 'none');
-    (document.getElementById('modal-confirm') as HTMLElement).classList.add('active');
-  }
+    function submitModal() {
+      var input = document.getElementById('modal-email');
+      var email = input ? input.value.trim() : '';
+      if (!email || !email.includes('@')) {
+        if (input) {
+          input.focus();
+          input.style.borderColor = '#e00055';
+          setTimeout(function () { input.style.borderColor = ''; }, 1200);
+        }
+        return;
+      }
+      // Hide the request fields (direct children, except close + confirm),
+      // then show the confirmation.
+      if (modal) {
+        Array.prototype.forEach.call(modal.children, function (el) {
+          if (!el.classList.contains('modal-confirm') && !el.classList.contains('modal-close')) {
+            el.style.display = 'none';
+          }
+        });
+      }
+      document.getElementById('modal-confirm').classList.add('active');
+      // Subscribe in the background (graceful — confirmation stands regardless).
+      fetch('/.netlify/functions/newsletter-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, source: 'start-here-series' }),
+      }).catch(function (e) { console.warn('[subscribe] API call failed:', e); });
+    }
 
-  function closeModal() {
-    (document.getElementById('modal-overlay') as HTMLElement).classList.remove('active');
-    document.body.style.overflow = '';
-  }
+    function closeModal() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.path-sequence-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { openModal(btn.dataset.stage || 'new'); });
+    });
+    var closeBtn = document.getElementById('modal-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (overlay) overlay.addEventListener('click', function (e) { if (e.target === e.currentTarget) closeModal(); });
+    var submitBtn = document.getElementById('modal-submit');
+    if (submitBtn) submitBtn.addEventListener('click', submitModal);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+  })();
 </script>
