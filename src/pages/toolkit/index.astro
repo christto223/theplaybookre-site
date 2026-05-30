@@ -7,7 +7,7 @@ const allResources = await getCollection('toolkit');
 const sorted = allResources.sort((a, b) => a.data.order - b.data.order);
 
 const featuredResource = sorted.find(r => r.data.featured) ?? sorted[0];
-const gridResources = sorted.filter(r => r.id !== featuredResource?.slug);
+const gridResources = sorted.filter(r => r.id !== featuredResource?.id);
 
 function badgeClass(type: string) {
   const map: Record<string, string> = {
@@ -135,7 +135,7 @@ const schema = {
                 </div>
               </div>
             )}
-            <button class="resource-cta-btn" data-resource-id={featuredResource.slug}>
+            <button class="resource-cta-btn" data-resource-id={featuredResource.id}>
               Send Me This →
             </button>
           </div>
@@ -201,7 +201,7 @@ const schema = {
             <p class="resource-card-desc">{resource.data.description}</p>
             <div class="resource-card-footer">
               <div class="resource-card-meta">{resource.data.format}</div>
-              <button class="resource-get-btn" data-resource-id={resource.slug}>Send Me This →</button>
+              <button class="resource-get-btn" data-resource-id={resource.id}>Send Me This →</button>
             </div>
           </div>
         ))}
