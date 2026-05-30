@@ -211,8 +211,8 @@ All subscribe forms POST to `/.netlify/functions/newsletter-subscribe`, which pr
 
 **Netlify environment variables required** (set in Netlify → Site Settings → Environment Variables):
 ```
-BEEHIIV_PUBLICATION_ID = 8ea0b955-576c-4da5-ba63-76d8de39dd9b
-BEEHIIV_API_KEY        = UiQHDhB3M3zv2of5CDW1bHwIcsUHKEIRskO7GJ0JXemUahZAXWS24J9KrTcLEiBI
+BEEHIIV_PUBLICATION_ID = pub_8ea0b955-576c-4da5-ba63-76d8de39dd9b
+BEEHIIV_API_KEY        = <set in Netlify env vars + local .env only — never commit this>
 ```
 
 **Forms wired to Beehiiv:**
