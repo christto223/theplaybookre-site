@@ -361,14 +361,14 @@ const schema = {
       return;
     }
 
-    // Subscribe to Beehiiv via the newsletter function (source: 'toolkit').
+    // Subscribe to Beehiiv via the newsletter function (source: 'toolkit-download').
     // Graceful: confirmation still shows even if the request fails — e.g. in
     // local dev, where the Netlify function doesn't run.
     try {
       await fetch('/.netlify/functions/newsletter-subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, source: 'toolkit' }),
+        body: JSON.stringify({ email: email, source: 'toolkit-download' }),
       });
     } catch (err) {
       /* swallow — show confirmation regardless */

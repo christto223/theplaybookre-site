@@ -1002,7 +1002,7 @@ const schema = [
       fetch('/.netlify/functions/newsletter-subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: nlEmail.value, source: 'newsletter' }),
+        body: JSON.stringify({ email: nlEmail.value, source: 'homepage-sidebar' }),
       }).catch(function (e) { console.warn('[subscribe] failed:', e); });
     });
 

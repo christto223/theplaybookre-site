@@ -34,11 +34,16 @@ exports.handler = async function (event) {
       reactivate_existing: true,
       send_welcome_email: true,
       utm_source: 'website',
+      // The placement that captured the signup (e.g. newsletter-band,
+      // footer-modal, toolkit-download). Lets you segment in Beehiiv.
+      utm_medium: source || 'unknown',
     };
 
-    // Tag advertising interest separately so you can segment in Beehiiv
-    if (source === 'advertise') {
-      payload.utm_medium = 'advertising-interest';
+    // Capture the exact page the signup happened on, read server-side from
+    // the request's referer header — no client changes needed.
+    const referer = event.headers.referer || event.headers.referrer;
+    if (referer) {
+      payload.referring_site = referer;
     }
 
     const res = await fetch(

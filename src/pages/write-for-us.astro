@@ -93,14 +93,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 </BaseLayout>
 
-<script>
-  const form = document.getElementById('wfu-form') as HTMLFormElement;
-  const confirm = document.getElementById('wfu-confirm');
-  form?.addEventListener('submit', e => {
-    e.preventDefault();
-    if (form) form.style.display = 'none';
-    if (confirm) confirm.style.display = 'block';
-  });
+<script is:inline>
+  (function () {
+    var form = document.getElementById('wfu-form');
+    var confirm = document.getElementById('wfu-confirm');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      form.style.display = 'none';
+      if (confirm) confirm.style.display = 'block';
+    });
+  })();
 </script>
 
 <style>
