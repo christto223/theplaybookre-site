@@ -1,46 +1,50 @@
 # The Playbook RE — Site Documentation
 
-**Live site:** https://theplaybookre.com  
-**GitHub repo:** git@github.com:christto223/theplaybookre-site.git  
-**Hosting:** Netlify (auto-deploys from `main` branch)  
-**Built with:** Astro 6, static output, no SSR adapter required
+**Live site (custom domain):** https://theplaybookre.com — ⚠️ **not yet attached.** The domain is currently parked (returns a non-Netlify `DPS` server / 404 on real pages). The working site lives at the project's `*.netlify.app` URL until the custom domain is pointed at Netlify.
+**GitHub repo:** git@github.com:christto223/theplaybookre-site.git
+**Hosting:** Netlify (auto-deploys from `main` branch)
+**Built with:** Astro **6.4.2**, static output, no SSR adapter
+
+> **Last comprehensive update:** 2026-05-29. See the [Change Log](#change-log) at the bottom for what changed and why.
 
 ---
 
 ## Running the Dev Server
 
-### The known problem
-`npm` requires Node to be in your shell PATH. Due to a `brew shellenv` bug on this machine, new terminal windows sometimes open without Homebrew in PATH, making `npm` unavailable.
-
-### Reliable fix — use the absolute path:
+### Reliable command (use this if `npm` isn't found)
 ```bash
-/opt/homebrew/Cellar/node/26.0.0/bin/node "/Users/christopherlinsellmba/Desktop/Claude Code/theplaybookre-site/node_modules/.bin/astro" dev
+/opt/homebrew/Cellar/node/26.0.0/bin/node \
+  "/Users/christopherlinsellmba/Desktop/Claude Code/theplaybookre-site/node_modules/astro/bin/astro.mjs" dev
 ```
 
-### If npm is working normally:
+### If `npm` is working normally
 ```bash
 cd "/Users/christopherlinsellmba/Desktop/Claude Code/theplaybookre-site"
 npm run dev
 ```
 
-The server runs on **http://localhost:4321** (or 4322 if 4321 is taken).
+Server runs on **http://localhost:4321** (or 4322 if taken). First boot after clearing caches can take ~50s (content sync + cold compile); subsequent reloads are fast.
 
-### Critical: Node version must be 26
-- **Node 26.0.0** — works correctly
-- **Node 22.x** — hangs with no output (ESM/startup incompatibility)
-- **Node 25.x** — broken system library (`libsimdjson.29.dylib` missing after Homebrew update)
+### Critical: local Node version must be 26
+- **Node 26.0.0** — works correctly (local dev)
+- **Node 22.x** — local dev server hangs with no output (Netlify *builds* on 22 fine — see below)
+- **Node 25.x** — broken system library (`libsimdjson` missing after a Homebrew update)
 
-Check/switch Node version:
 ```bash
 /opt/homebrew/bin/node --version          # should say v26.0.0
 brew unlink node@22 && brew link node     # switch back to Node 26 if needed
 ```
 
-After switching Node versions, always reinstall node_modules:
+> Note the split: **local dev needs Node 26**, but **Netlify builds on Node 22** (set in `netlify.toml`) and that works — the hang is a local dev-server-startup issue on this machine, not a build incompatibility.
+
+### If the dev server hangs or modules look broken — clean reinstall
+A corrupted `node_modules` will make the server hang silently or throw `ERR_MODULE_NOT_FOUND`. The fix is a full clean reinstall (deletes the lockfile so npm resolves fresh from `package.json`):
 ```bash
-rm -rf node_modules package-lock.json .astro
+cd "/Users/christopherlinsellmba/Desktop/Claude Code/theplaybookre-site"
+rm -rf node_modules package-lock.json .astro node_modules/.vite
 npm install
 ```
+> A plain `npm install` against a bad lockfile is *not* enough — delete `package-lock.json` too.
 
 ---
 
@@ -48,15 +52,17 @@ npm install
 
 | Layer | Choice |
 |---|---|
-| Framework | Astro 6 (static output) |
+| Framework | Astro **6.4.2** (static output) |
 | Hosting | Netlify |
 | Adapter | None — static HTML deploys fine without one |
 | Sitemap | `@astrojs/sitemap` |
+| Markdown directives | `remark-directive` + custom `src/plugins/remark-playbook-blocks.mjs` |
 | Email list | Beehiiv (via Netlify Function) |
+| Form intake | Netlify Forms (pitch + resource suggestions) |
 | Fonts | Bebas Neue, Inter, DM Sans (Google Fonts) |
 | Styles | Scoped CSS in `.astro` files + `src/styles/global.css` |
 
-**Important:** `@astrojs/netlify` is listed in `package.json` but intentionally NOT imported in `astro.config.mjs`. Importing it caused the dev server to hang by probing the local `.netlify/db` state. Remove it from `package.json` on the next cleanup.
+> **`package.json` pins `astro: "latest"`** — currently resolving to 6.4.2. Consider pinning an exact version for reproducible builds.
 
 ---
 
@@ -66,51 +72,47 @@ npm install
 theplaybookre-site/
 ├── src/
 │   ├── components/
-│   │   ├── Masthead.astro         # Sticky header with search, nav, newsletter CTA
-│   │   ├── Footer.astro           # Full footer with modals (newsletter + advertise)
-│   │   ├── NewsletterBand.astro   # "Build the Business" 2-col subscription section
-│   │   ├── PillarStrip.astro      # 8-pillar horizontal nav strip
-│   │   ├── ArticleCard.astro      # Reusable article card
-│   │   └── SEOHead.astro          # Meta tags, OG, schema injection
+│   │   ├── Masthead.astro          # Sticky header: search, nav, "Get the Newsletter" CTA
+│   │   ├── Footer.astro            # Footer + newsletter modal + advertise modal
+│   │   ├── NewsletterBand.astro    # "Build the Business" subscribe band (on 7 pages)
+│   │   ├── PillarStrip.astro       # 8-pillar horizontal nav strip
+│   │   ├── ArticleCard.astro       # Reusable article card
+│   │   └── SEOHead.astro           # Meta tags, OG, JSON-LD schema
 │   ├── layouts/
-│   │   ├── BaseLayout.astro       # Universal page shell (Masthead + Footer)
-│   │   └── ArticleLayout.astro    # Article detail page shell
+│   │   ├── BaseLayout.astro        # Universal page shell (Masthead + Footer)
+│   │   └── ArticleLayout.astro     # Article detail page shell
 │   ├── pages/
-│   │   ├── index.astro            # Homepage (all sections)
+│   │   ├── index.astro             # Homepage
 │   │   ├── [pillar]/
-│   │   │   ├── index.astro        # Pillar archive page (e.g. /lead-generation/)
-│   │   │   └── [slug].astro       # Article detail page
-│   │   ├── playbooks/index.astro  # All articles archive
-│   │   ├── toolkit/index.astro    # Free resources page
-│   │   ├── start-here.astro       # Start Here page
-│   │   ├── about.astro            # About page
-│   │   ├── write-for-us.astro     # Pitch submission page
-│   │   ├── privacy.astro          # Privacy policy
-│   │   ├── terms.astro            # Terms of use
-│   │   └── search.json.ts         # Static search index (all articles as JSON)
+│   │   │   ├── index.astro         # Pillar archive (e.g. /lead-generation/)
+│   │   │   └── [slug].astro        # Article detail page
+│   │   ├── playbooks/index.astro   # All-articles archive
+│   │   ├── toolkit/index.astro     # Free resources + "Suggest a Resource" form
+│   │   ├── start-here.astro        # Start Here + "Start the Series" modal
+│   │   ├── about.astro             # About page
+│   │   ├── write-for-us.astro      # Writer pitch form (Netlify Forms)
+│   │   ├── privacy.astro           # Privacy policy (needs attorney review)
+│   │   ├── terms.astro             # Terms of use (needs attorney review)
+│   │   └── search.json.ts          # Static search index, served at /search.json
 │   ├── content/
-│   │   ├── articles/              # All editorial content (markdown)
-│   │   │   ├── lead-generation/
-│   │   │   ├── marketing-and-branding/
-│   │   │   ├── sales-skills-and-scripts/
-│   │   │   ├── business-systems/
-│   │   │   ├── ai-and-technology/
-│   │   │   ├── mindset-and-performance/
-│   │   │   ├── growth-and-scaling/
-│   │   │   └── the-fundamentals/
-│   │   └── toolkit/               # Downloadable resource definitions (markdown)
+│   │   ├── articles/{pillar}/      # Editorial content (markdown), one folder per pillar
+│   │   └── toolkit/                # Downloadable resource definitions (markdown)
+│   ├── content.config.ts           # Content collection schemas (articles, toolkit)
 │   ├── data/
-│   │   ├── pillars.ts             # The 8 content pillars (slug, name, shortName, color)
-│   │   ├── mostRead.ts            # Manually curated Most Read article IDs
-│   │   └── clPosts.ts             # ChrisLinsell.com crossover posts (manual, static)
+│   │   ├── pillars.ts              # The 8 content pillars (slug, name, shortName, description)
+│   │   ├── mostRead.ts             # Manually curated Most Read article IDs
+│   │   └── clPosts.ts              # ChrisLinsell.com crossover posts (static, placeholder URLs)
+│   ├── plugins/
+│   │   └── remark-playbook-blocks.mjs  # Renders :::callout / :::warning / :::phase at build time
 │   └── styles/
-│       └── global.css             # CSS custom properties (brand tokens, fonts)
+│       └── global.css              # Brand tokens, fonts, article block styles
 ├── netlify/
 │   └── functions/
-│       └── newsletter-subscribe.js  # Beehiiv API proxy (keeps API key server-side)
-├── astro.config.mjs               # Astro config (sitemap only, no adapter)
-├── netlify.toml                   # Netlify build config
-└── .env                           # Local credentials (gitignored)
+│       └── newsletter-subscribe.js # Beehiiv API proxy (keeps API key server-side)
+├── .claude/launch.json             # Local dev-preview launch config (tooling, not deployed)
+├── astro.config.mjs                # Sitemap + markdown remark plugins. NO adapter import.
+├── netlify.toml                    # Netlify build config (Node 22)
+└── .env                            # Local credentials (gitignored — never commit)
 ```
 
 ---
@@ -129,18 +131,16 @@ Defined in `src/styles/global.css`:
 --rule:     #E0E0DA
 ```
 
-**Typography:** Bebas Neue (all headings/display), Inter (UI/labels), DM Sans (body copy)
+**Typography:** Bebas Neue (headings/display), Inter (UI/labels), DM Sans (body copy)
 
 ---
 
 ## Content Collections
 
-Defined in `src/content.config.ts`.
+Schemas in `src/content.config.ts`.
 
 ### Articles
 Path: `src/content/articles/{pillar}/{slug}.md`
-
-Required frontmatter:
 ```yaml
 ---
 title: "Your Article Title"
@@ -150,7 +150,7 @@ pillar: lead-generation          # must match a slug in src/data/pillars.ts
 tags: ["Cold Calling"]           # first tag displays on cards
 readTime: 8                      # minutes
 accentWord: "Zero"               # word highlighted yellow in title display
-featured: false                  # true = appears as Featured Hero on homepage
+featured: false                  # true = Featured Hero on homepage
 draft: false                     # true = excluded from all collections
 heroImage: filename.jpg          # optional, place in public/images/
 ---
@@ -158,8 +158,6 @@ heroImage: filename.jpg          # optional, place in public/images/
 
 ### Toolkit Resources
 Path: `src/content/toolkit/{slug}.md`
-
-Required frontmatter:
 ```yaml
 ---
 title: "Resource Title"
@@ -173,6 +171,41 @@ includes:
   - "Item two"
 ---
 ```
+
+> **Astro content API note:** content entries are keyed by **`entry.id`** (the slug), **not** `entry.slug` — `entry.slug` was removed in the Astro version we run. Use `entry.id` for routing/lookups. (A past bug used `.slug`, which rendered `undefined` and broke the toolkit modal buttons.)
+
+---
+
+## Article Content Blocks (`:::callout`, `:::warning`, `:::phase`)
+
+Articles can use three custom block components, authored as markdown **directives** and transformed to styled HTML **at build time** by `src/plugins/remark-playbook-blocks.mjs` (wired up via `remark-directive` in `astro.config.mjs`). Styles live in `src/styles/global.css`.
+
+**Callout** — yellow left-border emphasis box:
+```markdown
+:::callout
+**The lead-in (bold):** The rest of the callout body text.
+:::
+```
+
+**Warning** — pale-yellow box with an automatic "⚠ WARNING" label:
+```markdown
+:::warning
+The caution text goes here.
+:::
+```
+
+**Phase** — numbered step sequence. Each `### Step N: Title` heading + the paragraph(s) after it becomes a numbered row (badge auto-numbered 1, 2, 3…):
+```markdown
+:::phase
+### Step 1: Research the Property
+Body for step one.
+
+### Step 2: Pre-Appointment Call
+Body for step two.
+:::
+```
+
+> These are **build-time** transforms — no client JS. Don't reintroduce a browser-side transformer; earlier one assumed Astro rendered `:::` as `<blockquote>` (it doesn't), so it never worked.
 
 ---
 
@@ -189,49 +222,85 @@ includes:
 | `growth-and-scaling` | Growth & Scaling |
 | `the-fundamentals` | The Fundamentals |
 
+Pillar slugs, display names, short names, and descriptions are defined in `src/data/pillars.ts`. These descriptions render on pillar archive pages, the homepage PillarStrip, and the Start Here topic grid — edit in one place.
+
 ---
 
 ## Homepage Sections (in order)
 
 1. **PillarStrip** — horizontal 8-pillar navigation
 2. **Featured Hero** — first article with `featured: true`, or most recent
-3. **Latest Playbooks** — 2-col layout: feed (5 articles) + sidebar (newsletter widget + Most Read)
-4. **Spotlight: Lead Generation** — 1 large + 3 small cards from `lead-generation` pillar
-5. **The Toolkit** — 4 resource cards with download modal (triggers Beehiiv subscribe)
-6. **NewsletterBand** — "Build the Business. Run the Play." 2-col subscribe section
-7. **From the Desk of Chris Linsell** — 3-card crossover block linking to ChrisLinsell.com
-8. **Footer** — full site footer
+3. **Latest Playbooks** — 2-col: feed (5 articles) + sidebar (newsletter widget + Most Read)
+4. **Spotlight: Lead Generation** — 1 large + 3 small cards from `lead-generation`
+5. **The Toolkit** — 4 resource cards; download modal subscribes to Beehiiv (`source: toolkit-download`)
+6. **NewsletterBand** — "Build the Business. Run the Play." subscribe band (`source: newsletter-band`)
+7. **From the Desk of Chris Linsell** — 3-card crossover block to ChrisLinsell.com
+8. **Footer**
 
 ---
 
-## Beehiiv Integration
+## Email Capture & Integrations
 
-**How it works:**
-All subscribe forms POST to `/.netlify/functions/newsletter-subscribe`, which proxies to the Beehiiv API server-side (keeps the API key out of the browser).
+There are **two independent intake pipelines**:
 
-**Netlify environment variables required** (set in Netlify → Site Settings → Environment Variables):
+1. **Beehiiv** (newsletter subscriptions) — via the Netlify Function.
+2. **Netlify Forms** (email notifications to Chris) — for the resource-suggestion and writer-pitch forms.
+
+### A. Beehiiv (newsletter)
+
+All subscribe forms POST to `/.netlify/functions/newsletter-subscribe`, which proxies to the Beehiiv API server-side (keeps the API key out of the browser). The function:
+- Subscribes the email (`reactivate_existing: true`, `send_welcome_email: true`).
+- Sets `utm_source: 'website'` and **`utm_medium` = the form's `source`** (the placement).
+- Sets **`referring_site`** = the page the signup happened on, read server-side from the request's `referer` header (no client changes needed).
+- Fails gracefully: if credentials are missing it returns success silently; on a Beehiiv API error it logs `[subscribe] Beehiiv error: <status>` and returns 502. The client UI always shows confirmation regardless.
+
+**Netlify environment variables required** (Netlify → Site configuration → Environment variables):
 ```
-BEEHIIV_PUBLICATION_ID = pub_8ea0b955-576c-4da5-ba63-76d8de39dd9b
+BEEHIIV_PUBLICATION_ID = pub_8ea0b955-576c-4da5-ba63-76d8de39dd9b   # MUST include the pub_ prefix
 BEEHIIV_API_KEY        = <set in Netlify env vars + local .env only — never commit this>
 ```
+> ⚠️ The publication ID **must** be `pub_`-prefixed. A bare UUID is rejected by Beehiiv with `400 INVALID_PATTERN`, which silently dropped every subscriber until fixed (2026-05-29).
+> ⚠️ Beehiiv **rejects obviously-fake emails** — test with a real inbox (or a `+alias` on a real domain), not `test@example.com`.
+> After changing env vars you must trigger a new deploy for them to take effect.
 
-**Forms wired to Beehiiv:**
-- Header "Get the Newsletter" button → triggers footer modal → Beehiiv
-- Footer newsletter modal → Beehiiv (`source: 'newsletter'`)
-- Homepage sidebar newsletter widget → Beehiiv (`source: 'newsletter'`)
-- Footer "Advertise" modal → Beehiiv (`source: 'advertise'`, tagged with `utm_medium: advertising-interest`)
+### B. Netlify Forms (email notifications)
 
-**Local dev note:** The Netlify Function does not run during `npm run dev`. Forms show the confirmation UI but don't actually send to Beehiiv locally. Deploy to Netlify to test live.
+Two forms use Netlify Forms (marked `data-netlify="true"` with a honeypot). Netlify detects them at build time and stores submissions; **you must add an email notification** per form to actually receive them:
+**Netlify → Forms → Form notifications → Add notification → Email notification** (point at your address; can scope to a form or fire for all forms).
+
+| Netlify form name | Source page | Purpose |
+|---|---|---|
+| `suggest-a-resource` | `/toolkit/` | Resource suggestions (also subscribes the sender to Beehiiv) |
+| `write-for-us` | `/write-for-us/` | Writer pitches (email only — **not** subscribed to Beehiiv) |
+
+### C. Full capture-point inventory
+
+Every place a visitor can submit an email, and where it goes:
+
+| Entry point | Appears on | Pipeline | `source` / `utm_medium` |
+|---|---|---|---|
+| Header "Get the Newsletter" | every page | Beehiiv | `footer-modal` * |
+| Footer newsletter modal | every page | Beehiiv | `footer-modal` |
+| Footer "Advertise" modal | every page | Beehiiv | `advertise` |
+| Homepage sidebar widget | homepage | Beehiiv | `homepage-sidebar` |
+| "Build the Business" band | 7 pages | Beehiiv | `newsletter-band` |
+| Toolkit resource download | `/toolkit/` | Beehiiv | `toolkit-download` |
+| Start Here "Start the Series" | `/start-here/` | Beehiiv | `start-here-series` |
+| Suggest a Resource | `/toolkit/` | Beehiiv **+** Netlify Forms | `toolkit-suggestion` |
+| Write for Us pitch | `/write-for-us/` | Netlify Forms only | — |
+
+\* The header CTA programmatically opens the footer newsletter modal, so it tags as `footer-modal` (header vs. footer is not distinguished).
+
+**Local dev note:** neither the Netlify Function nor Netlify Forms run under `astro dev`. Forms show their confirmation UI but don't actually send. Deploy to test live.
 
 ---
 
 ## Search
 
-The header magnifying glass expands inline (nav fades out, search bar fades in).
-
+Header magnifying glass expands inline (nav crossfades out, search bar in; logo never moves).
 - **Index:** `src/pages/search.json.ts` — generated at build time, served at `/search.json`
 - **Logic:** client-side filter on title + description, up to 8 results
-- **Results:** fixed dropdown panel below the header
+- **Close:** × button or Escape
 
 ---
 
@@ -239,48 +308,90 @@ The header magnifying glass expands inline (nav fades out, search bar fades in).
 
 Auto-deploys via Netlify on every push to `main`.
 
-Build command: `npm run build`  
-Publish directory: `dist`  
-Node version (on Netlify): 22 (set in `netlify.toml`)
+- **Build command:** `npm run build`
+- **Publish directory:** `dist`
+- **Node version (Netlify):** 22 (`netlify.toml`)
+- **Manual deploy:** Netlify → Deploys → Trigger deploy → Deploy site
 
-**To trigger a manual deploy:** Netlify dashboard → Deploys → Trigger deploy → Deploy site
+**Deploy etiquette:** push to GitHub freely, but each push triggers a build — keep an eye on build-credit usage (loose guideline: ~one deploy/day unless actively debugging).
 
-**After setting new environment variables**, you must trigger a new deploy for them to take effect.
+After changing environment variables, trigger a fresh deploy for them to take effect.
 
 ---
 
 ## Key Quirks & Known Issues
 
 ### Do not import `@astrojs/netlify`
-It's in `package.json` but must NOT be imported in `astro.config.mjs`. The package probes local `.netlify/db` state on import and hangs the dev server indefinitely. The static site deploys fine to Netlify without any adapter.
+It's still in `package.json` but must NOT be imported in `astro.config.mjs`. On import it probes local `.netlify/db` state and hangs the dev server. The static site deploys fine without any adapter. **Should be removed from `package.json`.**
 
-### Script tags in Astro components must use `is:inline`
-TypeScript annotations in `<script>` tags (e.g. `param: string`, `as HTMLInputElement`) cause Vite to fail silently — scripts appear to load but no event listeners bind. Always use `<script is:inline>` with plain JavaScript for component interactivity.
+### Client `<script>` tags must be `is:inline` plain JS
+TypeScript annotations (`: string`, `as HTMLElement`, `<HTMLButtonElement>`, etc.) in a **processed** `<script>` cause Vite to fail silently — the script loads but no listeners bind. Always use `<script is:inline>` with plain JavaScript for interactivity. `define:vars` scripts are also inline (plain JS only). *(All client scripts were swept to comply on 2026-05-29.)*
+
+### Use `entry.id`, not `entry.slug`
+Astro removed `entry.slug` from content collections; use `entry.id` (the slug). Mixing them renders empty attributes and breaks interactivity.
+
+### Beehiiv publication ID needs the `pub_` prefix; Beehiiv rejects fake emails
+See [Beehiiv section](#a-beehiiv-newsletter). Both cost real debugging time — don't repeat them.
+
+### Custom domain not attached
+`theplaybookre.com` is parked elsewhere. Use the `*.netlify.app` URL until the domain is pointed at Netlify.
 
 ### `clPosts.ts` uses placeholder URLs
-The "From the Desk of Chris Linsell" crossover section (`src/data/clPosts.ts`) currently points all articles to `https://chrislinsell.com/blog`. Update with real article URLs when they're published.
+"From the Desk of Chris Linsell" (`src/data/clPosts.ts`) points all links to `https://chrislinsell.com/blog`. Update when real articles publish.
 
 ### Social icon links use placeholder handles
-Footer social icons (Threads, LinkedIn, Instagram) currently link to `chrislinsell` profiles. Update with The Playbook RE account handles when created.
-
-### Article detail pages exist but content is mostly placeholder
-Articles in `src/content/articles/` render via `src/pages/[pillar]/[slug].astro`. Most articles are placeholder content created to fill homepage card slots. Real articles need to be written and added before launch.
+Footer social icons (Threads, LinkedIn, Instagram) link to `chrislinsell` profiles. Update with Playbook RE handles when created.
 
 ### Most Read is manually curated
-Edit `src/data/mostRead.ts` to control which articles appear in the Most Read sidebar. Uses article IDs (e.g. `lead-generation/cold-calling-from-zero`).
+Edit `src/data/mostRead.ts` (format: `pillar-slug/article-slug`).
 
-### Privacy & Terms need attorney review before launch
-`src/pages/privacy.astro` and `src/pages/terms.astro` are drafted but have not been reviewed by counsel.
+### Article content is mostly placeholder
+Most articles exist to fill card slots. Real articles need writing before launch.
+
+### Privacy & Terms need attorney review
+`src/pages/privacy.astro` and `src/pages/terms.astro` are drafted, not reviewed by counsel.
+
+---
+
+## Security Notes
+
+- **Never commit secrets.** `.env` is gitignored (`.env`, `.env.*`, except `!.env.example`). Secrets live in Netlify env vars + local `.env` only.
+- The Beehiiv API key was previously committed in this README in plaintext. It has since been **rotated** (the old key is dead) and replaced with a placeholder. The dead key still exists in old git history, but is harmless because it was revoked.
+- If a secret is ever exposed again: **rotate it first** (that neutralizes the risk), then scrub the file. History rewriting is optional once rotated.
+
+---
+
+## Change Log
+
+### 2026-05-29 — Forms, tracking, content blocks, security
+- **Dev server fixed:** corrupted `node_modules` (missing `html-void-elements`) → clean reinstall; now on Astro **6.4.2**.
+- **Root-cause fix:** `BEEHIIV_PUBLICATION_ID` was a bare UUID → Beehiiv `400`s → **no subscribers were ever added** by any form. Added the required `pub_` prefix.
+- **Security:** removed the live Beehiiv API key that was committed in this README; key rotated.
+- **Wired up every broken capture point:** the NewsletterBand "Subscribe" button (had no handler), the Start Here series modal (TS-in-script silent failure), and the toolkit download modal (never called the function) all now subscribe.
+- **Per-placement tracking:** the function now maps `source` → `utm_medium` and records the signup page via `referring_site`. Retagged sources for uniqueness (`homepage-sidebar`, `footer-modal`, `toolkit-download`, etc.).
+- **New feature:** "Suggest a Resource" form on `/toolkit/` (Netlify Forms email + Beehiiv subscribe).
+- **Wired Write-for-Us pitch form** to Netlify Forms (was silently dropping pitches).
+- **Article blocks:** added `remark-directive` + `src/plugins/remark-playbook-blocks.mjs` so `:::callout` / `:::warning` / `:::phase` render styled at build time (previously showed literal `:::` markers in all 9 articles).
+- **Script sweep:** converted remaining TypeScript-laden `<script>` tags to `is:inline` plain JS.
+- **Copy edits:** pillar descriptions (Lead Gen, Marketing), Start Here (hero/intro/3 paths + label alignment), Toolkit (hero, coming-soon, meta/JSON-LD).
 
 ---
 
 ## Outstanding Before Launch
 
-- [ ] Replace all placeholder article content with real articles
-- [ ] Update `src/data/clPosts.ts` with real ChrisLinsell.com article URLs
-- [ ] Update footer social icon links with Playbook RE account handles
-- [ ] Attorney review of `/privacy/` and `/terms/`
-- [ ] Confirm Beehiiv env vars are set in Netlify and trigger a deploy
-- [ ] Add real hero images to articles (place in `public/images/`, reference in frontmatter)
-- [ ] Complete remaining homepage copy changes (NewsletterBand body text, stats, toolkit subtitle, CL subtitle, sidebar newsletter copy — partially done, session was interrupted)
-- [ ] Remove `@astrojs/netlify` from `package.json` dependencies (it's unused and caused dev server issues)
+- [ ] **Attach the custom domain** `theplaybookre.com` to the Netlify site (currently parked).
+- [ ] **Set up Netlify Forms email notifications** for `suggest-a-resource` and `write-for-us` (and verify they fire).
+- [ ] Replace placeholder article content with real articles.
+- [ ] Add real hero images to articles (`public/images/`, reference in frontmatter).
+- [ ] Update `src/data/clPosts.ts` with real ChrisLinsell.com article URLs.
+- [ ] Update footer social icon links with Playbook RE account handles.
+- [ ] Attorney review of `/privacy/` and `/terms/`.
+- [ ] Remove `@astrojs/netlify` from `package.json` (unused; dangerous if re-imported).
+- [ ] Consider pinning `astro` to an exact version in `package.json` (currently `"latest"`).
+
+### Done (2026-05-29)
+- [x] Confirm Beehiiv env vars set in Netlify + correct `pub_` publication ID.
+- [x] Verify subscribers actually flow into Beehiiv (confirmed end-to-end).
+- [x] Wire all newsletter capture points + the suggest/pitch forms.
+- [x] Fix `:::callout` / `:::warning` / `:::phase` rendering.
+- [x] Remove the API key from the README + rotate it.
