@@ -176,9 +176,13 @@ includes:
 
 ---
 
-## Article Content Blocks (`:::callout`, `:::warning`, `:::phase`)
+## Article Content Blocks (`:::` directives)
 
-Articles can use three custom block components, authored as markdown **directives** and transformed to styled HTML **at build time** by `src/plugins/remark-playbook-blocks.mjs` (wired up via `remark-directive` in `astro.config.mjs`). Styles live in `src/styles/global.css`.
+Articles use a set of custom block components authored as markdown **directives**, transformed to styled HTML **at build time** by `src/plugins/remark-playbook-blocks.mjs` (via `remark-directive` in `astro.config.mjs`). Styles live in `src/styles/global.css`.
+
+**📄 Full authoring reference** (for writing articles or driving a content skill): [`docs/article-content-elements.md`](docs/article-content-elements.md).
+
+Available directives: `:::callout`, `:::warning`, `:::protip`, `:::takeaways`, `:::stat{value}`, `:::quote{cite}`, `:::verdict{title}`, `:::phase`, `:::proscons`, `:::checklist{title}`, `:::quickfacts`, `:::newsletter{heading}` — plus `✓`/`✗` auto color-coding inside markdown tables. Quick examples:
 
 **Callout** — yellow left-border emphasis box:
 ```markdown

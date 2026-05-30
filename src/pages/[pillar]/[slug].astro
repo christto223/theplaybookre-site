@@ -42,5 +42,18 @@ const articleSlug = slugParts.slice(1).join('/');
   <Content />
 </ArticleLayout>
 
-<!-- Custom :::callout / :::warning / :::phase blocks are transformed at
-     build time by the remark-playbook-blocks plugin (see astro.config.mjs). -->
+<!-- Custom article blocks (:::callout, :::warning, :::phase, :::stat,
+     :::takeaways, :::quickfacts, :::quote, :::protip, :::verdict,
+     :::proscons, :::checklist, :::newsletter) are transformed at build time
+     by the remark-playbook-blocks plugin (see astro.config.mjs). -->
+<script is:inline>
+  // Inline :::newsletter CTA button opens the existing footer newsletter modal.
+  (function () {
+    document.querySelectorAll('.inline-cta-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var trigger = document.getElementById('footer-nl-btn');
+        if (trigger) trigger.click();
+      });
+    });
+  })();
+</script>

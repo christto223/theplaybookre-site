@@ -182,6 +182,104 @@ button { font-family: inherit; cursor: pointer; }
 }
 .phase-content p { font-size: 15px !important; margin-bottom: 8px !important; }
 
+/* ─── KEY TAKEAWAYS (:::takeaways) ─── */
+.takeaways-block { background: var(--white); border: 2px solid var(--yellow); padding: 24px 28px; margin: 32px 0; }
+.takeaways-block::before {
+  content: 'Key Takeaways'; font-family: 'Bebas Neue', cursive; font-size: 12px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); background: var(--black);
+  display: inline-block; padding: 4px 12px; margin-bottom: 16px;
+}
+.takeaways-block ul { list-style: none; margin: 0; padding: 0; }
+.takeaways-block li {
+  position: relative; padding-left: 28px; margin-bottom: 12px;
+  font-size: 16px !important; line-height: 1.6 !important; color: var(--charcoal);
+}
+.takeaways-block li:last-child { margin-bottom: 0; }
+.takeaways-block li::before { content: '→'; position: absolute; left: 0; top: 0; color: var(--yellow); font-weight: 700; }
+
+/* ─── STAT CALLOUT (:::stat{value="…"}) ─── */
+.stat-callout { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; background: var(--yellow); padding: 28px 32px; margin: 32px 0; }
+.stat-callout-num { font-family: 'Bebas Neue', cursive; font-size: 72px; line-height: 0.9; color: var(--black); letter-spacing: 0.01em; }
+.stat-callout-text p { font-size: 17px !important; line-height: 1.55 !important; margin-bottom: 0 !important; color: rgba(0,0,0,0.82) !important; }
+
+/* ─── QUICK FACTS / AT-A-GLANCE (:::quickfacts) ─── */
+.qf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #1a1a1a; margin: 32px 0; }
+.qf-cell { background: #0d0d0d; padding: 24px 20px; font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #888; }
+.qf-cell p { margin: 0 !important; font-size: 11px !important; color: #888 !important; line-height: 1.4 !important; }
+.qf-cell strong { display: block; font-family: 'Bebas Neue', cursive; font-weight: 400; font-size: 38px; line-height: 1; color: var(--yellow) !important; margin-bottom: 6px; letter-spacing: 0.01em; }
+
+/* ─── PULL QUOTE (:::quote{cite="…"}) ─── */
+.pull-quote { background: var(--black); padding: 36px 40px; margin: 36px 0; border: none; }
+.pull-quote p { font-family: 'Bebas Neue', cursive !important; font-size: 32px !important; line-height: 1.15 !important; color: var(--white) !important; letter-spacing: 0.01em; margin-bottom: 0 !important; }
+.pull-quote em { color: var(--yellow); font-style: normal; }
+.pull-quote-cite { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #666; margin-top: 16px; }
+
+/* ─── PRO TIP (:::protip) ─── */
+.protip-block { background: #fefce8; border-left: 4px solid var(--yellow); padding: 20px 24px; margin: 32px 0; }
+.protip-block::before {
+  content: 'Pro Tip'; font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.15em;
+  color: var(--yellow); background: var(--black); display: inline-block; padding: 3px 10px; margin-bottom: 10px;
+}
+.protip-block p { font-size: 15px !important; margin-bottom: 0 !important; }
+
+/* ─── VERDICT (:::verdict{title="…"}) ─── */
+.verdict-block { background: var(--yellow); padding: 32px; margin: 36px 0; }
+.verdict-block::before {
+  content: 'The Playbook Verdict'; font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 0.16em;
+  color: var(--yellow); background: var(--black); display: inline-block; padding: 4px 12px; margin-bottom: 16px;
+}
+.verdict-headline { font-family: 'Bebas Neue', cursive; font-size: 32px; line-height: 1.05; color: var(--black); margin-bottom: 12px; letter-spacing: 0.01em; }
+.verdict-block p { font-size: 16px !important; line-height: 1.65 !important; color: rgba(0,0,0,0.82) !important; margin-bottom: 0 !important; }
+
+/* ─── PROS / CONS (:::proscons) ─── */
+.proscons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--rule); margin: 32px 0; }
+.proscons-col { background: var(--white); padding: 24px 28px; }
+.proscons-col h3 {
+  font-family: 'Bebas Neue', cursive !important; font-size: 14px !important; letter-spacing: 0.1em !important;
+  text-transform: uppercase; display: inline-block; padding: 4px 12px !important; margin: 0 0 16px !important; color: var(--white) !important;
+}
+.proscons-pros h3 { background: #1a7f4b; }
+.proscons-cons h3 { background: #c0392b; }
+.proscons-col ul { list-style: none; margin: 0; padding: 0; }
+.proscons-col li { position: relative; padding-left: 26px; margin-bottom: 10px; font-size: 15px !important; line-height: 1.55 !important; color: var(--charcoal); }
+.proscons-pros li::before { content: '✓'; position: absolute; left: 0; color: #1a7f4b; font-weight: 700; }
+.proscons-cons li::before { content: '✗'; position: absolute; left: 0; color: #c0392b; font-weight: 700; }
+
+/* ─── CHECKLIST / PROTOCOL (:::checklist{title="…"}) ─── */
+.checklist-block { background: var(--white); border: 1px solid var(--rule); padding: 24px 28px; margin: 32px 0; }
+.checklist-title {
+  font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--yellow); background: var(--black); display: inline-block; padding: 4px 12px; margin-bottom: 18px;
+}
+.checklist-block h3 {
+  font-family: 'Inter', sans-serif !important; font-size: 11px !important; font-weight: 700 !important;
+  letter-spacing: 0.1em !important; text-transform: uppercase; color: var(--gray) !important; margin: 20px 0 10px !important; padding: 0 !important;
+}
+.checklist-block h3:first-child { margin-top: 0 !important; }
+.checklist-block ul { list-style: none; margin: 0; padding: 0; }
+.checklist-block li { position: relative; padding-left: 24px; margin-bottom: 9px; font-size: 15px !important; line-height: 1.5 !important; color: var(--charcoal); }
+.checklist-block li::before { content: ''; position: absolute; left: 0; top: 7px; width: 8px; height: 8px; background: var(--yellow); }
+
+/* ─── INLINE NEWSLETTER CTA (:::newsletter{heading="…"}) ─── */
+.inline-cta { display: flex; align-items: center; justify-content: space-between; gap: 24px; background: var(--black); padding: 28px 32px; margin: 36px 0; flex-wrap: wrap; }
+.inline-cta-label { font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #555; margin-bottom: 6px; }
+.inline-cta-headline { font-family: 'Bebas Neue', cursive; font-size: 26px; line-height: 1; color: var(--white); letter-spacing: 0.01em; }
+.inline-cta-btn { font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 0.08em; background: var(--yellow); color: var(--black); border: none; padding: 14px 26px; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background 0.15s; }
+.inline-cta-btn:hover { background: #e8be00; }
+
+/* ─── TABLE CELL ✓ / ✗ COLOR CODING ─── */
+.prose .cell-yes { color: #1a7f4b; font-weight: 700; }
+.prose .cell-no { color: #c0392b; font-weight: 700; }
+
+/* ─── Article block responsiveness ─── */
+@media (max-width: 640px) {
+  .qf-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat-callout { grid-template-columns: 1fr; gap: 8px; }
+  .stat-callout-num { font-size: 56px; }
+  .proscons-grid { grid-template-columns: 1fr; }
+  .inline-cta { flex-direction: column; align-items: flex-start; }
+}
+
 /* ─── SECTION LABEL SHARED ─── */
 .section-label {
   font-family: 'Bebas Neue', cursive;
