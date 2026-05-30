@@ -9,8 +9,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "latest",
     "@astrojs/netlify": "latest",
-    "@astrojs/sitemap": "latest"
+    "@astrojs/sitemap": "latest",
+    "astro": "latest",
+    "remark-directive": "^4.0.0"
   }
 }

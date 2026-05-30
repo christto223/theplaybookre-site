@@ -42,31 +42,5 @@ const articleSlug = slugParts.slice(1).join('/');
   <Content />
 </ArticleLayout>
 
-<script is:inline>
-  // Transform custom markdown blocks into styled HTML after render
-  // :::callout ... ::: → .callout-block
-  // :::warning ... ::: → .warning-block
-  (function () {
-    function transformCustomBlocks(container) {
-      // Astro renders ::: blocks as <blockquote> elements with paragraphs
-      var blockquotes = container.querySelectorAll('blockquote');
-      blockquotes.forEach(function (bq) {
-        var text = (bq.textContent || '').trim();
-        if (text.startsWith('callout')) {
-          bq.classList.add('callout-block');
-        } else if (text.startsWith('warning')) {
-          bq.classList.add('warning-block');
-        }
-      });
-    }
-    function run() {
-      var prose = document.querySelector('.prose');
-      if (prose) transformCustomBlocks(prose);
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', run);
-    } else {
-      run();
-    }
-  })();
-</script>
+<!-- Custom :::callout / :::warning / :::phase blocks are transformed at
+     build time by the remark-playbook-blocks plugin (see astro.config.mjs). -->

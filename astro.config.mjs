@@ -1,9 +1,14 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import remarkDirective from 'remark-directive';
+import { remarkPlaybookBlocks } from './src/plugins/remark-playbook-blocks.mjs';
 
 export default defineConfig({
   site: 'https://theplaybookre.com',
   output: 'static',
+  markdown: {
+    remarkPlugins: [remarkDirective, remarkPlaybookBlocks],
+  },
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/draft/'),
