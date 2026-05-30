@@ -62,7 +62,7 @@ npm install
 | Fonts | Bebas Neue, Inter, DM Sans (Google Fonts) |
 | Styles | Scoped CSS in `.astro` files + `src/styles/global.css` |
 
-> **`package.json` pins `astro: "latest"`** — currently resolving to 6.4.2. Consider pinning an exact version for reproducible builds.
+> **`astro` is pinned to `6.4.2`** in `package.json` for reproducible builds. `@astrojs/sitemap` and `remark-directive` remain on ranges. The unused `@astrojs/netlify` adapter has been **removed** (it was never imported and caused dev-server hangs if it ever was).
 
 ---
 
@@ -321,8 +321,8 @@ After changing environment variables, trigger a fresh deploy for them to take ef
 
 ## Key Quirks & Known Issues
 
-### Do not import `@astrojs/netlify`
-It's still in `package.json` but must NOT be imported in `astro.config.mjs`. On import it probes local `.netlify/db` state and hangs the dev server. The static site deploys fine without any adapter. **Should be removed from `package.json`.**
+### Do not add/import `@astrojs/netlify`
+The adapter has been **removed** from `package.json` (2026-05-29). Don't reinstall or import it: the static site deploys to Netlify fine without any adapter, and on import the adapter probes local `.netlify/db` state and hangs the dev server.
 
 ### Client `<script>` tags must be `is:inline` plain JS
 TypeScript annotations (`: string`, `as HTMLElement`, `<HTMLButtonElement>`, etc.) in a **processed** `<script>` cause Vite to fail silently — the script loads but no listeners bind. Always use `<script is:inline>` with plain JavaScript for interactivity. `define:vars` scripts are also inline (plain JS only). *(All client scripts were swept to comply on 2026-05-29.)*
@@ -373,7 +373,8 @@ Most articles exist to fill card slots. Real articles need writing before launch
 - **Wired Write-for-Us pitch form** to Netlify Forms (was silently dropping pitches).
 - **Article blocks:** added `remark-directive` + `src/plugins/remark-playbook-blocks.mjs` so `:::callout` / `:::warning` / `:::phase` render styled at build time (previously showed literal `:::` markers in all 9 articles).
 - **Script sweep:** converted remaining TypeScript-laden `<script>` tags to `is:inline` plain JS.
-- **Copy edits:** pillar descriptions (Lead Gen, Marketing), Start Here (hero/intro/3 paths + label alignment), Toolkit (hero, coming-soon, meta/JSON-LD).
+- **Copy edits:** pillar descriptions (Lead Gen, Marketing), Start Here (hero/intro/3 paths + label alignment), Toolkit (hero, coming-soon, meta/JSON-LD), About (why-this-exists, Chris bio, editorial standards, agent cards), Write for Us.
+- **Dependency cleanup:** removed unused `@astrojs/netlify` and pinned `astro` to `6.4.2`.
 
 ---
 
@@ -386,8 +387,6 @@ Most articles exist to fill card slots. Real articles need writing before launch
 - [ ] Update `src/data/clPosts.ts` with real ChrisLinsell.com article URLs.
 - [ ] Update footer social icon links with Playbook RE account handles.
 - [ ] Attorney review of `/privacy/` and `/terms/`.
-- [ ] Remove `@astrojs/netlify` from `package.json` (unused; dangerous if re-imported).
-- [ ] Consider pinning `astro` to an exact version in `package.json` (currently `"latest"`).
 
 ### Done (2026-05-29)
 - [x] Confirm Beehiiv env vars set in Netlify + correct `pub_` publication ID.
@@ -395,3 +394,5 @@ Most articles exist to fill card slots. Real articles need writing before launch
 - [x] Wire all newsletter capture points + the suggest/pitch forms.
 - [x] Fix `:::callout` / `:::warning` / `:::phase` rendering.
 - [x] Remove the API key from the README + rotate it.
+- [x] Remove unused `@astrojs/netlify` from `package.json`.
+- [x] Pin `astro` to an exact version (`6.4.2`).
