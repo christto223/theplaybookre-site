@@ -161,8 +161,9 @@ const schema = [
         return (
           <a href={articleUrl(a)} class="lp-card-lg">
             <div class="lp-card-img" style={`background:${bg}`}>
+              {a.data.heroImage && <img src={`/images/${a.data.heroImage}`} alt={a.data.title} loading="lazy" />}
               <div class="lp-img-badge">{a.data.tags[0]}</div>
-              {a.data.accentWord && <span class="lp-img-word" style="font-size:100px">{a.data.accentWord.toUpperCase()}</span>}
+              {!a.data.heroImage && a.data.accentWord && <span class="lp-img-word" style="font-size:100px">{a.data.accentWord.toUpperCase()}</span>}
             </div>
             <div class="lp-card-body">
               <div class="lp-cat-tag">{tag}</div>
@@ -184,8 +185,9 @@ const schema = [
         return (
           <a href={articleUrl(a)} class="lp-card-sm">
             <div class="lp-card-img lp-card-img--sm" style={`background:${bg}`}>
+              {a.data.heroImage && <img src={`/images/${a.data.heroImage}`} alt={a.data.title} loading="lazy" />}
               <div class="lp-img-badge">{a.data.tags[0]}</div>
-              {a.data.accentWord && <span class="lp-img-word" style="font-size:72px">{a.data.accentWord.toUpperCase()}</span>}
+              {!a.data.heroImage && a.data.accentWord && <span class="lp-img-word" style="font-size:72px">{a.data.accentWord.toUpperCase()}</span>}
             </div>
             <div class="lp-card-body">
               <div class="lp-cat-tag">{tag}</div>
@@ -206,8 +208,9 @@ const schema = [
         return (
           <a href={articleUrl(a)} class="lp-card-sm">
             <div class="lp-card-img lp-card-img--sm" style={`background:${bg}`}>
+              {a.data.heroImage && <img src={`/images/${a.data.heroImage}`} alt={a.data.title} loading="lazy" />}
               <div class="lp-img-badge">{a.data.tags[0]}</div>
-              {a.data.accentWord && <span class="lp-img-word" style="font-size:72px">{a.data.accentWord.toUpperCase()}</span>}
+              {!a.data.heroImage && a.data.accentWord && <span class="lp-img-word" style="font-size:72px">{a.data.accentWord.toUpperCase()}</span>}
             </div>
             <div class="lp-card-body">
               <div class="lp-cat-tag">{tag}</div>
@@ -280,7 +283,8 @@ const schema = [
         {spotlightLg && (
           <a href={articleUrl(spotlightLg)} class="sp-card-lg">
             <div class="sp-img-tall">
-              {spotlightLg.data.accentWord && (
+              {spotlightLg.data.heroImage && <img src={`/images/${spotlightLg.data.heroImage}`} alt={spotlightLg.data.title} loading="lazy" />}
+              {!spotlightLg.data.heroImage && spotlightLg.data.accentWord && (
                 <span class="sp-img-word">{spotlightLg.data.accentWord.toUpperCase()}</span>
               )}
               <div class="sp-img-badge">{spotlightLg.data.tags[0]}</div>
@@ -297,7 +301,8 @@ const schema = [
         {spotlightSm.map(a => (
           <a href={articleUrl(a)} class="sp-card-sm">
             <div class="sp-img-med">
-              {a.data.accentWord && (
+              {a.data.heroImage && <img src={`/images/${a.data.heroImage}`} alt={a.data.title} loading="lazy" />}
+              {!a.data.heroImage && a.data.accentWord && (
                 <span class="sp-img-word sp-img-word--sm">{a.data.accentWord.toUpperCase()}</span>
               )}
               <div class="sp-img-badge">{a.data.tags[0]}</div>
@@ -542,6 +547,15 @@ const schema = [
     font-family: 'Bebas Neue', cursive; line-height: 1;
     color: rgba(255,255,255,0.08); user-select: none; position: relative; z-index: 1;
   }
+  /* Hero photo fill for homepage cards (Latest Playbooks + Spotlight) */
+  .lp-card-img img, .sp-img-tall img, .sp-img-med img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: 0; transition: transform 0.2s;
+  }
+  .lp-card-lg:hover .lp-card-img img,
+  .lp-card-sm:hover .lp-card-img img,
+  .sp-card-lg:hover .sp-img-tall img,
+  .sp-card-sm:hover .sp-img-med img { transform: scale(1.03); }
 
   /* Card body */
   .lp-card-body {
