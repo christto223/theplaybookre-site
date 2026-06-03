@@ -5,7 +5,7 @@
 **Hosting:** Netlify (auto-deploys from `main` branch)
 **Built with:** Astro **6.4.2**, static output, no SSR adapter
 
-> **Last comprehensive update:** 2026-05-29. See the [Change Log](#change-log) at the bottom for what changed and why.
+> **Last comprehensive update:** 2026-06-03. See the [Change Log](#change-log) at the bottom for what changed and why.
 
 ---
 
@@ -213,6 +213,33 @@ Body for step two.
 
 ---
 
+## Content Creation & Publishing Workflow
+
+Articles are **written in Claude Cowork** using the **`the-playbook-content`** skill, then **implemented here in Code**.
+
+**1. Write (Cowork — `the-playbook-content`).** Chris provides a primary keyword, secondary keyword, search intent, and angle. The skill archives the brief, runs Ahrefs + live-search research, returns a source-annotated outline for up to two approval rounds, drafts against Chris's voice guides and an SEO/GEO spec using the `:::` element toolkit, scores against rubrics, and delivers a finished markdown file (frontmatter + body) to the watch folder. The element catalog it writes to is documented in [`docs/article-content-elements.md`](docs/article-content-elements.md) (plain-text twin: `docs/article-content-elements.txt`).
+
+**2. Implement (here).** Given the finished markdown:
+- Drop the file at `src/content/articles/{pillar}/{slug}.md` (contents unchanged).
+- Add the hero image to `public/images/{slug}.jpg` and reference it via `heroImage` in frontmatter (filename only, no path).
+- Optimize the hero image (see below).
+- Verify on the dev server: frontmatter validates, every `:::` directive renders styled (no literal `:::`), and the hero image shows on the article + cards.
+- Commit + push (auto-deploys via Netlify).
+
+First real article published this way: **Real Estate Farming** — `/lead-generation/real-estate-farming/`.
+
+### Hero images
+- `heroImage: filename.jpg` in frontmatter → file lives at `public/images/filename.jpg` (convention: name it after the slug).
+- It renders **everywhere the article appears**: the article page header (darkened background), topic-page cards, the homepage Featured Hero, and the homepage **Latest Playbooks** + **Spotlight** cards. Articles **without** a hero image fall back to a colored block with the accent word (the original homepage-card design).
+- **Optimize before committing.** Source photos are often huge (4000px / 2+ MB). Resize the long edge to ~1920px and recompress to roughly <500 KB with macOS `sips`:
+  ```bash
+  sips -Z 1920 image.jpg                                # resize long edge to 1920px
+  sips -s format jpeg -s formatOptions 58 image.jpg     # recompress (~quality 58)
+  ```
+- Homepage/topic cards use `object-fit: cover` at fixed heights, so the image is **center-cropped** — choose/crop photos that read well from the center.
+
+---
+
 ## The 8 Content Pillars
 
 | Slug | Display Name |
@@ -349,8 +376,8 @@ Footer social icons (Threads, LinkedIn, Instagram) link to `chrislinsell` profil
 ### Most Read is manually curated
 Edit `src/data/mostRead.ts` (format: `pillar-slug/article-slug`).
 
-### Article content is mostly placeholder
-Most articles exist to fill card slots. Real articles need writing before launch.
+### Article content is mostly placeholder (one real article live)
+The first real article — **Real Estate Farming** (`/lead-generation/real-estate-farming/`) — is published. The rest are still placeholder content created to fill card slots, and need replacing before launch.
 
 ### Privacy & Terms need attorney review
 `src/pages/privacy.astro` and `src/pages/terms.astro` are drafted, not reviewed by counsel.
@@ -366,6 +393,12 @@ Most articles exist to fill card slots. Real articles need writing before launch
 ---
 
 ## Change Log
+
+### 2026-06-03 — First article live, hero images, content skill
+- **Published the first real article:** "Real Estate Farming: How to Own a Neighborhood's Listings" at `/lead-generation/real-estate-farming/`, with an optimized hero image (`public/images/real-estate-farming.jpg`, 2.3 MB → ~421 KB via `sips`).
+- **Homepage cards now show hero images:** wired the Latest Playbooks feed and Spotlight cards to render `heroImage` (`object-fit: cover`, tag badge overlaid), falling back to the colored accent-word block when an article has none. Previously these sections ignored `heroImage`, so homepage thumbnails were missing for articles with photos.
+- **Content pipeline established:** articles are authored in Claude Cowork via the `the-playbook-content` skill (keyword/intent/angle → Ahrefs + live research → approved outline → voice/SEO/GEO draft → scored → markdown), then implemented here. See "Content Creation & Publishing Workflow."
+- **Docs:** added plain-text `README.txt` and `docs/article-content-elements.txt` for sharing outside a markdown renderer.
 
 ### 2026-05-29 — Forms, tracking, content blocks, security
 - **Dev server fixed:** corrupted `node_modules` (missing `html-void-elements`) → clean reinstall; now on Astro **6.4.2**.
@@ -386,7 +419,7 @@ Most articles exist to fill card slots. Real articles need writing before launch
 
 - [ ] **Attach the custom domain** `theplaybookre.com` to the Netlify site (currently parked).
 - [ ] **Set up Netlify Forms email notifications** for `suggest-a-resource` and `write-for-us` (and verify they fire).
-- [ ] Replace placeholder article content with real articles.
+- [ ] Replace remaining placeholder article content with real articles (1 published so far: Real Estate Farming).
 - [ ] Add real hero images to articles (`public/images/`, reference in frontmatter).
 - [ ] Update `src/data/clPosts.ts` with real ChrisLinsell.com article URLs.
 - [ ] Update footer social icon links with Playbook RE account handles.
