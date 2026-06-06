@@ -5,7 +5,7 @@
 **Hosting:** Netlify (auto-deploys from `main` branch)
 **Built with:** Astro **6.4.2**, static output, no SSR adapter
 
-> **Last comprehensive update:** 2026-06-03. See the [Change Log](#change-log) at the bottom for what changed and why.
+> **Last comprehensive update:** 2026-06-06. See the [Change Log](#change-log) at the bottom for what changed and why.
 
 ---
 
@@ -110,7 +110,7 @@ theplaybookre-site/
 │   └── functions/
 │       └── newsletter-subscribe.js # Beehiiv API proxy (keeps API key server-side)
 ├── .claude/launch.json             # Local dev-preview launch config (tooling, not deployed)
-├── astro.config.mjs                # Sitemap + markdown remark plugins. NO adapter import.
+├── astro.config.mjs                # Sitemap + remark plugins + trailingSlash: 'always'. NO adapter import.
 ├── netlify.toml                    # Netlify build config (Node 22)
 └── .env                            # Local credentials (gitignored — never commit)
 ```
@@ -215,18 +215,17 @@ Body for step two.
 
 ## Content Creation & Publishing Workflow
 
-Articles are **written in Claude Cowork** using the **`the-playbook-content`** skill, then **implemented here in Code**.
+Articles are **written in Claude Cowork** using the **`the-playbook-content`** skill, then **published here in Code** by the **`playbook-publishing-bot`** skill — the two halves of the pipeline.
 
 **1. Write (Cowork — `the-playbook-content`).** Chris provides a primary keyword, secondary keyword, search intent, and angle. The skill archives the brief, runs Ahrefs + live-search research, returns a source-annotated outline for up to two approval rounds, drafts against Chris's voice guides and an SEO/GEO spec using the `:::` element toolkit, scores against rubrics, and delivers a finished markdown file (frontmatter + body) to the watch folder. The element catalog it writes to is documented in [`docs/article-content-elements.md`](docs/article-content-elements.md) (plain-text twin: `docs/article-content-elements.txt`).
 
-**2. Implement (here).** Given the finished markdown:
-- Drop the file at `src/content/articles/{pillar}/{slug}.md` (contents unchanged).
-- Add the hero image to `public/images/{slug}.jpg` and reference it via `heroImage` in frontmatter (filename only, no path).
-- Optimize the hero image (see below).
-- Verify on the dev server: frontmatter validates, every `:::` directive renders styled (no literal `:::`), and the hero image shows on the article + cards.
-- Commit + push (auto-deploys via Netlify).
+**2. Publish (here — `playbook-publishing-bot`).** Given the finished markdown in the watch folder, the bot:
+- Drops the file at `src/content/articles/{pillar}/{slug}.md` (body unchanged — editorial content is read-only).
+- Routes the slug-named hero into `public/images/{slug}.jpg` and optimizes it (see below); reconciles the `heroImage` extension.
+- Validates frontmatter, runs a real build, and verifies on the dev server: every `:::` directive renders styled (no literal `:::`), internal links resolve, and the hero shows on the article + cards.
+- Commits + pushes to `main` (auto-deploys via Netlify).
 
-First real article published this way: **Real Estate Farming** — `/lead-generation/real-estate-farming/`.
+**Content state:** the **Lead Generation** pillar is fully built — 8 articles (1 pillar + 7 sub-pillars), fully interlinked (see [Internal links](#internal-links-topic-cluster-mesh)). The other seven pillars are still placeholder.
 
 ### Hero images
 - `heroImage: filename.jpg` in frontmatter → file lives at `public/images/filename.jpg` (convention: name it after the slug).
@@ -237,6 +236,15 @@ First real article published this way: **Real Estate Farming** — `/lead-genera
   sips -s format jpeg -s formatOptions 58 image.jpg     # recompress (~quality 58)
   ```
 - Homepage/topic cards use `object-fit: cover` at fixed heights, so the image is **center-cropped** — choose/crop photos that read well from the center.
+
+### Internal links (topic-cluster mesh)
+- The site is **`trailingSlash: 'always'`** — every internal link **must** end in a slash: `/{pillar}/{slug}/`. A slash-less link (`/lead-generation/real-estate-farming`) 404s, and the path is `/{pillar}/{slug}/`, **not** `/articles/{slug}/`.
+- Within a topic cluster, link **every sub-pillar up to the pillar**, the **pillar down to every sub-pillar**, and **sub-pillars to one another** wherever the content makes the link organic — never link for the sake of linking.
+- ⚠️ The `the-playbook-content` skill currently emits **slash-less** internal links (and once used an `/articles/...` path). Until that's patched in the skill, normalize at publish time:
+  ```bash
+  perl -i -pe 's{\]\(/lead-generation/([a-z0-9-]+)\)}{](/lead-generation/$1/)}g' \
+    src/content/articles/lead-generation/*.md
+  ```
 
 ---
 
@@ -376,8 +384,14 @@ Footer social icons (Threads, LinkedIn, Instagram) link to `chrislinsell` profil
 ### Most Read is manually curated
 Edit `src/data/mostRead.ts` (format: `pillar-slug/article-slug`).
 
-### Article content is mostly placeholder (one real article live)
-The first real article — **Real Estate Farming** (`/lead-generation/real-estate-farming/`) — is published. The rest are still placeholder content created to fill card slots, and need replacing before launch.
+### Lead Generation is real; the other 7 pillars are still placeholder
+The **Lead Generation** pillar is fully built — 8 real articles (1 pillar + 7 sub-pillars), fully interlinked. The other seven pillars still hold a placeholder article or two created to fill card slots, and need replacing before launch.
+
+### Internal links need a trailing slash (`trailingSlash: 'always'`)
+Internal links must be `/{pillar}/{slug}/`; slash-less links 404 and the route is `/{pillar}/{slug}/`, not `/articles/{slug}/`. The `the-playbook-content` skill currently emits slash-less links — normalize at publish (see [Internal links](#internal-links-topic-cluster-mesh)).
+
+### Several articles still carry `featured: true`
+Eight articles (the Lead Generation pillar plus one leftover placeholder per other pillar) are flagged `featured: true`, so the homepage Featured Hero is just whichever sorts first. Trim to a single intended hero before launch.
 
 ### Privacy & Terms need attorney review
 `src/pages/privacy.astro` and `src/pages/terms.astro` are drafted, not reviewed by counsel.
@@ -393,6 +407,13 @@ The first real article — **Real Estate Farming** (`/lead-generation/real-estat
 ---
 
 ## Change Log
+
+### 2026-06-06 — Lead Generation pillar fully built + internal link mesh
+- **Lead Generation is now a complete topic cluster — 8 real articles.** Published the pillar page **"Real Estate Lead Generation: The Complete System"** (`/lead-generation/real-estate-lead-generation/`, `featured: true`) plus six sub-pillars across 6/4–6/5 — Postcards, Referrals, Prospecting, Buy Leads, Expired Listings, and Lead Conversion. With Farming (6/3), that completes the `lead-generation` set.
+- **Removed 4 pre-launch placeholder articles** from `lead-generation` (`cold-calling-from-zero`, `expired-listing-system`, `open-house-lead-machine`, `sphere-of-influence-playbook`) — scaffold stubs never run through the content pipeline, two of them superseded by real articles.
+- **Built the internal link mesh:** every sub-pillar links up to the pillar, the pillar links down to all seven subs, and organic sub-to-sub links connect related tactics. Link markup only — no prose changed.
+- **Normalized internal-link paths:** the site is `trailingSlash: 'always'`, so all internal links were fixed to `/{pillar}/{slug}/` (slash-less links 404), plus one broken `/articles/...` path. **Heads-up:** `the-playbook-content` emits slash-less links — fix at publish time or patch the skill (see [Internal links](#internal-links-topic-cluster-mesh)).
+- **Publishing has its own skill now:** `playbook-publishing-bot` handles step 2 (route file + hero into the repo, validate, build, verify directives + links, deploy).
 
 ### 2026-06-03 — First article live, hero images, content skill
 - **Published the first real article:** "Real Estate Farming: How to Own a Neighborhood's Listings" at `/lead-generation/real-estate-farming/`, with an optimized hero image (`public/images/real-estate-farming.jpg`, 2.3 MB → ~421 KB via `sips`).
@@ -419,7 +440,8 @@ The first real article — **Real Estate Farming** (`/lead-generation/real-estat
 
 - [ ] **Attach the custom domain** `theplaybookre.com` to the Netlify site (currently parked).
 - [ ] **Set up Netlify Forms email notifications** for `suggest-a-resource` and `write-for-us` (and verify they fire).
-- [ ] Replace remaining placeholder article content with real articles (1 published so far: Real Estate Farming).
+- [ ] Replace placeholder content in the other 7 pillars (**Lead Generation done** — 8 articles, fully meshed).
+- [ ] Trim stray `featured: true` flags to one intended Featured Hero (currently 8 are flagged).
 - [ ] Add real hero images to articles (`public/images/`, reference in frontmatter).
 - [ ] Update `src/data/clPosts.ts` with real ChrisLinsell.com article URLs.
 - [ ] Update footer social icon links with Playbook RE account handles.
