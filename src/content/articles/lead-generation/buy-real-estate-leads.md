@@ -49,7 +49,7 @@ You and the lead get to know each other, decide you want to work together, and m
 The client buys or sells, and you get paid. Not every client reaches this stage, which is exactly why you need enough of them entering at the top.
 :::
 
-If you do not generate enough awareness and recognition on your own, you will never see enough leads to produce enough clients to produce enough closings to run the business you have in your head. Buying leads is how you skip the first two stages. You inject ready-made demand straight into the middle of the funnel instead of spending months building it.
+If you do not generate enough awareness and recognition on your own, you will never see enough leads to produce enough clients to produce enough closings to run the business you have in your head. Buying leads is how you skip the first two stages. You inject ready-made demand straight into [the middle of the funnel](/lead-generation/real-estate-lead-generation/) instead of spending months building it.
 
 That shortcut is the right move for a few specific people. You are new and have no name recognition, no brand machinery, and no audience to tell your story to yet. You have an established business but no organic prospecting habit feeding it. Or you run a mature, high-volume operation that has already done the math and accepted a thinner margin in exchange for predictable volume. If you are one of those three, paid leads belong in your plan.
 
@@ -66,7 +66,7 @@ People talk about buying leads as if it is the expensive option and building org
 | Who owns the relationship | The platform first, you later | You from day one |
 | Margin at maturity | Compressed | Wide |
 
-Buying leads converts dollars into pipeline almost immediately. Building [organic prospecting](/lead-generation/real-estate-prospecting) converts time and consistency into pipeline slowly, and the relationships you build belong to you the moment they start. Neither one is free. The question is which currency you have more of right now, and which one you are trying to protect for later.
+Buying leads converts dollars into pipeline almost immediately. Building [organic prospecting](/lead-generation/real-estate-prospecting/) converts time and consistency into pipeline slowly, and the relationships you build belong to you the moment they start. Neither one is free. The question is which currency you have more of right now, and which one you are trying to protect for later.
 
 ## Do the math before you buy a single lead
 
@@ -117,19 +117,19 @@ In [NAR's 2024 Profile of Home Buyers and Sellers](https://www.nar.realtor/blogs
 
 ## What to expect once the lead hits your CRM
 
-Paid leads do not behave like the people who already know you. A lead off [your sphere of influence](/lead-generation/real-estate-referrals) arrives warm, with trust already built. A bought lead arrives cold. They do not know you, they feel no obligation to call you back, and many of them will be slow to respond or go quiet for a while. Some will be ready to move immediately. Most will not.
+Paid leads do not behave like the people who already know you. A lead off [your sphere of influence](/lead-generation/real-estate-referrals/) arrives warm, with trust already built. A bought lead arrives cold. They do not know you, they feel no obligation to call you back, and many of them will be slow to respond or go quiet for a while. Some will be ready to move immediately. Most will not.
 
 :::quote{cite="Chris Linsell"}
 A bought lead owes you _nothing_. Build that into your math, your follow-up cadence, and your patience, and you will work them like the long game they are.
 :::
 
-Plan for more touches, faster first responses, and a longer nurture than a referral needs. None of that is a defect in the leads. It is the cost of buying a relationship you have not earned yet, and it belongs in the same calculation as the dollars.
+Plan for more touches, faster first responses, and a [longer nurture](/lead-generation/real-estate-lead-conversion-system/) than a referral needs. None of that is a defect in the leads. It is the cost of buying a relationship you have not earned yet, and it belongs in the same calculation as the dollars.
 
 ## The smart play: buy to build, then wean off
 
 There are agents running mature, profitable businesses entirely on paid leads. They spend heavily every month, they have accepted a slimmer margin, and they make it work at volume with eyes wide open. That is a legitimate choice.
 
-It is not the choice I would make. The smarter arc uses paid leads as a means, not an end. Early in your career, buy leads to generate the closings that fund your business and buy you time. Use that time to build the organic engines that compound: [a farm you own](/lead-generation/real-estate-farming), a sphere that refers you, a prospecting habit that fills the calendar. Then, once your organic pipeline can carry the volume you need, wean yourself off paid leads and into a business whose leads you do not rent. You bought your way in. You build your way out.
+It is not the choice I would make. The smarter arc uses paid leads as a means, not an end. Early in your career, buy leads to generate the closings that fund your business and buy you time. Use that time to build the organic engines that compound: [a farm you own](/lead-generation/real-estate-farming/), a sphere that refers you, a prospecting habit that fills the calendar. Then, once your organic pipeline can carry the volume you need, wean yourself off paid leads and into a business whose leads you do not rent. You bought your way in. You build your way out.
 
 :::newsletter{heading="Get the next playbook before everyone else runs it."}
 :::

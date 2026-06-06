@@ -33,13 +33,13 @@ Generating the lead is the easy part. Turning a stranger who raised a hand into 
 
 ## Real Estate Lead Conversion Is the Most Overlooked Money in Your Funnel
 
-Your funnel loses people at every stage, and the math shows you which stage deserves your energy. A hundred prospects, people who know your name but have not raised a hand, turn into maybe twenty leads. Those twenty leads turn into ten clients. Those ten clients turn into five closings.
+[Your funnel](/lead-generation/real-estate-lead-generation/) loses people at every stage, and the math shows you which stage deserves your energy. A hundred prospects, people who know your name but have not raised a hand, turn into maybe twenty leads. Those twenty leads turn into ten clients. Those ten clients turn into five closings.
 
 Most agents pour their whole budget and most of their anxiety into the very top of that funnel, chasing more prospects and more leads. The leverage sits further down, at the steps where a lead becomes a client.
 
 Getting someone to raise their hand is close to the easy part now. A lead magnet and a little ad spend will get a stranger to say "tell me more." The distance between "tell me more" and "I will trust you with the biggest financial decision of my life" is enormous, and it does not close on your schedule.
 
-It closes over weeks and months, across far more touches than most agents expect to make. Set that expectation up front, because the agents who quit early are the ones who assumed it would be quick. The same way daily [real estate prospecting](/lead-generation/real-estate-prospecting) runs on a knowable conversion rate, lead conversion does too, and the rate is lower and slower than the optimists believe.
+It closes over weeks and months, across far more touches than most agents expect to make. Set that expectation up front, because the agents who quit early are the ones who assumed it would be quick. The same way daily [real estate prospecting](/lead-generation/real-estate-prospecting/) runs on a knowable conversion rate, lead conversion does too, and the rate is lower and slower than the optimists believe.
 
 :::stat{value="10%"}
 of a typical real estate lead pool will buy or sell within about two years, based on an audit of 5,000 leads by coach Greg Harrelson. The average agent converts only 1 to 3 percent of them. The rest close with a competitor.
@@ -69,7 +69,7 @@ Converting a lead is two jobs, and it helps to name them separately even though 
 
 The first job is to become the agent they will work with. When a lead raises a hand, they have only told you they want to hear from you. They have not decided you are the one. You earn that with three kinds of proof: evidence of action, that you are busy doing this work right now; evidence of experience, that you have done it many times before; and evidence of success, that you do it well.
 
-That is how a lead comes to know you, like you, and trust you with the decision. A warm relationship makes it faster. The reason [referrals and past clients](/lead-generation/real-estate-referrals) convert so well is that this first job is already done before the conversation starts.
+That is how a lead comes to know you, like you, and trust you with the decision. A warm relationship makes it faster. The reason [referrals and past clients](/lead-generation/real-estate-referrals/) convert so well is that this first job is already done before the conversation starts.
 
 The second job is to keep that relationship alive until their timeline activates. Memories are short, and you are being worked by other agents the whole time. Becoming the agent they want is wasted effort if you are gone or forgotten by the month they are ready to move. These two jobs are not strictly sequential. You are often proving yourself and maintaining the relationship in the same breath.
 
@@ -109,11 +109,11 @@ The cadence only works if every touch carries real value. This is the part agent
 
 A market update that helps someone understand what their own home is worth earns the next open. A mailer with a sports schedule on it, sent so you can tell yourself you made contact, trains them to ignore the next thing you send.
 
-Hold every touch to the same bar you would hold a [real estate postcard](/lead-generation/real-estate-postcards) or a [geographic farming](/lead-generation/real-estate-farming) campaign to. If it is not worth their time to read, it is working against you.
+Hold every touch to the same bar you would hold a [real estate postcard](/lead-generation/real-estate-postcards/) or a [geographic farming](/lead-generation/real-estate-farming/) campaign to. If it is not worth their time to read, it is working against you.
 
-Then calibrate to the lead in front of you. A cold portal lead who has never met you needs more proof and more patience, because there is no relationship yet and they feel no obligation to respond.
+Then calibrate to the lead in front of you. A [cold portal lead](/lead-generation/buy-real-estate-leads/) who has never met you needs more proof and more patience, because there is no relationship yet and they feel no obligation to respond.
 
-A referral arrives half converted. An expired listing or a for sale by owner can compress months of nurture into days, because they already decided to sell. Read the temperature and the timeline, and adjust the mix and the pace to match. One boilerplate sequence for everyone leaves business on the table.
+A referral arrives half converted. [An expired listing](/lead-generation/how-to-get-expired-listings/) or a for sale by owner can compress months of nurture into days, because they already decided to sell. Read the temperature and the timeline, and adjust the mix and the pace to match. One boilerplate sequence for everyone leaves business on the table.
 
 | Touch type | Examples | Strength | Cost to you |
 |---|---|---|---|
@@ -129,7 +129,7 @@ The real risk runs the other way. Invesp's research found that roughly 48 percen
 
 ## Part Three: Track the Number You Are Trying to Move
 
-You cannot improve a number you refuse to look at. Your conversion rate is knowable, and once you know it, it becomes a slider you can steer with preparation, the same way a disciplined [prospecting](/lead-generation/real-estate-prospecting) habit does.
+You cannot improve a number you refuse to look at. Your conversion rate is knowable, and once you know it, it becomes a slider you can steer with preparation, the same way a disciplined [prospecting](/lead-generation/real-estate-prospecting/) habit does.
 
 Benchmark yourself against the roughly 10 percent of any pool that is genuinely convertible over a couple of years. If you are sitting at 1 or 2 percent, treat it as room to grow rather than a ceiling you hit. Most of that gap is process, and process is yours to fix.
 
