@@ -4,6 +4,7 @@ description: "A CRM only works if it's set up in a way you'll actually use. Most
 publishDate: 2026-05-07
 author: chris-linsell
 pillar: business-systems
+draft: true
 tags: ["CRM", "Pipeline Management", "Business Systems", "Follow-Up"]
 featured: true
 accentWord: "Leaking"

@@ -6,6 +6,7 @@ pillar: Lead Generation
 format: "PDF · 4 pages"
 featured: false
 order: 4
+draft: true
 includes:
   - "Opening script and full conversation guide"
   - "Objection response for \"I'm not paying a commission\""

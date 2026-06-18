@@ -3,7 +3,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import NewsletterBand from '../../components/NewsletterBand.astro';
 
-const allResources = await getCollection('toolkit');
+const allResources = await getCollection('toolkit', ({ data }) => !data.draft);
+const isComingSoon = allResources.length === 0;
 const sorted = allResources.sort((a, b) => a.data.order - b.data.order);
 
 const featuredResource = sorted.find(r => r.data.featured) ?? sorted[0];
@@ -56,6 +57,7 @@ const schema = {
   description="Templates, scripts, checklists, and tools built from real experience in the field. No content briefs, no filler. Every resource in The Toolkit is free — enter your email and we'll send it directly to you."
   activeNav="toolkit"
   schema={schema}
+  noindex={isComingSoon}
 >
   <!-- PAGE HERO -->
   <div class="page-hero">
@@ -63,13 +65,16 @@ const schema = {
       <div>
         <div class="hero-eyebrow">The Playbook RE</div>
         <h1 class="hero-h1">The <em>Toolkit</em>.</h1>
-        <p class="hero-sub">Templates, scripts, checklists, and tools built from real experience in the field. No content briefs, no filler. Every resource is free. Enter your email and it goes straight to your inbox.</p>
+        {isComingSoon && <span class="hero-badge">Coming Soon</span>}
+        <p class="hero-sub">{isComingSoon
+          ? "Templates, scripts, checklists, and calculators — built from real experience in the field, not spun up to pad a content calendar. The Toolkit is in production. Get on the list and the first resources land in your inbox the moment they're ready."
+          : "Templates, scripts, checklists, and tools built from real experience in the field. No content briefs, no filler. Every resource is free. Enter your email and it goes straight to your inbox."}</p>
       </div>
       <div class="hero-right">
         <div class="hero-stat-row">
           <div>
-            <div class="hero-stat-num">{allResources.length}</div>
-            <div class="hero-stat-label">Resources available now</div>
+            <div class="hero-stat-num">{isComingSoon ? 'Soon' : allResources.length}</div>
+            <div class="hero-stat-label">{isComingSoon ? 'Resources in production' : 'Resources available now'}</div>
           </div>
           <div class="hero-stat-divider"></div>
           <div>
@@ -86,7 +91,31 @@ const schema = {
     </div>
   </div>
 
-  <!-- HOW IT WORKS BAR -->
+  {isComingSoon && (
+  <Fragment>
+    {/* IN PRODUCTION */}
+    <div class="tk-cs-body">
+      <div class="tk-cs-inner">
+        <div class="section-label">In Production</div>
+        <h2 class="tk-cs-headline">The shelves are being <em>stocked</em>.</h2>
+        <p class="tk-cs-copy">Every tool here has to earn its place — used in a real business, on real deals, before it goes out. That takes longer than spinning up a downloads page, and that's the whole point. The first templates, scripts, checklists, and calculators are in production now.</p>
+        <p class="tk-cs-copy">Two ways to be first in line: get the newsletter below, or tell me exactly what would move the needle in your business and I'll consider building it next.</p>
+        <button class="tk-cs-suggest suggest-btn">Suggest a Resource →</button>
+        <div class="tk-cs-types">
+          <span class="tk-cs-type">Templates</span>
+          <span class="tk-cs-type">Scripts</span>
+          <span class="tk-cs-type">Checklists</span>
+          <span class="tk-cs-type">Calculators</span>
+          <span class="tk-cs-type">Guides</span>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+  )}
+
+  {!isComingSoon && (
+  <Fragment>
+  {/* HOW IT WORKS BAR */}
   <div class="how-bar">
     <div class="how-bar-inner">
       <div class="how-label">How it works</div>
@@ -217,7 +246,10 @@ const schema = {
     </div>
   </div>
 
-  <!-- NEWSLETTER BAND -->
+  </Fragment>
+  )}
+
+  {/* NEWSLETTER BAND */}
   <NewsletterBand />
 
   <!-- RESOURCE MODAL -->
@@ -709,4 +741,41 @@ const schema = {
   .suggest-input:focus, .suggest-textarea:focus { border-color: var(--yellow); }
   .suggest-input::placeholder, .suggest-textarea::placeholder { color: #bbb; }
   .suggest-submit { width: 100%; margin: 4px 0 12px; }
+
+  /* ─── COMING SOON ─── */
+  .hero-badge {
+    font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.18em;
+    color: var(--black); background: var(--yellow); padding: 5px 14px;
+    display: inline-flex; align-items: center; gap: 9px; margin-bottom: 20px;
+  }
+  .hero-badge::before { content: ''; width: 7px; height: 7px; background: var(--black); border-radius: 50%; }
+  .tk-cs-body { background: var(--off-white); }
+  .tk-cs-inner { max-width: 760px; margin: 0 auto; padding: 64px 40px 72px; }
+  .tk-cs-headline {
+    font-family: 'Bebas Neue', cursive; font-size: 48px; line-height: 0.95;
+    letter-spacing: 0.02em; color: var(--black); margin: 18px 0 24px;
+  }
+  .tk-cs-headline em { color: var(--yellow); font-style: normal; }
+  .tk-cs-copy {
+    font-family: 'DM Sans', sans-serif; font-size: 17px; line-height: 1.75;
+    color: var(--charcoal); margin-bottom: 18px;
+  }
+  .tk-cs-suggest {
+    font-family: 'Bebas Neue', cursive; font-size: 17px; letter-spacing: 0.09em;
+    background: var(--black); color: var(--yellow); border: none;
+    padding: 16px 32px; cursor: pointer; margin-top: 12px; transition: background 0.15s;
+  }
+  .tk-cs-suggest:hover { background: #222; }
+  .tk-cs-types {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px;
+    padding-top: 28px; border-top: 1px solid var(--rule);
+  }
+  .tk-cs-type {
+    font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 0.14em;
+    color: var(--gray); border: 1px solid var(--rule); padding: 6px 14px; background: var(--white);
+  }
+  @media (max-width: 720px) {
+    .tk-cs-inner { padding: 48px 20px 56px; }
+    .tk-cs-headline { font-size: 36px; }
+  }
 </style>

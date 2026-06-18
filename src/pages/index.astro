@@ -9,8 +9,9 @@ import { MOST_READ_IDS } from '../data/mostRead';
 import { CL_POSTS } from '../data/clPosts';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
-const allToolkit = await getCollection('toolkit');
+const allToolkit = await getCollection('toolkit', ({ data }) => !data.draft);
 const homepageToolkit = allToolkit.sort((a, b) => a.data.order - b.data.order);
+const toolkitComingSoon = homepageToolkit.length === 0;
 
 function tkCapitalize(s: string) { return s.charAt(0).toUpperCase() + s.slice(1); }
 function tkBadgeClass(type: string) {
@@ -326,25 +327,34 @@ const schema = [
         <div>
           <div class="tk-label">Templates, Scripts &amp; Downloads</div>
           <div class="tk-title">The <span>Toolkit</span></div>
-          <div class="tk-subtitle">Ready-to-use templates, checklists, and script packs. Download any or all of them free.</div>
+          <div class="tk-subtitle">{toolkitComingSoon
+            ? 'Templates, checklists, scripts, and calculators — built from real experience and on the way. Get the newsletter and they land in your inbox first.'
+            : 'Ready-to-use templates, checklists, and script packs. Download any or all of them free.'}</div>
         </div>
-        <a href="/toolkit/" class="tk-link">All Free Resources</a>
+        <a href="/toolkit/" class="tk-link">{toolkitComingSoon ? 'Visit the Toolkit' : 'All Free Resources'}</a>
       </div>
-      <div class="tk-grid">
-        {homepageToolkit.map(resource => (
-          <div class="tk-card">
-            <div class="tk-card-icon" set:html={tkIcons[resource.data.resourceType] ?? tkIcons.template} />
-            <div class="tk-body">
-              <div class="tk-type-badge">{tkTypeLabel(resource.data.resourceType)}</div>
-              <h3>{resource.data.title}</h3>
-              <p>{resource.data.description}</p>
-              <div class="tk-cta">
-                <button class="tk-cta-btn" data-resource-id={resource.id}>Download Free</button>
+      {toolkitComingSoon ? (
+        <a href="/toolkit/" class="tk-soon">
+          <div class="tk-soon-badge">Coming Soon</div>
+          <div class="tk-soon-text">The first resources are in production. <span>Tap in to be first in line →</span></div>
+        </a>
+      ) : (
+        <div class="tk-grid">
+          {homepageToolkit.map(resource => (
+            <div class="tk-card">
+              <div class="tk-card-icon" set:html={tkIcons[resource.data.resourceType] ?? tkIcons.template} />
+              <div class="tk-body">
+                <div class="tk-type-badge">{tkTypeLabel(resource.data.resourceType)}</div>
+                <h3>{resource.data.title}</h3>
+                <p>{resource.data.description}</p>
+                <div class="tk-cta">
+                  <button class="tk-cta-btn" data-resource-id={resource.id}>Download Free</button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 
@@ -820,6 +830,25 @@ const schema = [
   }
   .tk-cta-btn::after { content: '↓'; font-size: 12px; }
   .tk-card:hover { background: #1c1c1c; }
+
+  /* Toolkit coming-soon teaser */
+  .tk-soon {
+    display: flex; align-items: center; gap: 24px;
+    background: #161616; border-top: 3px solid var(--yellow);
+    padding: 36px 40px; text-decoration: none; transition: background 0.12s;
+    flex-wrap: wrap;
+  }
+  .tk-soon:hover { background: #1c1c1c; }
+  .tk-soon-badge {
+    font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.18em;
+    color: var(--black); background: var(--yellow); padding: 6px 16px;
+    display: inline-flex; align-items: center; gap: 9px; flex-shrink: 0;
+  }
+  .tk-soon-badge::before { content: ''; width: 7px; height: 7px; background: var(--black); border-radius: 50%; }
+  .tk-soon-text {
+    font-family: 'DM Sans', sans-serif; font-size: 17px; color: #aaa; line-height: 1.5;
+  }
+  .tk-soon-text span { color: var(--yellow); font-weight: 500; }
 
   /* ─── TOOLKIT MODAL ─── */
   .tk-modal-overlay {

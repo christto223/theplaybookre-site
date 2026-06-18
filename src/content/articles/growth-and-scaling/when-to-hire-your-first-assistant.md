@@ -4,6 +4,7 @@ description: "Hiring too early wastes money. Hiring too late costs you deals. He
 publishDate: 2026-05-11
 author: chris-linsell
 pillar: growth-and-scaling
+draft: true
 tags: ["Hiring", "Delegation", "Scaling", "Team Building"]
 featured: true
 accentWord: "First"

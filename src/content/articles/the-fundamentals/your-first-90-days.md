@@ -4,6 +4,7 @@ description: "The first 90 days in real estate determine whether you build a bus
 publishDate: 2026-05-03
 author: chris-linsell
 pillar: the-fundamentals
+draft: true
 tags: ["New Agent", "Getting Started", "90-Day Plan", "Prospecting"]
 featured: true
 accentWord: "Only"

@@ -6,6 +6,7 @@ pillar: Business Systems
 format: "Google Sheets"
 featured: true
 order: 1
+draft: true
 includes:
   - "GCI goal-setting with reverse-engineered activity targets"
   - "Lead source tracking by conversion rate, not just volume"

@@ -4,6 +4,7 @@ description: "AI isn't going to replace real estate agents. It is going to creat
 publishDate: 2026-05-13
 author: chris-linsell
 pillar: ai-and-technology
+draft: true
 tags: ["AI", "Technology", "Productivity", "Tech Stack"]
 featured: true
 accentWord: "Every"

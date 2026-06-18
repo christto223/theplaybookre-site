@@ -6,6 +6,7 @@ pillar: The Fundamentals
 format: "PDF · Interactive"
 featured: false
 order: 3
+draft: true
 includes:
   - "Week-by-week action items for days 1–90"
   - "Sphere activation sequence"

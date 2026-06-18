@@ -4,6 +4,7 @@ description: "The difference between a producing agent and a 7-figure business i
 publishDate: 2026-05-17
 author: chris-linsell
 pillar: business-systems
+draft: true
 tags: ["Business Systems", "Scaling", "Operations", "7-Figure"]
 featured: false
 accentWord: "Operating"

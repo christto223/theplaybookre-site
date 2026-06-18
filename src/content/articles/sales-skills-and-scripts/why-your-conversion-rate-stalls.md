@@ -4,6 +4,7 @@ description: "Most producing agents hit a conversion plateau around year two or 
 publishDate: 2026-05-05
 author: chris-linsell
 pillar: sales-skills-and-scripts
+draft: true
 tags: ["Conversion Rate", "Sales Skills", "Listing Appointments", "Plateau"]
 featured: true
 accentWord: "Stalling"

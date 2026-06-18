@@ -4,6 +4,7 @@ description: "Most agents who quit real estate don't quit because they lacked sk
 publishDate: 2026-05-09
 author: chris-linsell
 pillar: mindset-and-performance
+draft: true
 tags: ["Mindset", "Resilience", "Long-Term Career", "Performance"]
 featured: true
 accentWord: "Last"

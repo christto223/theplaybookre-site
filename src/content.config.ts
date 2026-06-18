@@ -40,6 +40,7 @@ const toolkit = defineCollection({
     featured: z.boolean().default(false),
     includes: z.array(z.string()).optional(),
     order: z.number().default(99),
+    draft: z.boolean().default(false),
   }),
 });
 

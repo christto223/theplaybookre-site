@@ -6,6 +6,7 @@ pillar: Lead Generation
 format: "Google Sheets"
 featured: false
 order: 2
+draft: true
 includes:
   - "Per-session dial and contact tracking"
   - "Automatic conversion rate calculations"

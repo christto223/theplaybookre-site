@@ -8,10 +8,15 @@ import { PILLARS, getPillarBySlug } from '../../data/pillars';
 
 export async function getStaticPaths() {
   const allArticles = await getCollection('articles', ({ data }) => !data.draft);
+  // Pillars with at least one published article. A pillar with none renders a
+  // "Coming Soon" state automatically — and flips to live the moment its first
+  // article publishes. No per-pillar flag to maintain.
+  const livePillars = PILLARS.filter(p => allArticles.some(a => a.data.pillar === p.slug));
   return PILLARS.map(pillar => ({
     params: { pillar: pillar.slug },
     props:  {
       pillarData: pillar,
+      livePillars,
       articles: allArticles
         .filter(a => a.data.pillar === pillar.slug)
         .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()),
@@ -19,9 +24,12 @@ export async function getStaticPaths() {
   }));
 }
 
-const { pillarData, articles } = Astro.props;
-const featuredArticle = articles.find(a => a.data.featured) ?? articles[0];
-const gridArticles    = articles.filter(a => a.id !== featuredArticle?.id);
+const { pillarData, articles, livePillars } = Astro.props;
+
+const isComingSoon       = articles.length === 0;
+const otherLivePillars   = livePillars.filter(p => p.slug !== pillarData.slug);
+const featuredArticle    = articles.find(a => a.data.featured) ?? articles[0];
+const gridArticles       = articles.filter(a => a.id !== featuredArticle?.id);
 
 function articleUrl(article: typeof articles[0]) {
   const parts = article.id.split('/');
@@ -38,99 +46,235 @@ const schema = {
 ---
 
 <BaseLayout
-  title={`${pillarData.name} Playbooks`}
+  title={isComingSoon ? `${pillarData.name} — Coming Soon` : `${pillarData.name} Playbooks`}
   description={pillarData.description}
   schema={schema}
+  noindex={isComingSoon}
 >
   <!-- PILLAR STRIP -->
   <PillarStrip activePillar={pillarData.slug} />
 
-  <!-- PILLAR HERO -->
-  <div class="pillar-hero">
-    <div class="pillar-hero-inner">
-      <div class="pillar-eyebrow">The Playbook RE</div>
-      <h1 class="pillar-name">{pillarData.name}</h1>
-      <p class="pillar-desc">{pillarData.description}</p>
-      <div class="pillar-count">{articles.length} {articles.length === 1 ? 'Playbook' : 'Playbooks'}</div>
-    </div>
-  </div>
+  {isComingSoon ? (
+    <>
+      <!-- COMING SOON HERO -->
+      <div class="cs-hero">
+        <div class="cs-hero-inner">
+          <div class="cs-eyebrow">The Playbook RE</div>
+          <h1 class="cs-name">{pillarData.name}</h1>
+          <div class="cs-badge">Coming Soon</div>
+          <p class="cs-desc">{pillarData.description}</p>
+        </div>
+      </div>
 
-  <!-- FEATURED ARTICLE -->
-  {featuredArticle && (
-    <div class="featured-section">
-      <div class="featured-inner">
-        <div class="featured-eyebrow">Featured Playbook</div>
-        <div class="featured-card">
-          <div class="featured-content">
-            <div>
-              <span class="feat-tag-pill">{featuredArticle.data.tags[0]}</span>
-              <h2 class="featured-title">
-                <a href={articleUrl(featuredArticle)}>{featuredArticle.data.title}</a>
-              </h2>
-              <p class="featured-excerpt">{featuredArticle.data.description}</p>
-            </div>
-            <div>
-              <div class="featured-meta">
-                <div class="f-author">
-                  <div class="f-avatar">CL</div>
-                  <div class="f-author-name">Chris Linsell</div>
-                </div>
-                <div class="f-sep"></div>
-                <div class="f-pill">{featuredArticle.data.readTime} min read</div>
+      <!-- IN PRODUCTION -->
+      <div class="cs-body">
+        <div class="cs-body-inner">
+          <div class="cs-note">
+            <div class="section-label">In Production</div>
+            <h2 class="cs-headline">This playbook is being <em>written</em>.</h2>
+            <p class="cs-copy">
+              The Playbook launched with Lead Generation and Marketing &amp; Branding built
+              out in full. <strong>{pillarData.name}</strong> is in the queue — researched,
+              field-tested, and written the same way: no filler, no recycled advice, no
+              vendor agendas. New playbooks publish every week.
+            </p>
+            <p class="cs-copy">
+              Want to know the moment this section goes live? Get the newsletter below — it's
+              the first place new playbooks land.
+            </p>
+          </div>
+
+          {otherLivePillars.length > 0 && (
+            <div class="cs-live">
+              <div class="cs-live-label">Start With What's Live</div>
+              <div class="cs-live-grid">
+                {otherLivePillars.map(p => (
+                  <a href={`/${p.slug}/`} class="cs-live-card">
+                    <div class="cs-live-name">{p.name}</div>
+                    <div class="cs-live-desc">{p.description}</div>
+                    <div class="cs-live-link">Browse Playbooks →</div>
+                  </a>
+                ))}
               </div>
-              <a href={articleUrl(featuredArticle)} class="featured-cta">Read the Playbook →</a>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  ) : (
+    <>
+      <!-- PILLAR HERO -->
+      <div class="pillar-hero">
+        <div class="pillar-hero-inner">
+          <div class="pillar-eyebrow">The Playbook RE</div>
+          <h1 class="pillar-name">{pillarData.name}</h1>
+          <p class="pillar-desc">{pillarData.description}</p>
+          <div class="pillar-count">{articles.length} {articles.length === 1 ? 'Playbook' : 'Playbooks'}</div>
+        </div>
+      </div>
+
+      <!-- FEATURED ARTICLE -->
+      {featuredArticle && (
+        <div class="featured-section">
+          <div class="featured-inner">
+            <div class="featured-eyebrow">Featured Playbook</div>
+            <div class="featured-card">
+              <div class="featured-content">
+                <div>
+                  <span class="feat-tag-pill">{featuredArticle.data.tags[0]}</span>
+                  <h2 class="featured-title">
+                    <a href={articleUrl(featuredArticle)}>{featuredArticle.data.title}</a>
+                  </h2>
+                  <p class="featured-excerpt">{featuredArticle.data.description}</p>
+                </div>
+                <div>
+                  <div class="featured-meta">
+                    <div class="f-author">
+                      <div class="f-avatar">CL</div>
+                      <div class="f-author-name">Chris Linsell</div>
+                    </div>
+                    <div class="f-sep"></div>
+                    <div class="f-pill">{featuredArticle.data.readTime} min read</div>
+                  </div>
+                  <a href={articleUrl(featuredArticle)} class="featured-cta">Read the Playbook →</a>
+                </div>
+              </div>
+              <div class="featured-image">
+                {featuredArticle.data.heroImage
+                  ? <img src={`/images/${featuredArticle.data.heroImage}`} alt={featuredArticle.data.title} />
+                  : <div class="featured-image-placeholder"></div>
+                }
+              </div>
             </div>
           </div>
-          <div class="featured-image">
-            {featuredArticle.data.heroImage
-              ? <img src={`/images/${featuredArticle.data.heroImage}`} alt={featuredArticle.data.title} />
-              : <div class="featured-image-placeholder"></div>
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-  )}
-
-  <!-- FILTER BAR + GRID -->
-  <div class="catalog-section">
-    <div class="catalog-inner">
-      <div class="catalog-bar">
-        <div class="filter-tabs">
-          <button class="filter-tab active" data-filter="all">All Playbooks</button>
-          <button class="filter-tab" data-filter="popular">Most Popular</button>
-        </div>
-        <div class="article-count">Showing {gridArticles.length} of {articles.length}</div>
-      </div>
-
-      {gridArticles.length > 0 ? (
-        <div class="article-grid" id="article-grid">
-          {gridArticles.map(article => (
-            <ArticleCard
-              title={article.data.title}
-              description={article.data.description}
-              pillar={article.data.pillar}
-              primaryTag={article.data.tags[0] ?? pillarData.name}
-              readTime={article.data.readTime}
-              slug={article.id}
-              heroImage={article.data.heroImage}
-              accentWord={article.data.accentWord}
-            />
-          ))}
-        </div>
-      ) : (
-        <div class="empty-grid">
-          <p>More playbooks coming soon. <a href="/start-here/">Start here</a> in the meantime.</p>
         </div>
       )}
-    </div>
-  </div>
+
+      <!-- FILTER BAR + GRID -->
+      <div class="catalog-section">
+        <div class="catalog-inner">
+          <div class="catalog-bar">
+            <div class="filter-tabs">
+              <button class="filter-tab active" data-filter="all">All Playbooks</button>
+              <button class="filter-tab" data-filter="popular">Most Popular</button>
+            </div>
+            <div class="article-count">Showing {gridArticles.length} of {articles.length}</div>
+          </div>
+
+          {gridArticles.length > 0 ? (
+            <div class="article-grid" id="article-grid">
+              {gridArticles.map(article => (
+                <ArticleCard
+                  title={article.data.title}
+                  description={article.data.description}
+                  pillar={article.data.pillar}
+                  primaryTag={article.data.tags[0] ?? pillarData.name}
+                  readTime={article.data.readTime}
+                  slug={article.id}
+                  heroImage={article.data.heroImage}
+                  accentWord={article.data.accentWord}
+                />
+              ))}
+            </div>
+          ) : (
+            <div class="empty-grid">
+              <p>More playbooks in this section are on the way. <a href="/playbooks/">Browse every published playbook</a> in the meantime.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  )}
 
   <!-- NEWSLETTER BAND -->
   <NewsletterBand />
 </BaseLayout>
 
 <style>
+  /* ─── COMING SOON ─── */
+  .cs-hero { background: var(--black); }
+  .cs-hero-inner {
+    max-width: 1280px; margin: 0 auto; padding: 64px 40px 56px;
+    display: flex; flex-direction: column; align-items: flex-start;
+  }
+  .cs-eyebrow {
+    font-family: 'Bebas Neue', cursive; font-size: 11px; letter-spacing: 0.2em;
+    color: #444; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .cs-eyebrow::before { content: ''; width: 24px; height: 2px; background: #333; display: inline-block; }
+  .cs-name {
+    font-family: 'Bebas Neue', cursive; font-size: 100px; line-height: 0.88;
+    letter-spacing: 0.02em; color: var(--white); margin-bottom: 20px;
+  }
+  .cs-badge {
+    font-family: 'Bebas Neue', cursive; font-size: 14px; letter-spacing: 0.18em;
+    color: var(--black); background: var(--yellow); padding: 6px 16px;
+    margin-bottom: 24px;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .cs-badge::before {
+    content: ''; width: 8px; height: 8px; background: var(--black);
+    border-radius: 50%; display: inline-block;
+  }
+  .cs-desc {
+    font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.65;
+    color: #777; font-style: italic; max-width: 720px;
+  }
+
+  .cs-body { background: var(--off-white); }
+  .cs-body-inner { max-width: 1280px; margin: 0 auto; padding: 56px 40px 72px; }
+  .cs-note { max-width: 760px; margin-bottom: 56px; }
+  .cs-headline {
+    font-family: 'Bebas Neue', cursive; font-size: 48px; line-height: 0.95;
+    letter-spacing: 0.02em; color: var(--black); margin: 18px 0 24px;
+  }
+  .cs-headline em { color: var(--yellow); font-style: normal; }
+  .cs-copy {
+    font-family: 'DM Sans', sans-serif; font-size: 17px; line-height: 1.75;
+    color: var(--charcoal); margin-bottom: 18px;
+  }
+  .cs-copy:last-child { margin-bottom: 0; }
+  .cs-copy strong { color: var(--black); font-weight: 600; }
+
+  .cs-live-label {
+    font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 0.18em;
+    color: var(--gray); margin-bottom: 18px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cs-live-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 2px; background: var(--rule);
+  }
+  .cs-live-card {
+    background: var(--white); border-top: 4px solid var(--yellow);
+    padding: 32px 36px; display: flex; flex-direction: column;
+    text-decoration: none; color: inherit; transition: background 0.12s;
+  }
+  .cs-live-card:hover { background: #fafaf8; }
+  .cs-live-name {
+    font-family: 'Bebas Neue', cursive; font-size: 32px; line-height: 0.95;
+    letter-spacing: 0.02em; color: var(--black); margin-bottom: 12px;
+    transition: color 0.12s;
+  }
+  .cs-live-card:hover .cs-live-name { color: var(--yellow); }
+  .cs-live-desc {
+    font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.65;
+    color: var(--charcoal); flex: 1; margin-bottom: 20px;
+  }
+  .cs-live-link {
+    font-family: 'Bebas Neue', cursive; font-size: 14px; letter-spacing: 0.1em;
+    color: var(--black);
+  }
+  .cs-live-card:hover .cs-live-link { color: var(--yellow); }
+
+  @media (max-width: 720px) {
+    .cs-name { font-size: 64px; }
+    .cs-headline { font-size: 36px; }
+    .cs-live-grid { grid-template-columns: 1fr; }
+    .cs-hero-inner, .cs-body-inner { padding-left: 20px; padding-right: 20px; }
+  }
+
   /* PILLAR HERO */
   .pillar-hero { background: var(--black); }
   .pillar-hero-inner {
