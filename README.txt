@@ -3,9 +3,9 @@ THE PLAYBOOK RE — SITE DOCUMENTATION
 ================================================================================
 
 Live site (custom domain): https://theplaybookre.com
-  WARNING: NOT YET ATTACHED. The domain is currently parked (returns a
-  non-Netlify "DPS" server / 404 on real pages). The working site lives at the
-  project's *.netlify.app URL until the custom domain is pointed at Netlify.
+  LIVE - attached to Netlify 2026-06-18, HTTPS via Let's Encrypt. GoDaddy DNS:
+  apex A -> 75.2.60.5, www CNAME -> the-playbook-re.netlify.app. Also reachable
+  at the-playbook-re.netlify.app.
 GitHub repo: git@github.com:christto223/theplaybookre-site.git
 Hosting:     Netlify (auto-deploys from the main branch)
 Built with:  Astro 6.4.2, static output, no SSR adapter
@@ -397,9 +397,9 @@ USE entry.id, NOT entry.slug
 BEEHIIV PUBLICATION ID NEEDS THE pub_ PREFIX; BEEHIIV REJECTS FAKE EMAILS
   See the Beehiiv section. Both cost real debugging time — don't repeat them.
 
-CUSTOM DOMAIN NOT ATTACHED
-  theplaybookre.com is parked elsewhere. Use the *.netlify.app URL until the
-  domain is pointed at Netlify.
+CUSTOM DOMAIN ATTACHED (2026-06-18)
+  theplaybookre.com is live on Netlify. GoDaddy DNS: apex A -> 75.2.60.5, www
+  CNAME -> the-playbook-re.netlify.app. Parking A record replaced; _dmarc preserved.
 
 clPosts.ts USES PLACEHOLDER URLs
   "From the Desk of Chris Linsell" (src/data/clPosts.ts) points all links to
@@ -512,7 +512,7 @@ CHANGE LOG
 OUTSTANDING BEFORE LAUNCH
 ================================================================================
 
-  [ ] Attach the custom domain theplaybookre.com to the Netlify site (parked now).
+  [x] Attach the custom domain theplaybookre.com to the Netlify site - done 2026-06-18.
   [ ] Set up Netlify Forms email notifications for suggest-a-resource and
       write-for-us (and verify they fire).
   [ ] Replace placeholder content in the other 7 pillars (Lead Generation done —
