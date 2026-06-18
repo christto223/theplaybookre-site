@@ -23,6 +23,18 @@ const { activeNav, ...seoProps } = Astro.props;
 <html lang="en">
   <head>
     <SEOHead {...seoProps} />
+    {import.meta.env.PROD && (
+      <Fragment>
+        {/* Google Analytics (GA4) — loaded on production builds only */}
+        <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-N31XKG6F3M"></script>
+        <script is:inline>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){ dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', 'G-N31XKG6F3M');
+        </script>
+      </Fragment>
+    )}
   </head>
   <body>
     <Masthead activeNav={activeNav} />
